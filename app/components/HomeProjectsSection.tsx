@@ -46,8 +46,7 @@ export default function HomeProjectsSection() {
   const { language } = useLanguage();
   const copy = sectionCopy[language];
 
-  // Zes projecten: drie links, drie rechts, om en om uit de reeks gehaald.
-  const [a, b, c, d, e, f] = projects.slice(0, 6);
+  const [a, b, c, d, e] = projects.slice(0, 5);
 
   return (
     <section className="w-full" style={{ backgroundColor: "var(--color-cedar)" }}>
@@ -67,17 +66,21 @@ export default function HomeProjectsSection() {
 
       <div className="relative">
         <div className="grid grid-cols-1 md:grid-cols-2">
+          {/*
+            De linkerkolom bepaalt de hoogte; rechts vult het tekstblok met
+            flex-1 precies het verschil op. Zo eindigen beide kolommen gelijk in
+            plaats van met een rafelige onderrand.
+          */}
           <div className="flex flex-col">
             <ProjectTile project={a} ratio="4 / 5" priority />
-            <TextTile body={copy.body} link={copy.link} />
             <ProjectTile project={c} ratio="4 / 3" />
             <ProjectTile project={e} ratio="1 / 1" />
           </div>
 
           <div className="flex flex-col">
             <ProjectTile project={b} ratio="1 / 1" />
+            <TextTile body={copy.body} link={copy.link} />
             <ProjectTile project={d} ratio="4 / 5" />
-            <ProjectTile project={f} ratio="4 / 3" />
           </div>
         </div>
 
@@ -93,6 +96,9 @@ export default function HomeProjectsSection() {
           aria-hidden
         />
       </div>
+
+      {/* Rust tussen de reeks en de dienstensectie eronder. */}
+      <div className="h-20 md:h-32" aria-hidden />
     </section>
   );
 }
@@ -149,7 +155,7 @@ function ProjectTile({
 function TextTile({ body, link }: { body: string; link: string }) {
   return (
     <div
-      className="flex flex-col justify-center px-8 py-16 md:px-14 md:py-24"
+      className="flex flex-1 flex-col justify-center px-8 py-16 md:px-14 md:py-20"
       style={{ backgroundColor: "var(--color-cedar)" }}
     >
       <p className="mb-10 text-lg leading-relaxed md:text-xl" style={{ ...serif, color: "var(--color-almond)" }}>
