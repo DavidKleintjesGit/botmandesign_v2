@@ -8,28 +8,30 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * Total pinned scroll (px). Larger = more room, especially the cedar-only tail after images.
+ * Hoeveel pixels de sectie vastgepind blijft. Dit stond op 5400 — ruim vijf
+ * schermhoogtes scrollen voor één beeldwisseling, met een lange staart waarin
+ * niets meer veranderde. 1800 houdt het effect maar laat de pagina doorlopen.
  */
-const SCROLL_HOLD = 5400;
+const SCROLL_HOLD = 1800;
 
 /** Crossing this progress (increasing) → starts timed fade-out animation. */
-const FADE_OUT_ENTER_PROGRESS = 0.54;
+const FADE_OUT_ENTER_PROGRESS = 0.62;
 
 /** Crossing below this (decreasing) → timed fade-in again (hysteresis). */
-const FADE_OUT_EXIT_PROGRESS = 0.5;
+const FADE_OUT_EXIT_PROGRESS = 0.56;
 
 /**
  * Crossing into this band finishes the shell to opacity 0. Lower = longer scroll after (no image)
  * before the pin ends: tail is (1 − this) × SCROLL_HOLD px once the short finish tween completes.
  */
-const SHELL_HARD_OFF_PROGRESS = 0.66;
+const SHELL_HARD_OFF_PROGRESS = 0.85;
 
 /** Fast finish when entering the hard-off band (still animated, not a 1-frame set). */
-const SHELL_HARD_OFF_FINISH_SEC = 0.55;
+const SHELL_HARD_OFF_FINISH_SEC = 0.3;
 
-const SHELL_FADE_IN_SEC = 2.75;
-const SHELL_FADE_IN_DELAY_SEC = 0.35;
-const SHELL_FADE_OUT_SEC = 2.5;
+const SHELL_FADE_IN_SEC = 0.8;
+const SHELL_FADE_IN_DELAY_SEC = 0.1;
+const SHELL_FADE_OUT_SEC = 0.7;
 
 const SECTION_IMAGE = "/images/botman_design_second_section.png";
 

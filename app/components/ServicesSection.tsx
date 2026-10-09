@@ -31,7 +31,8 @@ export default function ServicesSection() {
         trigger: sectionRef.current,
         start: "top 90%",
         end: "top 15%",
-        scrub: 2,
+        // 0.6 houdt de beweging vloeiend zonder merkbaar achter de scroll aan te lopen.
+        scrub: 0.6,
       },
     });
 
