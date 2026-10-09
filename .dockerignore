@@ -1,0 +1,10 @@
+node_modules
+.next
+.open-next
+.wrangler
+.git
+.idea
+.claude
+README.md
+.env*
+npm-debug.log*
