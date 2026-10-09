@@ -1,10 +1,12 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import SiteHeader from "./SiteHeader";
 import Footer from "./Footer";
+import ProjectSlideshow from "./ProjectSlideshow";
 import { useLanguage } from "./LanguageProvider";
 import { getProject, nextProject, projectContent } from "@/app/content/projects";
 
@@ -18,6 +20,8 @@ const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
 export default function ProjectDetail({ slug }: { slug: string }) {
   const { language } = useLanguage();
+  const [navHidden, setNavHidden] = useState(false);
+  const handleImmersiveChange = useCallback((immersive: boolean) => setNavHidden(immersive), []);
   const project = getProject(slug);
 
   if (!project) return null;
@@ -28,7 +32,7 @@ export default function ProjectDetail({ slug }: { slug: string }) {
 
   return (
     <div style={{ backgroundColor: "var(--color-cedar)" }}>
-      <SiteHeader />
+      <SiteHeader hidden={navHidden} />
 
       {/* HERO */}
       <header className="relative h-screen w-full overflow-hidden">
@@ -83,60 +87,14 @@ export default function ProjectDetail({ slug }: { slug: string }) {
         </div>
       </section>
 
-      {/* BEELDENREEKS */}
-      <section className="w-full pb-20 md:pb-28">
-        <div className="container mx-auto flex flex-col gap-16 px-4 md:gap-24 md:px-8">
-          {content.slides.map((slide, index) => (
-            <figure key={slide.img} className="m-0">
-              <div
-                className="relative overflow-hidden rounded-lg"
-                style={{ aspectRatio: index % 3 === 0 ? "16 / 9" : "4 / 3" }}
-              >
-                <Image
-                  src={slide.img}
-                  alt={slide.caption || project.title}
-                  fill
-                  priority={index === 0}
-                  loading={index === 0 ? undefined : "lazy"}
-                  sizes="(max-width: 768px) 100vw, 1200px"
-                  className="object-cover"
-                />
-                <div
-                  className="pointer-events-none absolute inset-0 rounded-lg border"
-                  style={{ borderColor: "rgba(182, 163, 144, 0.4)" }}
-                />
-              </div>
-
-              {slide.caption && (
-                <figcaption className="pt-8 text-center">
-                  {slide.sub && (
-                    <p
-                      className="mb-4 text-sm uppercase md:text-base"
-                      style={{ ...sans, color: "var(--color-champagne)" }}
-                    >
-                      {slide.sub}
-                    </p>
-                  )}
-                  <h2
-                    className="mb-4 text-2xl font-light uppercase tracking-wider md:text-3xl"
-                    style={{ ...serif, letterSpacing: "0.1em", color: "var(--color-champagne)" }}
-                  >
-                    {slide.caption}
-                  </h2>
-                  {slide.body && (
-                    <p
-                      className="mx-auto max-w-2xl text-base leading-relaxed md:text-lg"
-                      style={{ ...serif, color: "var(--color-almond)" }}
-                    >
-                      {slide.body}
-                    </p>
-                  )}
-                </figcaption>
-              )}
-            </figure>
-          ))}
-        </div>
-      </section>
+      {/* BEELDENREEKS — sticky diashow zoals in het ontwerp */}
+      <ProjectSlideshow
+        slides={content.slides}
+        title={project.title}
+        backHref="/projecten"
+        backLabel={copy.allProjects}
+        onImmersiveChange={handleImmersiveChange}
+      />
 
       {/* MATERIAAL */}
       <section

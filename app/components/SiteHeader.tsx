@@ -15,7 +15,12 @@ const SCROLL_THRESHOLD = 40;
  * omlijnde pil — maar hier blijft hij staan in plaats van weg te faden, omdat
  * deze pagina's geen beeldvullende hero hebben om in te verdwijnen.
  */
-export default function SiteHeader() {
+interface SiteHeaderProps {
+  /** Verbergt de balk, bijvoorbeeld terwijl een beeldvullende diashow loopt. */
+  hidden?: boolean;
+}
+
+export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
   const { language, setLanguage, t } = useLanguage();
   const [compact, setCompact] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -115,8 +120,10 @@ export default function SiteHeader() {
   return (
     <>
       <nav
-        className="fixed inset-x-0 top-0 z-50 pt-5 transition-colors duration-300"
+        className="fixed inset-x-0 top-0 z-50 pt-5 transition-all duration-300"
         style={{
+          opacity: hidden ? 0 : 1,
+          pointerEvents: hidden ? "none" : "auto",
           backgroundColor: scrolled ? "var(--color-cedar)" : "transparent",
           borderBottom: scrolled
             ? "1px solid rgba(182, 163, 144, 0.25)"

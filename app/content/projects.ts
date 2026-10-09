@@ -19,6 +19,9 @@ export interface ProjectContent {
 export interface Project {
   slug: string;
   title: string;
+  /** Volgnummer en jaar zoals ze op de kaart staan: "01 — INTERIOR DESIGN — 2024". */
+  number: string;
+  year: string;
   cardImage: string;
   en: ProjectContent;
   nl: ProjectContent;
@@ -111,18 +114,14 @@ const sharedCopy = {
   },
 };
 
-const projectList: Array<{ slug: string; title: string; cardImage: string }> = [
-  { slug: "villa-oltera", title: "Villa Oltera", cardImage: "/images/design/project-villa-oltera.jpg" },
-  { slug: "villa-alero", title: "Villa Alero", cardImage: "/images/design/project-villa-alero.jpg" },
-  {
-    slug: "onderzeeen-apartment",
-    title: "Onderzeeën Apartment",
-    cardImage: "/images/design/project-onderzeeen-apartment.jpg",
-  },
-  { slug: "villa-nera", title: "Villa Nera", cardImage: "/images/design/project-villa-nera.jpg" },
-  { slug: "villa-rivenna", title: "Villa Rivenna", cardImage: "/images/design/project-villa-rivenna.jpg" },
-  { slug: "cliara-villa", title: "Cliara Villa", cardImage: "/images/design/project-cliara-villa.jpg" },
-  { slug: "villa-vitael", title: "Villa Vitael", cardImage: "/images/design/project-villa-vitael.jpg" },
+const projectList: Array<{ slug: string; title: string; number: string; year: string; cardImage: string }> = [
+  { slug: "villa-oltera", title: "Villa Oltera", number: "01", year: "2024", cardImage: "/images/design/project-villa-oltera.jpg" },
+  { slug: "villa-alero", title: "Villa Alero", number: "02", year: "2024", cardImage: "/images/design/project-villa-alero.jpg" },
+  { slug: "onderzeeen-apartment", title: "Onderzeeën Apartment", number: "03", year: "2023", cardImage: "/images/design/project-onderzeeen-apartment.jpg" },
+  { slug: "villa-nera", title: "Villa Nera", number: "04", year: "2023", cardImage: "/images/design/project-villa-nera.jpg" },
+  { slug: "villa-rivenna", title: "Villa Rivenna", number: "05", year: "2022", cardImage: "/images/design/project-villa-rivenna.jpg" },
+  { slug: "cliara-villa", title: "Cliara Villa", number: "06", year: "2022", cardImage: "/images/design/project-cliara-villa.jpg" },
+  { slug: "villa-vitael", title: "Villa Vitael", number: "07", year: "2021", cardImage: "/images/design/project-villa-vitael.jpg" },
 ];
 
 export const projects: Project[] = projectList.map((p) => ({
