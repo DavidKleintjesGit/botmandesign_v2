@@ -1,21 +1,17 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"main": ".open-next/worker.js",
-	"name": "botmandesign-com",
+	"name": "botmandesign-com-v2",
 	"compatibility_date": "2026-07-10",
 	"observability": {
 		"enabled": true
 	},
-	"routes": [
-		{
-			"pattern": "botmandesign.com",
-			"custom_domain": true
-		},
-		{
-			"pattern": "www.botmandesign.com",
-			"custom_domain": true
-		}
-	],
+	/*
+	 * v2 draait naast de bestaande botmandesign-worker en claimt dus bewust
+	 * geen custom domains: botmandesign.com en www.botmandesign.com blijven bij
+	 * de huidige site. Deze worker is bereikbaar op zijn workers.dev-adres.
+	 * Zet hier pas een route neer als v2 echt live mag.
+	 */
 	"compatibility_flags": [
 		"nodejs_compat",
 		"global_fetch_strictly_public"
@@ -29,7 +25,7 @@
 			// Self-reference service binding, the service name must match the worker name
 			// see https://opennext.js.org/cloudflare/caching
 			"binding": "WORKER_SELF_REFERENCE",
-			"service": "botmandesign-com"
+			"service": "botmandesign-com-v2"
 		}
 	],
 	"images": {
