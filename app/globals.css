@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-mist: #F7F4F1;
+  --color-champagne: #eee3d3;
+  --color-almond: #B6A390;
+  --color-cedar: #675C53;
+  --color-black: #020203;
+  --color-background: var(--color-mist);
+  --color-foreground: var(--color-black);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-cormorant: var(--font-cormorant-garamond);
+}
+
+:root {
+  /* Font Variables */
+  --font-cormorant-garamond: var(--font-cormorant-garamond);
+  --font-montserrat: var(--font-montserrat);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Legacy variables for compatibility */
+  --background: var(--color-mist);
+  --foreground: var(--color-black);
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-cormorant-garamond), serif;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+@keyframes active-projects-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-active-projects-label {
+  animation: active-projects-enter 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fade-diagonal {
+  0% {
+    transform: translate(100vw, -80vh);
+  }
+  100% {
+    transform: translate(-100vw, 100vh);
+  }
+}
+
+@keyframes fade-diagonal-reveal {
+  0% {
+    transform: translate(100vw, -20vh); /* Start at top-right, covering everything */
+  }
+  100% {
+    transform: translate(-100vw, 100vh); /* End at bottom-left, revealing everything */
+  }
+}
+
+@keyframes fade-diagonal-hide {
+  0% {
+    transform: translate(-100vw, 100vh); /* Start at bottom-left, everything visible */
+  }
+  100% {
+    transform: translate(100vw, -20vh); /* End at top-right, covering everything */
+  }
+}
+
+@keyframes fade-diagonal-mask {
+  0% {
+    mask-position: 200% -100%;
+    -webkit-mask-position: 200% -100%;
+  }
+  100% {
+    mask-position: -100% 200%;
+    -webkit-mask-position: -100% 200%;
+  }
+}
