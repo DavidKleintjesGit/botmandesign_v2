@@ -94,7 +94,7 @@ export default function SiteHeader({
     { key: "services", label: t.navServices, href: "/services" },
   ];
 
-  const rightLinks = [{ key: "about", label: t.navAbout, href: "/" }];
+  const rightLinks = [{ key: "about", label: t.navAbout, href: "/over" }];
 
   const linkStyle = {
     fontFamily: "var(--font-montserrat)",

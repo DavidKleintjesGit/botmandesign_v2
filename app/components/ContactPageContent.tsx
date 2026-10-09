@@ -49,9 +49,9 @@ const contactCopy = {
 };
 
 const INQUIRY_OPTIONS = [
-  { value: "style-consult", label: "Style Consult" },
-  { value: "signature-ontwerp", label: "Signature Ontwerp" },
-  { value: "home-couture", label: "Home Couture" },
+  { value: "turn-key-projects", label: "Turn-key Projects" },
+  { value: "interior-upgrade", label: "Interior Upgrade" },
+  { value: "restyling", label: "Restyling" },
   { value: "b2b-partnerships", label: "B2B Partnerships" },
   { value: "other", label: "Overig" },
 ];

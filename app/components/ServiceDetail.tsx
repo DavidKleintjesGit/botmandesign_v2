@@ -100,12 +100,14 @@ export default function ServiceDetail({ slug }: { slug: string }) {
               >
                 {content.introOne}
               </p>
-              <p
-                className="text-lg leading-relaxed md:text-xl"
-                style={{ ...serif, color: "var(--color-almond)" }}
-              >
-                {content.introTwo}
-              </p>
+              {content.introTwo && (
+                <p
+                  className="text-lg leading-relaxed md:text-xl"
+                  style={{ ...serif, color: "var(--color-almond)" }}
+                >
+                  {content.introTwo}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col items-start gap-4 md:w-1/3 md:items-center md:text-center">
@@ -114,12 +116,6 @@ export default function ServiceDetail({ slug }: { slug: string }) {
                 style={{ ...serif, color: "var(--color-champagne)" }}
               >
                 {content.price}
-              </p>
-              <p
-                className="text-[11px] uppercase tracking-wider md:text-xs"
-                style={{ ...sans, letterSpacing: "0.15em", color: "var(--color-almond)" }}
-              >
-                {content.priceUnit}
               </p>
 
               <Link
@@ -141,6 +137,7 @@ export default function ServiceDetail({ slug }: { slug: string }) {
       </section>
 
       {/* REDENEN — vier kolommen met dunne scheidingslijnen, als de dienstenrij op de homepage */}
+      {content.reasons && content.reasons.length > 0 && (
       <section className="w-full pb-20 md:pb-28">
         <div className="container mx-auto px-4 md:px-8">
           <p
@@ -151,7 +148,7 @@ export default function ServiceDetail({ slug }: { slug: string }) {
           </p>
 
           <div className="flex flex-col gap-10 md:flex-row md:items-stretch md:gap-0">
-            {content.reasons.map((reason, index) => (
+            {content.reasons!.map((reason, index) => (
               <div key={reason.n} className="flex flex-col md:flex-1 md:flex-row">
                 <div className="flex flex-col items-center px-0 text-center md:flex-1 md:px-6">
                   <p
@@ -168,7 +165,7 @@ export default function ServiceDetail({ slug }: { slug: string }) {
                   </p>
                 </div>
 
-                {index < content.reasons.length - 1 && (
+                {index < content.reasons!.length - 1 && (
                   <div className="hidden md:flex md:flex-shrink-0 md:items-center md:self-stretch">
                     <div
                       className="h-28 w-px"
@@ -182,8 +179,10 @@ export default function ServiceDetail({ slug }: { slug: string }) {
           </div>
         </div>
       </section>
+      )}
 
       {/* STAPPEN */}
+      {content.steps && content.steps.length > 0 && (
       <section className="w-full pb-20 md:pb-28">
         <div className="container mx-auto px-4 md:px-8">
           <p
@@ -194,7 +193,7 @@ export default function ServiceDetail({ slug }: { slug: string }) {
           </p>
 
           <div className="flex flex-col gap-16 md:gap-28">
-            {content.steps.map((step, index) => (
+            {content.steps!.map((step, index) => (
               <article key={step.title} className="flex flex-col gap-8 md:flex-row md:items-center md:gap-16">
                 <div className={`md:w-1/2 ${index % 2 === 0 ? "" : "md:order-2"}`}>
                   <div className="relative overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 3" }}>
@@ -238,8 +237,10 @@ export default function ServiceDetail({ slug }: { slug: string }) {
           </div>
         </div>
       </section>
+      )}
 
       {/* QUOTE */}
+      {content.quote && (
       <section
         className="w-full py-20 md:py-28"
         style={{ borderTop: "1px solid rgba(182, 163, 144, 0.25)" }}
@@ -273,6 +274,7 @@ export default function ServiceDetail({ slug }: { slug: string }) {
           </Link>
         </div>
       </section>
+      )}
 
       <Footer />
     </div>
