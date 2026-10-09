@@ -21,6 +21,18 @@ const sectionCopy = {
   },
 };
 
+const CEDAR = "#675C53";
+const CEDAR_RGB = "103, 92, 83";
+
+/*
+ * De rest van de site laat beeld in cedar oplossen in plaats van er met een
+ * harde rand tegenaan te zetten. Deze twee banden doen hetzelfde aan de kop en
+ * de voet van de reeks, zodat hij uit het pin-effect erboven komt en weer in de
+ * dienstensectie eronder verdwijnt.
+ */
+const FADE_FROM_TOP = `linear-gradient(to bottom, ${CEDAR} 0%, rgba(${CEDAR_RGB}, 0.93) 12%, rgba(${CEDAR_RGB}, 0.65) 32%, rgba(${CEDAR_RGB}, 0.25) 52%, rgba(${CEDAR_RGB}, 0) 72%)`;
+const FADE_TO_BOTTOM = `linear-gradient(to top, ${CEDAR} 0%, rgba(${CEDAR_RGB}, 0.93) 12%, rgba(${CEDAR_RGB}, 0.65) 32%, rgba(${CEDAR_RGB}, 0.25) 52%, rgba(${CEDAR_RGB}, 0) 72%)`;
+
 const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
 const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
@@ -53,19 +65,33 @@ export default function HomeProjectsSection() {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2">
-        <div className="flex flex-col">
-          <ProjectTile project={a} ratio="4 / 5" priority />
-          <TextTile body={copy.body} link={copy.link} />
-          <ProjectTile project={c} ratio="4 / 3" />
-          <ProjectTile project={e} ratio="1 / 1" />
+      <div className="relative">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="flex flex-col">
+            <ProjectTile project={a} ratio="4 / 5" priority />
+            <TextTile body={copy.body} link={copy.link} />
+            <ProjectTile project={c} ratio="4 / 3" />
+            <ProjectTile project={e} ratio="1 / 1" />
+          </div>
+
+          <div className="flex flex-col">
+            <ProjectTile project={b} ratio="1 / 1" />
+            <ProjectTile project={d} ratio="4 / 5" />
+            <ProjectTile project={f} ratio="4 / 3" />
+          </div>
         </div>
 
-        <div className="flex flex-col">
-          <ProjectTile project={b} ratio="1 / 1" />
-          <ProjectTile project={d} ratio="4 / 5" />
-          <ProjectTile project={f} ratio="4 / 3" />
-        </div>
+        {/* De reeks komt uit het cedar tevoorschijn en lost er weer in op. */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-40 md:h-56"
+          style={{ background: FADE_FROM_TOP }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-40 md:h-56"
+          style={{ background: FADE_TO_BOTTOM }}
+          aria-hidden
+        />
       </div>
     </section>
   );
