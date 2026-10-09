@@ -28,7 +28,7 @@ export default function AboutPageContent() {
 
           <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
             <h1
-              className="text-4xl font-light uppercase tracking-wider md:text-5xl"
+              className="text-3xl font-light uppercase tracking-wider md:text-4xl lg:text-5xl"
               style={{ ...serif, letterSpacing: "0.15em", color: "var(--color-champagne)" }}
             >
               {copy.title}

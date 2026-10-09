@@ -9,6 +9,7 @@ import LoadingPage from "./LoadingPage";
 import CookiePopup from "./CookiePopup";
 import BusinessCardComponent from "./BusinessCardComponent";
 import HorizontalImageGalleryPlaceholder from "./HorizontalImageGalleryPlaceholder";
+import HomeProjectsSection from "./HomeProjectsSection";
 import ServicesSection from "./ServicesSection";
 import AboutSection from "./AboutSection";
 import TestimonialSection from "./TestimonialSection";
@@ -69,6 +70,7 @@ export default function LandingPage() {
       <div ref={galleryPlaceholderRef}>
         <HorizontalImageGalleryPlaceholder />
       </div>
+      <HomeProjectsSection />
       <ServicesSection />
       <AboutSection />
       <TestimonialSection />

@@ -28,7 +28,7 @@ export default function PageIntro({
 
         <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
           <h1
-            className="max-w-3xl text-4xl font-light uppercase tracking-wider md:text-5xl"
+            className="max-w-3xl text-3xl font-light uppercase tracking-wider md:text-4xl lg:text-5xl"
             style={{
               fontFamily: "var(--font-cormorant-garamond), serif",
               letterSpacing: "0.15em",
