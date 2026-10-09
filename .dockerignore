@@ -8,3 +8,5 @@ node_modules
 README.md
 .env*
 npm-debug.log*
+.deploy
+deploy.sh

@@ -50,3 +50,6 @@ next-env.d.ts
 
 # JetBrains
 .idea
+
+# Deploy-bundel
+.deploy
