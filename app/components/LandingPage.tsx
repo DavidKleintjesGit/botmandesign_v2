@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Header from "./Header";
-import Navbar from "./Navbar";
+import SiteHeader from "./SiteHeader";
 import SocialMediaLabel from "./SocialMediaLabel";
 import LanguageLabel from "./LanguageLabel";
 import LoadingPage from "./LoadingPage";
@@ -59,7 +59,7 @@ export default function LandingPage() {
         fadeOut
         timeWait={showInitialLoading ? 2.5 : 3}
       />
-      <Navbar headerTriggerRef={headerTriggerRef} />
+      <SiteHeader fadeOutAfterRef={headerTriggerRef} showLanguageSwitch={false} />
       <BusinessCardComponent showCardAfterRef={headerTriggerRef} hideCardAfterRef={hideCardAfterRef} />
       <SocialMediaLabel />
       <LanguageLabel onLanguageChange={handleLanguageChange} />

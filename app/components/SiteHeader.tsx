@@ -18,9 +18,23 @@ const SCROLL_THRESHOLD = 40;
 interface SiteHeaderProps {
   /** Verbergt de balk, bijvoorbeeld terwijl een beeldvullende diashow loopt. */
   hidden?: boolean;
+  /*
+   * De homepage laat de balk wegvagen zodra je voorbij de hero scrolt. Geef het
+   * element mee dat dat moment bepaalt; zonder dit blijft de balk gewoon staan.
+   */
+  fadeOutAfterRef?: React.RefObject<HTMLElement | null>;
+  /*
+   * De homepage heeft al een eigen taalwisselaar aan de zijkant, dus daar laten
+   * we deze weg om er geen twee op één pagina te hebben.
+   */
+  showLanguageSwitch?: boolean;
 }
 
-export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
+export default function SiteHeader({
+  hidden = false,
+  fadeOutAfterRef,
+  showLanguageSwitch = true,
+}: SiteHeaderProps) {
   const { language, setLanguage, t } = useLanguage();
   const [compact, setCompact] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -42,6 +56,22 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
       window.removeEventListener("scroll", checkScroll);
     };
   }, []);
+
+  const [fadedOut, setFadedOut] = useState(false);
+
+  useEffect(() => {
+    const trigger = fadeOutAfterRef?.current;
+    if (!trigger) return;
+
+    const onScroll = () => {
+      const rect = trigger.getBoundingClientRect();
+      setFadedOut(rect.bottom <= 300);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [fadeOutAfterRef]);
 
   useEffect(() => {
     document.body.style.overflow = drawerOpen ? "hidden" : "";
@@ -122,8 +152,8 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
       <nav
         className="fixed inset-x-0 top-0 z-50 pt-5 transition-all duration-300"
         style={{
-          opacity: hidden ? 0 : 1,
-          pointerEvents: hidden ? "none" : "auto",
+          opacity: hidden || fadedOut ? 0 : 1,
+          pointerEvents: hidden || fadedOut ? "none" : "auto",
           backgroundColor: scrolled ? "var(--color-cedar)" : "transparent",
           borderBottom: scrolled
             ? "1px solid rgba(182, 163, 144, 0.25)"
@@ -192,7 +222,7 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
                 </Link>
 
                 <div className="flex items-center gap-5">
-                  {languageSwitch}
+                  {showLanguageSwitch && languageSwitch}
                   <button
                     type="button"
                     aria-label={t.menu}
