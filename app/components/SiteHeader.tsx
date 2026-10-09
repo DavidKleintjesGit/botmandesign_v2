@@ -92,6 +92,7 @@ export default function SiteHeader({
   const leftLinks = [
     { key: "projects", label: t.navProjects, href: "/projecten" },
     { key: "services", label: t.navServices, href: "/services" },
+    { key: "shop", label: t.navShop, href: "/collectie" },
   ];
 
   const rightLinks = [{ key: "about", label: t.navAbout, href: "/over" }];
