@@ -6,7 +6,7 @@ import Link from "next/link";
 import SiteHeader from "./SiteHeader";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageProvider";
-import { getService } from "@/app/content/services";
+import type { Service } from "@/app/content/services";
 
 const detailCopy = {
   en: {
@@ -26,9 +26,9 @@ const detailCopy = {
 const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
 const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
-export default function ServiceDetail({ slug }: { slug: string }) {
+export default function ServiceDetail({ slug, services }: { slug: string; services: Record<string, Service> }) {
   const { language } = useLanguage();
-  const service = getService(slug);
+  const service = services[slug];
 
   if (!service) return null;
 

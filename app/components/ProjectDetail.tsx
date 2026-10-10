@@ -8,7 +8,7 @@ import SiteHeader from "./SiteHeader";
 import Footer from "./Footer";
 import ProjectSlideshow from "./ProjectSlideshow";
 import { useLanguage } from "./LanguageProvider";
-import { getProject, nextProject, projectContent } from "@/app/content/projects";
+import { projectContent, type Project } from "@/app/content/projects";
 
 const detailCopy = {
   en: { allProjects: "All projects", nextProject: "Next project" },
@@ -18,17 +18,18 @@ const detailCopy = {
 const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
 const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
-export default function ProjectDetail({ slug }: { slug: string }) {
+export default function ProjectDetail({ slug, projects }: { slug: string; projects: Project[] }) {
   const { language } = useLanguage();
   const [navHidden, setNavHidden] = useState(false);
   const handleImmersiveChange = useCallback((immersive: boolean) => setNavHidden(immersive), []);
-  const project = getProject(slug);
+  const project = projects.find((item) => item.slug === slug);
 
   if (!project) return null;
 
   const copy = detailCopy[language];
   const content = projectContent(project, language);
-  const next = nextProject(slug);
+  // Het volgende project in de reeks, zodat de pagina altijd verder kan.
+  const next = projects[(projects.findIndex((item) => item.slug === slug) + 1) % projects.length];
 
   return (
     <div style={{ backgroundColor: "var(--color-cedar)" }}>

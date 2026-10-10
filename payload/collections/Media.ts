@@ -9,6 +9,10 @@ export const Media: CollectionConfig = {
   admin: {
     group: "Instellingen",
   },
+  access: {
+    // Beelden horen op de site zichtbaar te zijn, ook voor wie niet ingelogd is.
+    read: () => true,
+  },
   upload: {
     staticDir: process.env.PAYLOAD_MEDIA_DIR ?? "payload-data/media",
     mimeTypes: ["image/*"],

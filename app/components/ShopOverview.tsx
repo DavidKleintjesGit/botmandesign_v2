@@ -11,7 +11,6 @@ import {
   categoryLabels,
   formatPrice,
   isSoldOut,
-  products,
   type Product,
   type ProductCategory,
 } from "@/app/content/products";
@@ -40,7 +39,7 @@ const shopCopy = {
 const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
 const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
-export default function ShopOverview() {
+export default function ShopOverview({ products }: { products: Product[] }) {
   const { language } = useLanguage();
   const copy = shopCopy[language];
 

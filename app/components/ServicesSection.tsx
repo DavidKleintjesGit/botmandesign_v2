@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { services } from "@/app/content/services";
+import type { Service } from "@/app/content/services";
 import { useLanguage } from "./LanguageProvider";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -14,7 +14,7 @@ const sectionCopy = {
   nl: { label: "Onze studio services", more: "Meer info" },
 };
 
-export default function ServicesSection() {
+export default function ServicesSection({ services }: { services: Record<string, Service> }) {
   const { language } = useLanguage();
   const copy = sectionCopy[language];
   const sectionRef = useRef<HTMLElement>(null);

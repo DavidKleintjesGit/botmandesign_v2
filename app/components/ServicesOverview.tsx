@@ -7,7 +7,7 @@ import SiteHeader from "./SiteHeader";
 import Footer from "./Footer";
 import PageIntro from "./PageIntro";
 import { useLanguage } from "./LanguageProvider";
-import { services } from "@/app/content/services";
+import type { Service } from "@/app/content/services";
 
 const overviewCopy = {
   en: {
@@ -31,7 +31,7 @@ const overviewCopy = {
  * volgt de dienstensectie op de homepage: champagne kop, almond lopende tekst,
  * de prijs in Cormorant en een omlijnde pil als doorklik.
  */
-export default function ServicesOverview() {
+export default function ServicesOverview({ services }: { services: Record<string, Service> }) {
   const { language } = useLanguage();
   const copy = overviewCopy[language];
   const entries = Object.entries(services);

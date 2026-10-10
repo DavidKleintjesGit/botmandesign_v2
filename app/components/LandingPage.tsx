@@ -16,7 +16,15 @@ import TestimonialSection from "./TestimonialSection";
 import CTA from "./CTA";
 import Footer from "./Footer";
 
-export default function LandingPage() {
+import type { Project } from "@/app/content/projects";
+import type { Service } from "@/app/content/services";
+
+interface LandingPageProps {
+  projects: Project[];
+  services: Record<string, Service>;
+}
+
+export default function LandingPage({ projects, services }: LandingPageProps) {
   const headerTriggerRef = useRef<HTMLDivElement>(null);
   const galleryPlaceholderRef = useRef<HTMLDivElement>(null);
   const hideCardAfterRef = useRef<HTMLDivElement>(null);
@@ -70,8 +78,8 @@ export default function LandingPage() {
       <div ref={galleryPlaceholderRef}>
         <HorizontalImageGalleryPlaceholder />
       </div>
-      <HomeProjectsSection />
-      <ServicesSection />
+      <HomeProjectsSection projects={projects} />
+      <ServicesSection services={services} />
       <AboutSection />
       <TestimonialSection />
       <div ref={hideCardAfterRef}>

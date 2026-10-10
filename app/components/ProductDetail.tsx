@@ -9,9 +9,8 @@ import { useLanguage } from "./LanguageProvider";
 import {
   categoryLabels,
   formatPrice,
-  getProduct,
   isSoldOut,
-  products,
+  type Product,
 } from "@/app/content/products";
 
 const detailCopy = {
@@ -40,9 +39,9 @@ const detailCopy = {
 const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
 const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
-export default function ProductDetail({ slug }: { slug: string }) {
+export default function ProductDetail({ slug, products }: { slug: string; products: Product[] }) {
   const { language } = useLanguage();
-  const product = getProduct(slug);
+  const product = products.find((item) => item.slug === slug);
 
   if (!product) return null;
 

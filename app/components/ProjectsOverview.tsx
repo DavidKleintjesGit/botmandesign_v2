@@ -6,7 +6,7 @@ import Link from "next/link";
 import SiteHeader from "./SiteHeader";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageProvider";
-import { projects, type Project } from "@/app/content/projects";
+import type { Project } from "@/app/content/projects";
 
 const overviewCopy = {
   en: { label: "PROJECTS", title1: "Selected works.", title2: "One vision.", viewProject: "VIEW PROJECT" },
@@ -21,7 +21,7 @@ const sans = { fontFamily: "var(--font-montserrat)" } as const;
  * kolommen die tegen elkaar aan liggen — geen marges, geen tussenruimte. De
  * rechterkolom start een stuk lager, zodat de kaarten onderling verspringen.
  */
-export default function ProjectsOverview() {
+export default function ProjectsOverview({ projects }: { projects: Project[] }) {
   const { language } = useLanguage();
   const copy = overviewCopy[language];
 

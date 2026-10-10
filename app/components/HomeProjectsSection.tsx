@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { useLanguage } from "./LanguageProvider";
-import { projects } from "@/app/content/projects";
+import type { Project } from "@/app/content/projects";
 
 const sectionCopy = {
   nl: {
@@ -42,7 +42,7 @@ const sans = { fontFamily: "var(--font-montserrat)" } as const;
  * dat is wat het rustige ritme geeft. In het gat dat daardoor links ontstaat
  * valt een tekstblok op cedar, zodat de reeks ademt.
  */
-export default function HomeProjectsSection() {
+export default function HomeProjectsSection({ projects }: { projects: Project[] }) {
   const { language } = useLanguage();
   const copy = sectionCopy[language];
 
@@ -108,7 +108,7 @@ function ProjectTile({
   ratio,
   priority = false,
 }: {
-  project: (typeof projects)[number];
+  project: Project;
   ratio: string;
   priority?: boolean;
 }) {
