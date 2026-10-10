@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 520" fill="none">
-  <!-- Hoge vaas met smalle hals -->
-  <path d="M168 60h64v34c0 18 8 26 20 40 26 30 44 66 44 110 0 92-40 160-96 160S104 336 104 244c0-44 18-80 44-110 12-14 20-22 20-40V60Z"
-        stroke="#B6A390" stroke-width="2.5" stroke-linejoin="round"/>
-  <path d="M168 94h64" stroke="#B6A390" stroke-width="1.5" opacity="0.6"/>
-  <ellipse cx="200" cy="60" rx="32" ry="7" stroke="#B6A390" stroke-width="2.5"/>
-  <path d="M140 300c14 10 36 16 60 16s46-6 60-16" stroke="#B6A390" stroke-width="1.5" opacity="0.5"/>
-  <ellipse cx="200" cy="420" rx="76" ry="10" fill="#020203" opacity="0.18"/>
-</svg>

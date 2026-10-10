@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
-  <!-- Ondiepe schaal -->
-  <path d="M60 120c0 58 63 96 140 96s140-38 140-96" stroke="#B6A390" stroke-width="2.5" stroke-linecap="round"/>
-  <ellipse cx="200" cy="120" rx="140" ry="34" stroke="#B6A390" stroke-width="2.5"/>
-  <ellipse cx="200" cy="120" rx="112" ry="26" stroke="#B6A390" stroke-width="1.5" opacity="0.45"/>
-  <ellipse cx="200" cy="238" rx="104" ry="10" fill="#020203" opacity="0.16"/>
-</svg>

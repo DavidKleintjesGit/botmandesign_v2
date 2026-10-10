@@ -13,6 +13,7 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
+    "@imgly/background-removal-node": "^1.4.5",
     "@opennextjs/cloudflare": "^1.20.1",
     "@payloadcms/db-sqlite": "^3.90.2",
     "@payloadcms/next": "^3.90.2",
@@ -46,6 +47,9 @@
     "sharp@0.34.5": true,
     "unrs-resolver@1.11.1": true,
     "esbuild@0.18.20": true,
-    "esbuild@0.28.2": true
+    "esbuild@0.28.2": true,
+    "onnxruntime-node@1.17.3": true,
+    "sharp@0.32.6": true,
+    "sharp@0.35.5": true
   }
 }

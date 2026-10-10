@@ -57,3 +57,6 @@ next-env.d.ts
 # Payload: database en uploads blijven buiten de repo
 payload-data
 payload-types.ts
+
+# Werkmap voor het uitknippen van productfotos
+.cutouts
