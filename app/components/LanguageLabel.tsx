@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "./LanguageProvider";
+import { usePageSurface, INK_TRANSITION } from "./PageSurface";
 
 interface LanguageLabelProps {
   onLanguageChange?: () => void;
@@ -9,6 +10,14 @@ interface LanguageLabelProps {
 export default function LanguageLabel({ onLanguageChange }: LanguageLabelProps) {
   const { language, setLanguage } = useLanguage();
   const selectedLanguage = language === "nl" ? "NL" : "EN";
+
+  /*
+   * Op een lichte grond is almond onzichtbaar — het is dezelfde kleur — en
+   * champagne bijna. Daar wordt de gekozen taal zwart en de andere grijs.
+   */
+  const { light } = usePageSurface();
+  const chosen = light ? "var(--color-black)" : "var(--color-champagne)";
+  const other = light ? "rgba(2, 2, 3, 0.45)" : "var(--color-almond)";
 
   /* De schakelaar deelt nu dezelfde taalstatus als de rest van de site. */
   const handleLanguageClick = (next: "NL" | "EN") => {
@@ -25,7 +34,8 @@ export default function LanguageLabel({ onLanguageChange }: LanguageLabelProps) 
           fontFamily: 'var(--font-cormorant-garamond), serif',
           width: '50px',
           backgroundColor: 'transparent',
-          borderColor: 'var(--color-almond)',
+          borderColor: light ? 'rgba(2, 2, 3, 0.28)' : 'var(--color-almond)',
+          transition: INK_TRANSITION,
           boxShadow: '0 4px 30px rgba(0,0,0,0.08)',
         }}
       >
@@ -36,7 +46,8 @@ export default function LanguageLabel({ onLanguageChange }: LanguageLabelProps) 
             style={{
               fontFamily: 'var(--font-cormorant-garamond), serif',
               letterSpacing: '0.15em',
-              color: selectedLanguage === "NL" ? "var(--color-champagne)" : "var(--color-almond)"
+              color: selectedLanguage === "NL" ? chosen : other,
+              transition: INK_TRANSITION + ", transform 300ms ease",
             }}
             aria-label="Dutch"
           >
@@ -48,7 +59,8 @@ export default function LanguageLabel({ onLanguageChange }: LanguageLabelProps) 
             style={{
               fontFamily: 'var(--font-cormorant-garamond), serif',
               letterSpacing: '0.15em',
-              color: selectedLanguage === "EN" ? "#eee3d3" : "#B6A390"
+              color: selectedLanguage === "EN" ? chosen : other,
+              transition: INK_TRANSITION + ", transform 300ms ease",
             }}
             aria-label="English"
           >

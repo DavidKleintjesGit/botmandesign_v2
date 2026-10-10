@@ -37,6 +37,16 @@ const shopCopy = {
   },
 };
 
+/*
+ * De collectie staat op almond in plaats van cedar, zodat de winkel zich
+ * onderscheidt van de rest van de site. Almond is licht, dus de tekst is hier
+ * zwart: champagne haalt er 1,9:1 en cedar 2,7:1 — allebei onleesbaar. Zwart
+ * haalt 8,5:1, en dat is ook wat de huisstijl voorschrijft als tekstkleur.
+ */
+const SURFACE = "var(--color-almond)";
+const INK = "var(--color-black)";
+const INK_SOFT = "rgba(2, 2, 3, 0.62)";
+
 const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
 const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
@@ -50,29 +60,29 @@ export default function ShopOverview({ products }: { products: Product[] }) {
   const shown = active === "all" ? products : products.filter((p) => p.category === active);
 
   return (
-    <div style={{ backgroundColor: "var(--color-cedar)" }}>
+    <div>
       <SiteHeader />
       <LanguageLabel />
 
       <section className="w-full pt-40 pb-12 md:pt-52 md:pb-16">
         <div className="container mx-auto px-4 md:px-8">
-          <p className="mb-6 text-sm uppercase md:text-base" style={{ ...sans, color: "var(--color-champagne)" }}>
+          <p className="mb-6 text-sm uppercase md:text-base" style={{ ...sans, color: INK }}>
             {copy.label}
           </p>
 
           <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
             <h1
               className="text-3xl font-light uppercase tracking-wider md:text-4xl lg:text-5xl"
-              style={{ ...serif, letterSpacing: "0.15em", color: "var(--color-champagne)" }}
+              style={{ ...serif, letterSpacing: "0.15em", color: INK }}
             >
               {copy.title}
               <br />
-              <span style={{ color: "var(--color-almond)" }}>{copy.titleAccent}</span>
+              <span style={{ color: INK_SOFT }}>{copy.titleAccent}</span>
             </h1>
 
             <p
               className="max-w-md text-lg leading-relaxed md:text-xl"
-              style={{ ...serif, color: "var(--color-almond)" }}
+              style={{ ...serif, color: INK_SOFT }}
             >
               {copy.intro}
             </p>
@@ -129,9 +139,9 @@ function CategoryButton({
       style={{
         ...sans,
         letterSpacing: "0.15em",
-        backgroundColor: active ? "var(--color-champagne)" : "transparent",
-        borderColor: active ? "var(--color-champagne)" : "var(--color-almond)",
-        color: active ? "var(--color-cedar)" : "var(--color-champagne)",
+        backgroundColor: active ? INK : "transparent",
+        borderColor: active ? INK : "rgba(2, 2, 3, 0.28)",
+        color: active ? SURFACE : INK,
       }}
     >
       {label}
@@ -158,7 +168,7 @@ function ProductCard({ product, soldOutLabel }: { product: Product; soldOutLabel
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 58% 42% at 50% 62%, rgba(182,163,144,0.16) 0%, rgba(182,163,144,0) 70%)",
+              "radial-gradient(ellipse 58% 42% at 50% 62%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 70%)",
           }}
         />
         <Image
@@ -175,8 +185,8 @@ function ProductCard({ product, soldOutLabel }: { product: Product; soldOutLabel
             style={{
               ...sans,
               letterSpacing: "0.15em",
-              backgroundColor: "rgba(10,9,7,0.6)",
-              color: "var(--color-champagne)",
+              backgroundColor: "rgba(2, 2, 3, 0.65)",
+              color: SURFACE,
             }}
           >
             {soldOutLabel}
@@ -186,16 +196,16 @@ function ProductCard({ product, soldOutLabel }: { product: Product; soldOutLabel
 
       <h2
         className="mb-2 text-xl font-light uppercase tracking-wider"
-        style={{ ...serif, letterSpacing: "0.1em", color: "var(--color-champagne)" }}
+        style={{ ...serif, letterSpacing: "0.1em", color: INK }}
       >
         {content.name}
       </h2>
 
-      <p className="mb-3 text-base leading-relaxed" style={{ ...serif, color: "var(--color-almond)" }}>
+      <p className="mb-3 text-base leading-relaxed" style={{ ...serif, color: INK_SOFT }}>
         {content.tagline}
       </p>
 
-      <p className="text-lg" style={{ ...serif, color: "var(--color-champagne)" }}>
+      <p className="text-lg" style={{ ...serif, color: INK }}>
         {formatPrice(product.priceCents, language)}
       </p>
     </Link>

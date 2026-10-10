@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { useLanguage } from "./LanguageProvider";
+import { usePageSurface, INK_TRANSITION } from "./PageSurface";
 
 const COMPACT_BREAKPOINT = 1024;
 const SCROLL_THRESHOLD = 40;
@@ -25,6 +26,12 @@ interface SiteHeaderProps {
 
 export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
   const { t } = useLanguage();
+  /*
+   * De balk staat op elke pagina, en niet elke pagina heeft dezelfde grond. Op
+   * de collectie is die licht, en daar valt champagne tekst weg (1,9:1); zwart
+   * haalt er 8,5:1. De kleur verloopt mee met de achtergrond.
+   */
+  const { light } = usePageSurface();
   const [compact, setCompact] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -95,10 +102,13 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
 
   const rightLinks = [{ key: "about", label: t.navAbout, href: "/over" }];
 
+  const inkColor = light ? "var(--color-black)" : "var(--color-champagne)";
+
   const linkStyle = {
     fontFamily: "var(--font-montserrat)",
     letterSpacing: "0.15em",
-    color: "var(--color-champagne)",
+    color: inkColor,
+    transition: INK_TRANSITION,
   } as const;
 
   const contactPill = (
@@ -109,8 +119,9 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
         fontFamily: "var(--font-montserrat)",
         letterSpacing: "0.15em",
         backgroundColor: "transparent",
-        borderColor: "var(--color-almond)",
-        color: "var(--color-champagne)",
+        borderColor: light ? "rgba(2, 2, 3, 0.32)" : "var(--color-almond)",
+        color: inkColor,
+        transition: INK_TRANSITION,
       }}
     >
       {t.navContact}
@@ -132,7 +143,11 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
            * vlak: genoeg om de links leesbaar te houden boven een foto, te
            * weinig om de aandacht te trekken.
            */
-          backgroundColor: atTop ? "transparent" : "rgba(103, 92, 83, 0.38)",
+          backgroundColor: atTop
+            ? "transparent"
+            : light
+              ? "rgba(182, 163, 144, 0.55)"
+              : "rgba(103, 92, 83, 0.38)",
           backdropFilter: atTop ? "none" : "blur(14px)",
           WebkitBackdropFilter: atTop ? "none" : "blur(14px)",
         }}
@@ -207,15 +222,15 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
                   >
                     <span
                       className="block h-px w-[26px]"
-                      style={{ backgroundColor: "var(--color-champagne)" }}
+                      style={{ backgroundColor: inkColor }}
                     />
                     <span
                       className="block h-px w-[26px]"
-                      style={{ backgroundColor: "var(--color-champagne)" }}
+                      style={{ backgroundColor: inkColor }}
                     />
                     <span
                       className="block h-px w-[18px] self-end"
-                      style={{ backgroundColor: "var(--color-champagne)" }}
+                      style={{ backgroundColor: inkColor }}
                     />
                   </button>
                 </div>

@@ -131,7 +131,7 @@ export default function ContactPageContent() {
   } as const;
 
   return (
-    <div style={{ backgroundColor: "var(--color-cedar)" }}>
+    <div>
       <SiteHeader />
       <LanguageLabel />
 

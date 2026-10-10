@@ -31,7 +31,7 @@ export default function ProjectsOverview({ projects }: { projects: Project[] }) 
   const rightColumn = rest.filter((_, index) => index % 2 === 1);
 
   return (
-    <div style={{ backgroundColor: "var(--color-cedar)" }}>
+    <div>
       <SiteHeader />
       <LanguageLabel />
 

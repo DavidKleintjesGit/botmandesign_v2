@@ -18,7 +18,7 @@ export default function AboutPageContent() {
   const copy = aboutCopy[language];
 
   return (
-    <div style={{ backgroundColor: "var(--color-cedar)" }}>
+    <div>
       <SiteHeader />
       <LanguageLabel />
 

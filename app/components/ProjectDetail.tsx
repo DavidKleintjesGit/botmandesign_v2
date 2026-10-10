@@ -33,7 +33,7 @@ export default function ProjectDetail({ slug, projects }: { slug: string; projec
   const next = projects[(projects.findIndex((item) => item.slug === slug) + 1) % projects.length];
 
   return (
-    <div style={{ backgroundColor: "var(--color-cedar)" }}>
+    <div>
       <SiteHeader hidden={navHidden} />
       <LanguageLabel />
 

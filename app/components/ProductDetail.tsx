@@ -37,6 +37,12 @@ const detailCopy = {
   },
 };
 
+// Zelfde grond als het overzicht: almond met zwarte tekst.
+const SURFACE = "var(--color-almond)";
+const INK = "var(--color-black)";
+const INK_SOFT = "rgba(2, 2, 3, 0.62)";
+const LINE = "rgba(2, 2, 3, 0.18)";
+
 const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
 const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
@@ -53,7 +59,7 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
   const related = products.filter((p) => p.slug !== product.slug).slice(0, 3);
 
   return (
-    <div style={{ backgroundColor: "var(--color-cedar)" }}>
+    <div>
       <SiteHeader />
       <LanguageLabel />
 
@@ -62,7 +68,7 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
           <Link
             href="/collectie"
             className="mb-10 inline-block text-xs uppercase"
-            style={{ ...sans, letterSpacing: "0.15em", color: "var(--color-almond)" }}
+            style={{ ...sans, letterSpacing: "0.15em", color: INK_SOFT }}
           >
             &larr; {copy.back}
           </Link>
@@ -75,7 +81,7 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
                   className="pointer-events-none absolute inset-0"
                   style={{
                     background:
-                      "radial-gradient(ellipse 58% 42% at 50% 60%, rgba(182,163,144,0.18) 0%, rgba(182,163,144,0) 70%)",
+                      "radial-gradient(ellipse 58% 42% at 50% 60%, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%)",
                   }}
                 />
                 <Image
@@ -93,30 +99,30 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
             <div className="flex flex-col md:w-1/2">
               <p
                 className="mb-4 text-xs uppercase"
-                style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-almond)" }}
+                style={{ ...sans, letterSpacing: "0.2em", color: INK_SOFT }}
               >
                 {categoryLabels[product.category][language]}
               </p>
 
               <h1
                 className="mb-5 text-3xl font-light uppercase tracking-wider md:text-4xl"
-                style={{ ...serif, letterSpacing: "0.12em", color: "var(--color-champagne)" }}
+                style={{ ...serif, letterSpacing: "0.12em", color: INK }}
               >
                 {content.name}
               </h1>
 
-              <p className="mb-8 text-lg leading-relaxed md:text-xl" style={{ ...serif, color: "var(--color-almond)" }}>
+              <p className="mb-8 text-lg leading-relaxed md:text-xl" style={{ ...serif, color: INK_SOFT }}>
                 {content.description}
               </p>
 
-              <p className="mb-2 text-2xl md:text-3xl" style={{ ...serif, color: "var(--color-champagne)" }}>
+              <p className="mb-2 text-2xl md:text-3xl" style={{ ...serif, color: INK }}>
                 {formatPrice(product.priceCents, language)}
               </p>
 
               {!soldOut && product.stock !== null && product.stock <= 3 && (
                 <p
                   className="mb-6 text-xs uppercase"
-                  style={{ ...sans, letterSpacing: "0.15em", color: "var(--color-almond)" }}
+                  style={{ ...sans, letterSpacing: "0.15em", color: INK_SOFT }}
                 >
                   {product.stock === 1 ? copy.lastOne : copy.fewLeft(product.stock)}
                 </p>
@@ -133,18 +139,18 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
                 style={{
                   ...sans,
                   letterSpacing: "0.15em",
-                  backgroundColor: soldOut ? "transparent" : "var(--color-champagne)",
-                  borderColor: soldOut ? "var(--color-almond)" : "var(--color-champagne)",
-                  color: soldOut ? "var(--color-champagne)" : "var(--color-cedar)",
+                  backgroundColor: soldOut ? "transparent" : INK,
+                  borderColor: soldOut ? "rgba(2, 2, 3, 0.3)" : INK,
+                  color: soldOut ? INK : SURFACE,
                 }}
               >
                 {soldOut ? copy.notify : copy.addToCart}
               </Link>
 
-              <div style={{ borderTop: "1px solid rgba(182, 163, 144, 0.25)" }} className="pt-8">
+              <div style={{ borderTop: `1px solid ${LINE}` }} className="pt-8">
                 <p
                   className="mb-5 text-xs uppercase"
-                  style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-champagne)" }}
+                  style={{ ...sans, letterSpacing: "0.2em", color: INK }}
                 >
                   {copy.specs}
                 </p>
@@ -152,10 +158,10 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
                 <dl className="flex flex-col gap-3">
                   {content.specs.map((spec) => (
                     <div key={spec.label} className="flex justify-between gap-6">
-                      <dt className="text-base" style={{ ...serif, color: "var(--color-almond)" }}>
+                      <dt className="text-base" style={{ ...serif, color: INK_SOFT }}>
                         {spec.label}
                       </dt>
-                      <dd className="text-right text-base" style={{ ...serif, color: "var(--color-champagne)" }}>
+                      <dd className="text-right text-base" style={{ ...serif, color: INK }}>
                         {spec.value}
                       </dd>
                     </div>
@@ -168,11 +174,11 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
       </section>
 
       {related.length > 0 && (
-        <section className="w-full pb-24 md:pb-32" style={{ borderTop: "1px solid rgba(182, 163, 144, 0.25)" }}>
+        <section className="w-full pb-24 md:pb-32" style={{ borderTop: `1px solid ${LINE}` }}>
           <div className="container mx-auto px-4 pt-20 md:px-8 md:pt-28">
             <p
               className="mb-10 text-sm uppercase md:text-base"
-              style={{ ...sans, color: "var(--color-champagne)" }}
+              style={{ ...sans, color: INK }}
             >
               {copy.alsoInteresting}
             </p>
@@ -192,11 +198,11 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
                   </div>
                   <h3
                     className="mb-1 text-lg font-light uppercase tracking-wider"
-                    style={{ ...serif, letterSpacing: "0.1em", color: "var(--color-champagne)" }}
+                    style={{ ...serif, letterSpacing: "0.1em", color: INK }}
                   >
                     {item[language].name}
                   </h3>
-                  <p className="text-base" style={{ ...serif, color: "var(--color-almond)" }}>
+                  <p className="text-base" style={{ ...serif, color: INK_SOFT }}>
                     {formatPrice(item.priceCents, language)}
                   </p>
                 </Link>

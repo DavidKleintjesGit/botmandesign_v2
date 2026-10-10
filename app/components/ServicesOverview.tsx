@@ -38,7 +38,7 @@ export default function ServicesOverview({ services }: { services: Record<string
   const entries = Object.entries(services);
 
   return (
-    <div style={{ backgroundColor: "var(--color-cedar)" }}>
+    <div>
       <SiteHeader />
       <LanguageLabel />
 

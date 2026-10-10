@@ -37,7 +37,7 @@ export default function ServiceDetail({ slug, services }: { slug: string; servic
   const content = service[language];
 
   return (
-    <div style={{ backgroundColor: "var(--color-cedar)" }}>
+    <div>
       <SiteHeader />
       <LanguageLabel />
 
