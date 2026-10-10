@@ -14,12 +14,19 @@
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.20.1",
+    "@payloadcms/db-sqlite": "^3.90.2",
+    "@payloadcms/next": "^3.90.2",
+    "@payloadcms/richtext-lexical": "^3.90.2",
+    "@payloadcms/ui": "^3.90.2",
     "@types/nodemailer": "^8.0.2",
+    "graphql": "^16.14.2",
     "gsap": "^3.14.2",
-    "next": "^16.2.10",
+    "next": "^16.4.0",
     "nodemailer": "^10.0.16",
+    "payload": "^3.90.2",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -27,7 +34,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "^16.2.10",
+    "eslint-config-next": "^16.4.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "wrangler": "^4.110.0"
@@ -37,6 +44,8 @@
     "esbuild@0.28.1": true,
     "workerd@1.20260708.1": true,
     "sharp@0.34.5": true,
-    "unrs-resolver@1.11.1": true
+    "unrs-resolver@1.11.1": true,
+    "esbuild@0.18.20": true,
+    "esbuild@0.28.2": true
   }
 }

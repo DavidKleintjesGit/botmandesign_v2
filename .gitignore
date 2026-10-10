@@ -53,3 +53,7 @@ next-env.d.ts
 
 # Deploy-bundel
 .deploy
+
+# Payload: database en uploads blijven buiten de repo
+payload-data
+payload-types.ts

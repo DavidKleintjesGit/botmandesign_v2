@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withPayload } from "@payloadcms/next/withPayload";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 initOpenNextCloudflareForDev();
@@ -23,4 +24,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withPayload(nextConfig);

@@ -1,6 +1,6 @@
 "use client";
 
-import LoadingPage from "../components/LoadingPage";
+import LoadingPage from "@/app/components/LoadingPage";
 
 export default function LoadingTestPage() {
   return (

@@ -10,3 +10,4 @@ README.md
 npm-debug.log*
 .deploy
 deploy.sh
+payload-data
