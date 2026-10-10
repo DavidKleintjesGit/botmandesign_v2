@@ -49,6 +49,12 @@ LIBSQL_VERSION=$(node -p "require('./node_modules/libsql/package.json').version"
 echo "→ Linux-driver voor SQLite ($LIBSQL_VERSION)"
 ssh "$HOST" "cd '$APP' && npm install --no-save --no-audit --no-fund @libsql/linux-x64-gnu@$LIBSQL_VERSION >/dev/null"
 
+# Het schema volgt de code, dus voor de zekerheid eerst een kopie van de
+# database. Alleen de laatste wordt bewaard; dat is genoeg om een misgelopen
+# deploy terug te draaien.
+echo "→ database veiligstellen"
+ssh "$HOST" "cp -f /var/www/botmandesign-v2/data/payload.db /var/www/botmandesign-v2/data/payload.db.bak 2>/dev/null || true"
+
 echo "→ herstarten"
 ssh "$ROOT_HOST" "systemctl restart $SITE && sleep 3 && systemctl is-active $SITE"
 

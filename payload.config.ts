@@ -44,6 +44,14 @@ export default buildConfig({
 
   db: sqliteAdapter({
     client: { url: databaseUrl },
+    /*
+     * Payload past het schema normaal alleen in development vanzelf aan en
+     * verwacht op productie migraties. De migratie-CLI loopt hier vast op
+     * dezelfde CommonJS-beperking als de scriptrunner, dus laten we het schema
+     * ook op de server de code volgen. Het vangnet daarvoor staat in deploy.sh:
+     * die maakt eerst een kopie van de database.
+     */
+    push: true,
   }),
 
   secret: process.env.PAYLOAD_SECRET ?? "",
