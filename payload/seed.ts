@@ -58,7 +58,32 @@ async function alreadyThere(collection: "projects" | "services" | "products", sl
  * Een document met twee talen vraagt twee schrijfacties: Payload schrijft per
  * keer naar één locale. Eerst het Nederlands aanmaken, daarna het Engels
  * erover.
+ *
+ * Let op bij lijsten: de tweede taal moet dezelfde rij-id's meesturen. Zonder
+ * die id's ziet Payload een nieuwe lijst en raakt de eerste taal zijn waarden
+ * kwijt — dat overkwam de detailregels van de producten en de bijschriften van
+ * de projecten. withRowIds() hangt ze er daarom aan.
  */
+function withRowIds(
+  created: Record<string, unknown>,
+  data: Record<string, unknown>,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...data };
+
+  for (const [key, value] of Object.entries(data)) {
+    if (!Array.isArray(value)) continue;
+
+    const rows = created[key];
+    if (!Array.isArray(rows)) continue;
+
+    out[key] = value.map((row, index) => ({
+      ...(row as object),
+      id: (rows[index] as { id?: string } | undefined)?.id,
+    }));
+  }
+
+  return out;
+}
 async function createBilingual(
   collection: "projects" | "services" | "products",
   shared: Record<string, unknown>,
@@ -74,7 +99,7 @@ async function createBilingual(
   await payload.update({
     collection,
     id: created.id,
-    data: en as never,
+    data: withRowIds(created as Record<string, unknown>, en) as never,
     locale: "en",
   });
 
