@@ -1,0 +1,166 @@
+/* Het beginscherm, naar het ontwerp. Kleuren komen uit custom.scss. */
+
+.bd-dashboard {
+  padding: clamp(24px, 4vw, 56px);
+  max-width: 1100px;
+
+  &__intro {
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+
+  &__date {
+    margin: 0 0 8px;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bd-soft);
+  }
+
+  &__greeting {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 400;
+    color: var(--bd-ink);
+  }
+
+  &__tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+    margin-bottom: clamp(36px, 5vw, 56px);
+  }
+}
+
+.bd-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+  min-height: 130px;
+  padding: 18px 20px;
+  background: var(--bd-paper);
+  border: 1px solid var(--bd-line);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: #c4b8a8;
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__label {
+    font-size: 15px;
+    color: var(--bd-ink);
+  }
+
+  &__group {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bd-soft);
+  }
+
+  &__foot {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  &__count {
+    font-family: var(--font-serif);
+    font-size: 30px;
+    line-height: 1;
+    color: var(--bd-ink);
+  }
+
+  &__note {
+    font-size: 12px;
+    color: var(--bd-muted);
+  }
+}
+
+.bd-recent {
+  &__title {
+    margin: 0 0 14px;
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--bd-ink);
+  }
+
+  &__empty {
+    margin: 0;
+    font-size: 14px;
+    color: var(--bd-muted);
+  }
+
+  &__list {
+    background: var(--bd-paper);
+    border: 1px solid var(--bd-line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 18px;
+    text-decoration: none;
+    border-bottom: 1px solid var(--bd-line);
+    transition: background 0.15s ease;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: var(--bd-wash);
+    }
+  }
+
+  &__dot {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--bd-stone);
+  }
+
+  &__text {
+    display: flex;
+    flex: 1;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 14px;
+    color: var(--bd-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__collection {
+    flex: none;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bd-soft);
+  }
+
+  &__since {
+    flex: none;
+    font-size: 12px;
+    color: var(--bd-muted);
+  }
+}

@@ -1,1 +1,139 @@
-/* Ruimte voor eigen aanpassingen aan het beheerpaneel. */
+/*
+ * Het beheerpaneel in de tinten van het ontwerp.
+ *
+ * Payload bouwt zijn hele interface op CSS-variabelen. Door die te
+ * overschrijven kleurt alles mee — lijsten, formulieren, knoppen, de zijbalk —
+ * zonder dat we componenten hoeven te vervangen. Wat we niet aanraken blijft
+ * werken zoals het werkt.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap");
+
+:root {
+  /* Uit het ontwerp */
+  --bd-ink: #24211d;
+  --bd-muted: #776f65;
+  --bd-soft: #8b847a;
+  --bd-paper: #fffefc;
+  --bd-wash: #faf8f4;
+  --bd-wash-2: #f6f4f0;
+  --bd-line: #e7e2d9;
+  --bd-line-2: #ddd6ca;
+  --bd-stone: #9c8c78;
+  --bd-accent: #a0603d;
+
+  --font-body: "Hanken Grotesk", system-ui, sans-serif;
+  --font-serif: "Newsreader", Georgia, serif;
+}
+
+html[data-theme="light"],
+html[data-theme="dark"],
+html {
+  --theme-bg: var(--bd-wash);
+  --theme-input-bg: var(--bd-paper);
+  --theme-text: var(--bd-ink);
+  --theme-border-color: var(--bd-line);
+
+  /* Payload bouwt diepte op met een trap van elevatie-tinten. */
+  --theme-elevation-0: var(--bd-paper);
+  --theme-elevation-50: var(--bd-wash);
+  --theme-elevation-100: var(--bd-wash-2);
+  --theme-elevation-150: var(--bd-line);
+  --theme-elevation-200: var(--bd-line);
+  --theme-elevation-250: var(--bd-line-2);
+  --theme-elevation-300: var(--bd-line-2);
+  --theme-elevation-400: var(--bd-stone);
+  --theme-elevation-500: var(--bd-soft);
+  --theme-elevation-600: var(--bd-muted);
+  --theme-elevation-700: #5d574f;
+  --theme-elevation-800: #3a352f;
+  --theme-elevation-900: var(--bd-ink);
+  --theme-elevation-1000: var(--bd-ink);
+
+  --theme-success-500: #6b7f5e;
+  --theme-warning-500: var(--bd-accent);
+  --theme-error-500: #a0493d;
+
+  --color-base-0: var(--bd-paper);
+  --color-base-50: var(--bd-wash);
+  --color-base-100: var(--bd-wash-2);
+  --color-base-150: var(--bd-line);
+  --color-base-200: var(--bd-line);
+  --color-base-250: var(--bd-line-2);
+  --color-base-500: var(--bd-soft);
+  --color-base-800: #3a352f;
+  --color-base-1000: var(--bd-ink);
+
+  --font-body: "Hanken Grotesk", system-ui, sans-serif;
+  --font-serif: "Newsreader", Georgia, serif;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+/* Koppen in de serif van het ontwerp; de rest blijft de schreefloze. */
+.nav__link,
+h1,
+h2,
+h3,
+.doc-header__title,
+.collection-list__header h1 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* De zijbalk staat in het ontwerp op papierwit met een dunne scheiding. */
+.nav {
+  background: var(--bd-paper);
+  border-right: 1px solid var(--bd-line);
+}
+
+.nav__link:hover {
+  background: #e8e3da;
+}
+
+/* Knoppen: gevuld in inkt, zoals "Opslaan" in het ontwerp. */
+.btn--style-primary {
+  background: var(--bd-ink);
+  border-color: var(--bd-ink);
+  color: var(--bd-paper);
+
+  &:hover {
+    background: #3a352f;
+    border-color: #3a352f;
+  }
+}
+
+.btn--style-secondary {
+  border-color: var(--bd-line-2);
+  color: var(--bd-ink);
+
+  &:hover {
+    border-color: var(--bd-stone);
+  }
+}
+
+/* Tabellen rustiger: lichte scheidingslijnen, geen zware randen. */
+.table {
+  background: var(--bd-paper);
+  border: 1px solid var(--bd-line);
+  border-radius: 6px;
+  overflow: hidden;
+
+  td,
+  th {
+    border-color: var(--bd-line);
+  }
+
+  tbody tr:hover {
+    background: var(--bd-wash);
+  }
+}
+
+input,
+textarea,
+select {
+  border-radius: 4px;
+}

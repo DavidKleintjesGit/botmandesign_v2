@@ -28,6 +28,14 @@ export default buildConfig({
     meta: {
       titleSuffix: " — Botman Design",
     },
+    components: {
+      views: {
+        // Het beginscherm uit het ontwerp in plaats van de standaardlijst.
+        dashboard: {
+          Component: "/payload/components/Dashboard#default",
+        },
+      },
+    },
   },
 
   collections: [Projects, ServicesCollection, Testimonials, Products, Media, Users],
