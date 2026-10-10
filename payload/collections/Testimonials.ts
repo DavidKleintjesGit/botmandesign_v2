@@ -55,6 +55,17 @@ export const Testimonials: CollectionConfig = {
       },
     },
     {
+      name: "placeholder",
+      type: "checkbox",
+      label: "Voorbeeldtekst",
+      defaultValue: false,
+      admin: {
+        position: "sidebar",
+        description:
+          "Verzonnen citaat om de site te kunnen tonen. Moet weg of vervangen zijn voordat de site live gaat.",
+      },
+    },
+    {
       name: "published",
       type: "checkbox",
       label: "Zichtbaar op de site",
