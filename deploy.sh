@@ -42,6 +42,13 @@ tar -cf - -C .deploy . | ssh "$HOST" "
   tar -xf - -C '$APP'
 "
 
+# SQLite draait op een binair stuurprogramma dat per platform verschilt. Wij
+# bouwen op Windows, dus reist de Windows-versie mee en ontbreekt die voor
+# Linux. libsql en zijn binary moeten exact dezelfde versie hebben.
+LIBSQL_VERSION=$(node -p "require('./node_modules/libsql/package.json').version")
+echo "→ Linux-driver voor SQLite ($LIBSQL_VERSION)"
+ssh "$HOST" "cd '$APP' && npm install --no-save --no-audit --no-fund @libsql/linux-x64-gnu@$LIBSQL_VERSION >/dev/null"
+
 echo "→ herstarten"
 ssh "$ROOT_HOST" "systemctl restart $SITE && sleep 3 && systemctl is-active $SITE"
 
