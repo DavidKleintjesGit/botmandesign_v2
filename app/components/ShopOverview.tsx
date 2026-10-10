@@ -38,14 +38,14 @@ const shopCopy = {
 };
 
 /*
- * De collectie staat op almond in plaats van cedar, zodat de winkel zich
- * onderscheidt van de rest van de site. Almond is licht, dus de tekst is hier
- * zwart: champagne haalt er 1,9:1 en cedar 2,7:1 — allebei onleesbaar. Zwart
- * haalt 8,5:1, en dat is ook wat de huisstijl voorschrijft als tekstkleur.
+ * De collectie staat op champagne in plaats van cedar, zodat de winkel zich
+ * onderscheidt van de rest van de site. Op die lichte grond is zwart de
+ * koptekst (16,4:1) en cedar de zachtere laag eronder (5,1:1) — precies de rol
+ * die het merkblad cedar geeft: tekst op een lichte achtergrond.
  */
-const SURFACE = "var(--color-almond)";
+const SURFACE = "var(--color-champagne)";
 const INK = "var(--color-black)";
-const INK_SOFT = "rgba(2, 2, 3, 0.62)";
+const INK_SOFT = "var(--color-cedar)";
 
 const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
 const sans = { fontFamily: "var(--font-montserrat)" } as const;
@@ -140,7 +140,7 @@ function CategoryButton({
         ...sans,
         letterSpacing: "0.15em",
         backgroundColor: active ? INK : "transparent",
-        borderColor: active ? INK : "rgba(2, 2, 3, 0.28)",
+        borderColor: active ? INK : "rgba(103, 92, 83, 0.4)",
         color: active ? SURFACE : INK,
       }}
     >
@@ -168,7 +168,7 @@ function ProductCard({ product, soldOutLabel }: { product: Product; soldOutLabel
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 58% 42% at 50% 62%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 70%)",
+              "radial-gradient(ellipse 58% 42% at 50% 62%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 70%)",
           }}
         />
         <Image
@@ -185,7 +185,7 @@ function ProductCard({ product, soldOutLabel }: { product: Product; soldOutLabel
             style={{
               ...sans,
               letterSpacing: "0.15em",
-              backgroundColor: "rgba(2, 2, 3, 0.65)",
+              backgroundColor: INK_SOFT,
               color: SURFACE,
             }}
           >

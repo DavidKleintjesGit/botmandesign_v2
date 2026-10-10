@@ -28,8 +28,8 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
   const { t } = useLanguage();
   /*
    * De balk staat op elke pagina, en niet elke pagina heeft dezelfde grond. Op
-   * de collectie is die licht, en daar valt champagne tekst weg (1,9:1); zwart
-   * haalt er 8,5:1. De kleur verloopt mee met de achtergrond.
+   * de collectie is die champagne, en daar valt champagne tekst weg; cedar
+   * haalt er 5,1:1. De kleur verloopt mee met de achtergrond.
    */
   const { light } = usePageSurface();
   const [compact, setCompact] = useState(false);
@@ -102,7 +102,7 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
 
   const rightLinks = [{ key: "about", label: t.navAbout, href: "/over" }];
 
-  const inkColor = light ? "var(--color-black)" : "var(--color-champagne)";
+  const inkColor = light ? "var(--color-cedar)" : "var(--color-champagne)";
 
   const linkStyle = {
     fontFamily: "var(--font-montserrat)",
@@ -119,7 +119,7 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
         fontFamily: "var(--font-montserrat)",
         letterSpacing: "0.15em",
         backgroundColor: "transparent",
-        borderColor: light ? "rgba(2, 2, 3, 0.32)" : "var(--color-almond)",
+        borderColor: light ? "rgba(103, 92, 83, 0.45)" : "var(--color-almond)",
         color: inkColor,
         transition: INK_TRANSITION,
       }}
@@ -146,7 +146,7 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
           backgroundColor: atTop
             ? "transparent"
             : light
-              ? "rgba(182, 163, 144, 0.55)"
+              ? "rgba(238, 227, 211, 0.6)"
               : "rgba(103, 92, 83, 0.38)",
           backdropFilter: atTop ? "none" : "blur(14px)",
           WebkitBackdropFilter: atTop ? "none" : "blur(14px)",

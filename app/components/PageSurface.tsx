@@ -27,12 +27,13 @@ interface Surface {
 }
 
 /*
- * De collectie staat op almond, de rest van de site op cedar. Almond is licht,
- * dus daar is champagne tekst onleesbaar (1,9:1) en zwart juist goed (8,5:1).
+ * De collectie staat op champagne, de rest van de site op cedar. Champagne is
+ * licht, dus daar valt champagne tekst weg en gaat de tekst naar zwart en
+ * cedar — 16,4:1 en 5,1:1.
  */
 function surfaceFor(pathname: string): Surface {
   if (pathname.startsWith("/collectie")) {
-    return { color: "var(--color-almond)", light: true };
+    return { color: "var(--color-champagne)", light: true };
   }
 
   return { color: "var(--color-cedar)", light: false };

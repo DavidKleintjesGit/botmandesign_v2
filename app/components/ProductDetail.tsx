@@ -37,11 +37,17 @@ const detailCopy = {
   },
 };
 
-// Zelfde grond als het overzicht: almond met zwarte tekst.
-const SURFACE = "var(--color-almond)";
+// Zelfde grond als het overzicht: champagne, met zwart en cedar erop.
+/*
+ * De collectie staat op champagne in plaats van cedar, zodat de winkel zich
+ * onderscheidt van de rest van de site. Op die lichte grond is zwart de
+ * koptekst (16,4:1) en cedar de zachtere laag eronder (5,1:1) — precies de rol
+ * die het merkblad cedar geeft: tekst op een lichte achtergrond.
+ */
+const SURFACE = "var(--color-champagne)";
 const INK = "var(--color-black)";
-const INK_SOFT = "rgba(2, 2, 3, 0.62)";
-const LINE = "rgba(2, 2, 3, 0.18)";
+const INK_SOFT = "var(--color-cedar)";
+const LINE = "rgba(103, 92, 83, 0.25)";
 
 const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
 const sans = { fontFamily: "var(--font-montserrat)" } as const;
@@ -81,7 +87,7 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
                   className="pointer-events-none absolute inset-0"
                   style={{
                     background:
-                      "radial-gradient(ellipse 58% 42% at 50% 60%, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%)",
+                      "radial-gradient(ellipse 58% 42% at 50% 60%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 70%)",
                   }}
                 />
                 <Image
@@ -140,7 +146,7 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
                   ...sans,
                   letterSpacing: "0.15em",
                   backgroundColor: soldOut ? "transparent" : INK,
-                  borderColor: soldOut ? "rgba(2, 2, 3, 0.3)" : INK,
+                  borderColor: soldOut ? "rgba(103, 92, 83, 0.4)" : INK,
                   color: soldOut ? INK : SURFACE,
                 }}
               >

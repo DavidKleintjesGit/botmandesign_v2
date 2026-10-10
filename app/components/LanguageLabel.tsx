@@ -12,12 +12,13 @@ export default function LanguageLabel({ onLanguageChange }: LanguageLabelProps) 
   const selectedLanguage = language === "nl" ? "NL" : "EN";
 
   /*
-   * Op een lichte grond is almond onzichtbaar — het is dezelfde kleur — en
-   * champagne bijna. Daar wordt de gekozen taal zwart en de andere grijs.
+   * Op de champagne grond van de collectie is champagne tekst onzichtbaar — het
+   * is dezelfde kleur. Daar wordt de gekozen taal cedar en de andere een
+   * lichtere cedar.
    */
   const { light } = usePageSurface();
-  const chosen = light ? "var(--color-black)" : "var(--color-champagne)";
-  const other = light ? "rgba(2, 2, 3, 0.45)" : "var(--color-almond)";
+  const chosen = light ? "var(--color-cedar)" : "var(--color-champagne)";
+  const other = light ? "rgba(103, 92, 83, 0.5)" : "var(--color-almond)";
 
   /* De schakelaar deelt nu dezelfde taalstatus als de rest van de site. */
   const handleLanguageClick = (next: "NL" | "EN") => {
@@ -34,7 +35,7 @@ export default function LanguageLabel({ onLanguageChange }: LanguageLabelProps) 
           fontFamily: 'var(--font-cormorant-garamond), serif',
           width: '50px',
           backgroundColor: 'transparent',
-          borderColor: light ? 'rgba(2, 2, 3, 0.28)' : 'var(--color-almond)',
+          borderColor: light ? 'rgba(103, 92, 83, 0.4)' : 'var(--color-almond)',
           transition: INK_TRANSITION,
           boxShadow: '0 4px 30px rgba(0,0,0,0.08)',
         }}
