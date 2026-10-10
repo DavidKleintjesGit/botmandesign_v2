@@ -9,6 +9,9 @@ import { useLanguage } from "./LanguageProvider";
 const COMPACT_BREAKPOINT = 1024;
 const SCROLL_THRESHOLD = 40;
 
+/** Hoeveel pixels richtingverandering nodig is voordat de balk reageert. */
+const DIRECTION_THRESHOLD = 8;
+
 /*
  * De navigatie van de onderliggende pagina's. Zelfde opmaak als de navbar op de
  * homepage — Montserrat in hoofdletters, het woordmerk gecentreerd, Contact als
@@ -19,11 +22,6 @@ interface SiteHeaderProps {
   /** Verbergt de balk, bijvoorbeeld terwijl een beeldvullende diashow loopt. */
   hidden?: boolean;
   /*
-   * De homepage laat de balk wegvagen zodra je voorbij de hero scrolt. Geef het
-   * element mee dat dat moment bepaalt; zonder dit blijft de balk gewoon staan.
-   */
-  fadeOutAfterRef?: React.RefObject<HTMLElement | null>;
-  /*
    * De homepage heeft al een eigen taalwisselaar aan de zijkant, dus daar laten
    * we deze weg om er geen twee op één pagina te hebben.
    */
@@ -32,46 +30,51 @@ interface SiteHeaderProps {
 
 export default function SiteHeader({
   hidden = false,
-  fadeOutAfterRef,
   showLanguageSwitch = true,
 }: SiteHeaderProps) {
   const { language, setLanguage, t } = useLanguage();
   const [compact, setCompact] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  /*
+   * De balk mag het beeld niet in de weg zitten maar moet wel bereikbaar
+   * blijven. Hij verdwijnt daarom zodra je naar beneden scrolt en komt terug
+   * zodra je omhoog gaat — dan is hij nodig. Bovenaan de pagina staat hij
+   * gewoon.
+   */
+  const [revealed, setRevealed] = useState(true);
+  const [atTop, setAtTop] = useState(true);
 
   const drawerOpen = compact && menuOpen;
 
   useEffect(() => {
     const check = () => setCompact(window.innerWidth < COMPACT_BREAKPOINT);
-    const checkScroll = () => setScrolled(window.scrollY > SCROLL_THRESHOLD);
+
+    let last = window.scrollY;
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      const top = y <= SCROLL_THRESHOLD;
+
+      setAtTop(top);
+
+      // Kleine bewegingen negeren, anders knippert de balk bij elke rimpel.
+      if (Math.abs(y - last) > DIRECTION_THRESHOLD) {
+        setRevealed(top || y < last);
+        last = y;
+      }
+    };
 
     check();
-    checkScroll();
+    onScroll();
     window.addEventListener("resize", check);
-    window.addEventListener("scroll", checkScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       window.removeEventListener("resize", check);
-      window.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("scroll", onScroll);
     };
   }, []);
-
-  const [fadedOut, setFadedOut] = useState(false);
-
-  useEffect(() => {
-    const trigger = fadeOutAfterRef?.current;
-    if (!trigger) return;
-
-    const onScroll = () => {
-      const rect = trigger.getBoundingClientRect();
-      setFadedOut(rect.bottom <= 300);
-    };
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [fadeOutAfterRef]);
 
   useEffect(() => {
     document.body.style.overflow = drawerOpen ? "hidden" : "";
@@ -88,6 +91,9 @@ export default function SiteHeader({
     window.addEventListener("keydown", onEscape);
     return () => window.removeEventListener("keydown", onEscape);
   }, [drawerOpen]);
+
+  // De diashow op een projectpagina kan de balk ook helemaal onderdrukken.
+  const visible = revealed && !hidden;
 
   const leftLinks = [
     { key: "projects", label: t.navProjects, href: "/projecten" },
@@ -151,14 +157,21 @@ export default function SiteHeader({
   return (
     <>
       <nav
-        className="fixed inset-x-0 top-0 z-50 pt-5 transition-all duration-300"
+        className="fixed inset-x-0 top-0 z-50 pt-5 transition-all duration-500"
         style={{
-          opacity: hidden || fadedOut ? 0 : 1,
-          pointerEvents: hidden || fadedOut ? "none" : "auto",
-          backgroundColor: scrolled ? "var(--color-cedar)" : "transparent",
-          borderBottom: scrolled
-            ? "1px solid rgba(182, 163, 144, 0.25)"
-            : "1px solid transparent",
+          // Wegschuiven in plaats van alleen vervagen: zo neemt hij ook geen
+          // ruimte meer in beeld in zodra hij weg is.
+          transform: visible ? "translateY(0)" : "translateY(-100%)",
+          opacity: visible ? 1 : 0,
+          pointerEvents: visible ? "auto" : "none",
+          /*
+           * Bovenaan helemaal doorzichtig. Daarna een waas in plaats van een
+           * vlak: genoeg om de links leesbaar te houden boven een foto, te
+           * weinig om de aandacht te trekken.
+           */
+          backgroundColor: atTop ? "transparent" : "rgba(103, 92, 83, 0.38)",
+          backdropFilter: atTop ? "none" : "blur(14px)",
+          WebkitBackdropFilter: atTop ? "none" : "blur(14px)",
         }}
       >
         <div className="container mx-auto px-8 md:px-12">
