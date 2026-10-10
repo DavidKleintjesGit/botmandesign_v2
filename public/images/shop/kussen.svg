@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <!-- Kussen met zachte hoeken -->
+  <path d="M96 96c0-14 10-22 26-20 32 4 124 4 156 0 16-2 26 6 26 20 4 34 4 108 0 142 0 14-10 22-26 20-32-4-124-4-156 0-16 2-26-6-26-20-4-34-4-108 0-142Z"
+        stroke="#B6A390" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M120 120c40 36 120 36 160 0M120 280c40-36 120-36 160 0" stroke="#B6A390" stroke-width="1.5" opacity="0.45"/>
+  <ellipse cx="200" cy="330" rx="92" ry="9" fill="#020203" opacity="0.16"/>
+</svg>

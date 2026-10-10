@@ -113,7 +113,6 @@ export const ServicesCollection: CollectionConfig = {
               type: "textarea",
               label: "Reden",
               localized: true,
-              required: true,
             },
           ],
         },
@@ -137,14 +136,12 @@ export const ServicesCollection: CollectionConfig = {
               type: "text",
               label: "Titel",
               localized: true,
-              required: true,
             },
             {
               name: "body",
               type: "textarea",
               label: "Toelichting",
               localized: true,
-              required: true,
             },
             {
               name: "image",

@@ -113,7 +113,8 @@ export const Products: CollectionConfig = {
       label: "Details",
       labels: { singular: "Detail", plural: "Details" },
       admin: {
-        description: "Materiaal, afmeting, herkomst — wat er op het kaartje hoort.",
+        description:
+          "Materiaal, afmeting, herkomst — wat er op het kaartje hoort. Een regel zonder vertaling blijft in die taal gewoon leeg.",
       },
       fields: [
         {
@@ -124,7 +125,6 @@ export const Products: CollectionConfig = {
               type: "text",
               label: "Omschrijving",
               localized: true,
-              required: true,
               admin: { width: "40%" },
             },
             {
@@ -132,7 +132,6 @@ export const Products: CollectionConfig = {
               type: "text",
               label: "Waarde",
               localized: true,
-              required: true,
               admin: { width: "60%" },
             },
           ],

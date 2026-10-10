@@ -6,7 +6,7 @@ import type { Payload } from "payload";
 import { projects as fileProjects } from "../app/content/projects";
 import { services as fileServices } from "../app/content/services";
 import { products as fileProducts } from "../app/content/products";
-import { seedTestimonials } from "../app/content/testimonials";
+import { placeholderTestimonials, seedTestimonials } from "../app/content/testimonials";
 
 /*
  * Zet de content die tot nu toe in app/content/ stond in de database.
@@ -210,10 +210,15 @@ async function seedTestimonialsInto() {
     return;
   }
 
-  for (const item of seedTestimonials) {
+  for (const item of [...seedTestimonials, ...placeholderTestimonials]) {
     const created = await payload.create({
       collection: "testimonials",
-      data: { order: item.order, published: item.published, ...item.nl },
+      data: {
+        order: item.order,
+        published: item.published,
+        placeholder: item.placeholder ?? false,
+        ...item.nl,
+      },
       locale: "nl",
     });
 

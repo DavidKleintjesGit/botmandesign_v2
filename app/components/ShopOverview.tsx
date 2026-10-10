@@ -144,17 +144,25 @@ function ProductCard({ product, soldOutLabel }: { product: Product; soldOutLabel
 
   return (
     <Link href={`/collectie/${product.slug}`} className="group block">
+      {/*
+        De artikelen staan als uitgeknipt object op het cedar in plaats van in
+        een omlijnde kaart. Een zachte gloed eronder geeft ze grond, zodat ze
+        zweven in plaats van te plakken.
+      */}
       <div className="relative mb-5 overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 5" }}>
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 58% 42% at 50% 62%, rgba(182,163,144,0.16) 0%, rgba(182,163,144,0) 70%)",
+          }}
+        />
         <Image
           src={product.images[0]}
           alt={content.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-        />
-        <div
-          className="pointer-events-none absolute inset-0 rounded-lg border"
-          style={{ borderColor: "rgba(182, 163, 144, 0.4)" }}
+          className="object-contain p-8 transition-transform duration-700 group-hover:scale-[1.05]"
         />
 
         {soldOut && (

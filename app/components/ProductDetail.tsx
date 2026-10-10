@@ -69,17 +69,20 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
             {/* Beeld */}
             <div className="md:w-1/2">
               <div className="relative overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 5" }}>
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse 58% 42% at 50% 60%, rgba(182,163,144,0.18) 0%, rgba(182,163,144,0) 70%)",
+                  }}
+                />
                 <Image
                   src={product.images[0]}
                   alt={content.name}
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
-                />
-                <div
-                  className="pointer-events-none absolute inset-0 rounded-lg border"
-                  style={{ borderColor: "rgba(182, 163, 144, 0.4)" }}
+                  className="object-contain p-10"
                 />
               </div>
             </div>
@@ -182,7 +185,7 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
                       fill
                       loading="lazy"
                       sizes="(max-width: 640px) 100vw, 33vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      className="object-contain p-6 transition-transform duration-700 group-hover:scale-[1.05]"
                     />
                   </div>
                   <h3
