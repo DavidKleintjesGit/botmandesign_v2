@@ -18,13 +18,15 @@ import Footer from "./Footer";
 
 import type { Project } from "@/app/content/projects";
 import type { Service } from "@/app/content/services";
+import type { Testimonial } from "@/app/content/testimonials";
 
 interface LandingPageProps {
   projects: Project[];
   services: Record<string, Service>;
+  testimonials: Testimonial[];
 }
 
-export default function LandingPage({ projects, services }: LandingPageProps) {
+export default function LandingPage({ projects, services, testimonials }: LandingPageProps) {
   const headerTriggerRef = useRef<HTMLDivElement>(null);
   const galleryPlaceholderRef = useRef<HTMLDivElement>(null);
   const hideCardAfterRef = useRef<HTMLDivElement>(null);
@@ -81,7 +83,7 @@ export default function LandingPage({ projects, services }: LandingPageProps) {
       <HomeProjectsSection projects={projects} />
       <ServicesSection services={services} />
       <AboutSection />
-      <TestimonialSection />
+      <TestimonialSection testimonials={testimonials} />
       <div ref={hideCardAfterRef}>
         <CTA />
       </div>

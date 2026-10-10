@@ -1,10 +1,14 @@
 import LandingPage from "@/app/components/LandingPage";
-import { fetchProjects, fetchServices } from "@/app/lib/cms";
+import { fetchProjects, fetchServices, fetchTestimonials } from "@/app/lib/cms";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [projects, services] = await Promise.all([fetchProjects(), fetchServices()]);
+  const [projects, services, testimonials] = await Promise.all([
+    fetchProjects(),
+    fetchServices(),
+    fetchTestimonials(),
+  ]);
 
-  return <LandingPage projects={projects} services={services} />;
+  return <LandingPage projects={projects} services={services} testimonials={testimonials} />;
 }

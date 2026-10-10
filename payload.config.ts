@@ -9,6 +9,7 @@ import { Media } from "./payload/collections/Media";
 import { Products } from "./payload/collections/Products";
 import { Projects } from "./payload/collections/Projects";
 import { ServicesCollection } from "./payload/collections/Services";
+import { Testimonials } from "./payload/collections/Testimonials";
 import { Users } from "./payload/collections/Users";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -29,7 +30,7 @@ export default buildConfig({
     },
   },
 
-  collections: [Projects, ServicesCollection, Products, Media, Users],
+  collections: [Projects, ServicesCollection, Testimonials, Products, Media, Users],
 
   editor: lexicalEditor(),
 

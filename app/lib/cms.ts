@@ -4,6 +4,7 @@ import config from "@payload-config";
 import type { Product, ProductCategory } from "@/app/content/products";
 import type { Project } from "@/app/content/projects";
 import type { Service } from "@/app/content/services";
+import type { Testimonial } from "@/app/content/testimonials";
 
 /*
  * De brug tussen de database en de pagina's.
@@ -164,4 +165,29 @@ export async function fetchProducts(): Promise<Product[]> {
       en: contentFor("en"),
     } satisfies Product;
   });
+}
+
+export async function fetchTestimonials(): Promise<Testimonial[]> {
+  const payload = await client();
+
+  const result = await payload.find({
+    collection: "testimonials",
+    where: { published: { equals: true } },
+    sort: "order",
+    locale: "all",
+    depth: 0,
+    limit: 50,
+  });
+
+  return result.docs.map((doc) => ({
+    id: String(doc.id),
+    nl: {
+      quote: pick(doc.quote as Localized<string>, "nl"),
+      attribution: pick(doc.attribution as Localized<string>, "nl"),
+    },
+    en: {
+      quote: pick(doc.quote as Localized<string>, "en"),
+      attribution: pick(doc.attribution as Localized<string>, "en"),
+    },
+  }));
 }

@@ -6,6 +6,7 @@ import type { Payload } from "payload";
 import { projects as fileProjects } from "../app/content/projects";
 import { services as fileServices } from "../app/content/services";
 import { products as fileProducts } from "../app/content/products";
+import { seedTestimonials } from "../app/content/testimonials";
 
 /*
  * Zet de content die tot nu toe in app/content/ stond in de database.
@@ -202,12 +203,38 @@ async function seedProducts() {
   }
 }
 
+async function seedTestimonialsInto() {
+  const existing = await payload.find({ collection: "testimonials", limit: 1, locale: "nl" });
+  if (existing.docs.length > 0) {
+    payload.logger.info("citaten bestaan al — overgeslagen");
+    return;
+  }
+
+  for (const item of seedTestimonials) {
+    const created = await payload.create({
+      collection: "testimonials",
+      data: { order: item.order, published: item.published, ...item.nl },
+      locale: "nl",
+    });
+
+    await payload.update({
+      collection: "testimonials",
+      id: created.id,
+      data: item.en,
+      locale: "en",
+    });
+
+    payload.logger.info(`citaat ${item.nl.attribution} toegevoegd`);
+  }
+}
+
 export async function runSeed(client: Payload) {
   payload = client;
 
   await seedProjects();
   await seedServices();
   await seedProducts();
+  await seedTestimonialsInto();
 
   return { ok: true };
 }
