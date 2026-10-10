@@ -70,7 +70,7 @@ export default function LandingPage({ projects, services, testimonials }: Landin
         fadeOut
         timeWait={showInitialLoading ? 2.5 : 3}
       />
-      <SiteHeader showLanguageSwitch={false} />
+      <SiteHeader />
       <BusinessCardComponent showCardAfterRef={headerTriggerRef} hideCardAfterRef={hideCardAfterRef} />
       <SocialMediaLabel />
       <LanguageLabel onLanguageChange={handleLanguageChange} />

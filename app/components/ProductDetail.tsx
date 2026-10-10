@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import SiteHeader from "./SiteHeader";
+import LanguageLabel from "./LanguageLabel";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageProvider";
 import {
@@ -54,6 +55,7 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
   return (
     <div style={{ backgroundColor: "var(--color-cedar)" }}>
       <SiteHeader />
+      <LanguageLabel />
 
       <section className="w-full pt-40 pb-20 md:pt-52 md:pb-28">
         <div className="container mx-auto px-4 md:px-8">

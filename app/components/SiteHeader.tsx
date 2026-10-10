@@ -21,18 +21,10 @@ const DIRECTION_THRESHOLD = 8;
 interface SiteHeaderProps {
   /** Verbergt de balk, bijvoorbeeld terwijl een beeldvullende diashow loopt. */
   hidden?: boolean;
-  /*
-   * De homepage heeft al een eigen taalwisselaar aan de zijkant, dus daar laten
-   * we deze weg om er geen twee op één pagina te hebben.
-   */
-  showLanguageSwitch?: boolean;
 }
 
-export default function SiteHeader({
-  hidden = false,
-  showLanguageSwitch = true,
-}: SiteHeaderProps) {
-  const { language, setLanguage, t } = useLanguage();
+export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
+  const { t } = useLanguage();
   const [compact, setCompact] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -108,35 +100,6 @@ export default function SiteHeader({
     letterSpacing: "0.15em",
     color: "var(--color-champagne)",
   } as const;
-
-  const languageSwitch = (
-    <div
-      className="flex items-center gap-1 text-[11px]"
-      style={{
-        fontFamily: "var(--font-montserrat)",
-        letterSpacing: "0.1em",
-        color: "var(--color-almond)",
-      }}
-    >
-      <button
-        type="button"
-        onClick={() => setLanguage("nl")}
-        className="cursor-pointer bg-transparent p-0"
-        style={{ opacity: language === "nl" ? 1 : 0.5, color: "inherit" }}
-      >
-        NL
-      </button>
-      <span style={{ opacity: 0.5 }}>/</span>
-      <button
-        type="button"
-        onClick={() => setLanguage("en")}
-        className="cursor-pointer bg-transparent p-0"
-        style={{ opacity: language === "en" ? 1 : 0.5, color: "inherit" }}
-      >
-        EN
-      </button>
-    </div>
-  );
 
   const contactPill = (
     <Link
@@ -218,7 +181,6 @@ export default function SiteHeader({
                       {link.label}
                     </Link>
                   ))}
-                  {languageSwitch}
                   {contactPill}
                 </div>
               </>
@@ -236,7 +198,6 @@ export default function SiteHeader({
                 </Link>
 
                 <div className="flex items-center gap-5">
-                  {showLanguageSwitch && languageSwitch}
                   <button
                     type="button"
                     aria-label={t.menu}

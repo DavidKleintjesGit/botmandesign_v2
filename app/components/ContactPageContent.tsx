@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 import SiteHeader from "./SiteHeader";
+import LanguageLabel from "./LanguageLabel";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageProvider";
 
@@ -132,6 +133,7 @@ export default function ContactPageContent() {
   return (
     <div style={{ backgroundColor: "var(--color-cedar)" }}>
       <SiteHeader />
+      <LanguageLabel />
 
       {/* HERO */}
       <header className="relative h-screen w-full overflow-hidden">

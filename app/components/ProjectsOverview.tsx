@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import SiteHeader from "./SiteHeader";
+import LanguageLabel from "./LanguageLabel";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageProvider";
 import type { Project } from "@/app/content/projects";
@@ -32,6 +33,7 @@ export default function ProjectsOverview({ projects }: { projects: Project[] }) 
   return (
     <div style={{ backgroundColor: "var(--color-cedar)" }}>
       <SiteHeader />
+      <LanguageLabel />
 
       <section className="w-full pt-40 pb-12 md:pt-52 md:pb-16">
         <div className="container mx-auto px-4 md:px-8">

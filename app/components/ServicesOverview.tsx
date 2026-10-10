@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import SiteHeader from "./SiteHeader";
+import LanguageLabel from "./LanguageLabel";
 import Footer from "./Footer";
 import PageIntro from "./PageIntro";
 import { useLanguage } from "./LanguageProvider";
@@ -39,6 +40,7 @@ export default function ServicesOverview({ services }: { services: Record<string
   return (
     <div style={{ backgroundColor: "var(--color-cedar)" }}>
       <SiteHeader />
+      <LanguageLabel />
 
       <PageIntro label={copy.label} title={copy.title} intro={copy.intro} />
 

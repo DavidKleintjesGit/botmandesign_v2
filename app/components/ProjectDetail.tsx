@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import SiteHeader from "./SiteHeader";
+import LanguageLabel from "./LanguageLabel";
 import Footer from "./Footer";
 import ProjectSlideshow from "./ProjectSlideshow";
 import { useLanguage } from "./LanguageProvider";
@@ -34,6 +35,7 @@ export default function ProjectDetail({ slug, projects }: { slug: string; projec
   return (
     <div style={{ backgroundColor: "var(--color-cedar)" }}>
       <SiteHeader hidden={navHidden} />
+      <LanguageLabel />
 
       {/* HERO */}
       <header className="relative h-screen w-full overflow-hidden">

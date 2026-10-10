@@ -29,6 +29,8 @@ export default buildConfig({
       titleSuffix: " — Botman Design",
     },
     components: {
+      // De zijbalk uit het ontwerp in plaats van die van Payload.
+      Nav: "/payload/components/Nav#default",
       views: {
         // Het beginscherm uit het ontwerp in plaats van de standaardlijst.
         dashboard: {
