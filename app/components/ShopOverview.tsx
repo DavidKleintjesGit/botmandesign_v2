@@ -143,7 +143,9 @@ function ProductCard({ product, soldOutLabel }: { product: Product; soldOutLabel
   const soldOut = isSoldOut(product);
 
   return (
-    <Link href={`/collectie/${product.slug}`} className="group block">
+    // Tekst gecentreerd onder het object; links uitgelijnd leest scheef
+    // naast een beeld dat zelf in het midden staat.
+    <Link href={`/collectie/${product.slug}`} className="group block text-center">
       {/*
         De artikelen staan als uitgeknipt object op het cedar in plaats van in
         een omlijnde kaart. Een zachte gloed eronder geeft ze grond, zodat ze

@@ -177,7 +177,7 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
 
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
               {related.map((item) => (
-                <Link key={item.slug} href={`/collectie/${item.slug}`} className="group block">
+                <Link key={item.slug} href={`/collectie/${item.slug}`} className="group block text-center">
                   <div className="relative mb-4 overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 5" }}>
                     <Image
                       src={item.images[0]}

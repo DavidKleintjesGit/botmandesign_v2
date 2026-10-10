@@ -9,7 +9,12 @@ import type { Language } from "./i18n";
  * in een totaal.
  */
 
-export type ProductCategory = "textiel" | "objecten" | "verlichting" | "kunst";
+/*
+ * De indeling volgt wat er in de collectie staat, niet een bedachte boom.
+ * "Objecten" was eerst een vergaarbak met zes van de acht artikelen; daar
+ * filtert niemand iets mee.
+ */
+export type ProductCategory = "vazen" | "schalen" | "verlichting" | "objecten";
 
 export interface ProductContent {
   name: string;
@@ -33,10 +38,10 @@ export interface Product {
 }
 
 export const categoryLabels: Record<ProductCategory, { nl: string; en: string }> = {
-  textiel: { nl: "Textiel", en: "Textiles" },
-  objecten: { nl: "Objecten", en: "Objects" },
+  vazen: { nl: "Vazen", en: "Vases" },
+  schalen: { nl: "Schalen", en: "Bowls" },
   verlichting: { nl: "Verlichting", en: "Lighting" },
-  kunst: { nl: "Kunst", en: "Art" },
+  objecten: { nl: "Sculptuur", en: "Sculpture" },
 };
 
 /*
@@ -47,7 +52,7 @@ export const categoryLabels: Record<ProductCategory, { nl: string; en: string }>
 export const products: Product[] = [
   {
     slug: "ronde-vaas-zand",
-    category: "objecten",
+    category: "vazen",
     priceCents: 16500,
     currency: "EUR",
     stock: 6,
@@ -109,7 +114,7 @@ export const products: Product[] = [
 
   {
     slug: "bolvaas-steengrijs",
-    category: "objecten",
+    category: "vazen",
     priceCents: 21500,
     currency: "EUR",
     stock: 4,
@@ -140,7 +145,7 @@ export const products: Product[] = [
 
   {
     slug: "ovale-schaal-albast",
-    category: "objecten",
+    category: "schalen",
     priceCents: 27500,
     currency: "EUR",
     stock: 3,
@@ -171,7 +176,7 @@ export const products: Product[] = [
 
   {
     slug: "schalen-set-keramiek",
-    category: "objecten",
+    category: "schalen",
     priceCents: 14500,
     currency: "EUR",
     stock: 8,
@@ -202,7 +207,7 @@ export const products: Product[] = [
 
   {
     slug: "vaasjes-trio",
-    category: "objecten",
+    category: "vazen",
     priceCents: 9500,
     currency: "EUR",
     stock: 10,
@@ -233,7 +238,7 @@ export const products: Product[] = [
 
   {
     slug: "sokkel-travertijn",
-    category: "kunst",
+    category: "objecten",
     priceCents: 34500,
     currency: "EUR",
     stock: 2,
@@ -264,7 +269,7 @@ export const products: Product[] = [
 
   {
     slug: "wandobject-gevlochten",
-    category: "kunst",
+    category: "objecten",
     priceCents: 39500,
     currency: "EUR",
     stock: 1,

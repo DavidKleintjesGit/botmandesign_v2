@@ -46,10 +46,10 @@ export const Products: CollectionConfig = {
           label: "Categorie",
           required: true,
           options: [
-            { label: "Textiel", value: "textiel" },
-            { label: "Objecten", value: "objecten" },
+            { label: "Vazen", value: "vazen" },
+            { label: "Schalen", value: "schalen" },
             { label: "Verlichting", value: "verlichting" },
-            { label: "Kunst", value: "kunst" },
+            { label: "Sculptuur", value: "objecten" },
           ],
           admin: { width: "33%" },
         },
