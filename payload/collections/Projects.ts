@@ -13,6 +13,12 @@ export const Projects: CollectionConfig = {
     plural: "Projecten",
   },
   admin: {
+    components: {
+      views: {
+        // De lijstweergave uit het ontwerp.
+        list: { Component: "/payload/components/ListView#default" },
+      },
+    },
     useAsTitle: "title",
     defaultColumns: ["title", "number", "year", "published"],
     group: "Website",

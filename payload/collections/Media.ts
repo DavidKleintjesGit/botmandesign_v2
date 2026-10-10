@@ -7,6 +7,12 @@ import type { CollectionConfig } from "payload";
 export const Media: CollectionConfig = {
   slug: "media",
   admin: {
+    components: {
+      views: {
+        // De lijstweergave uit het ontwerp.
+        list: { Component: "/payload/components/ListView#default" },
+      },
+    },
     group: "Instellingen",
   },
   access: {

@@ -12,6 +12,12 @@ export const ServicesCollection: CollectionConfig = {
     plural: "Services",
   },
   admin: {
+    components: {
+      views: {
+        // De lijstweergave uit het ontwerp.
+        list: { Component: "/payload/components/ListView#default" },
+      },
+    },
     useAsTitle: "name",
     defaultColumns: ["name", "number", "price", "published"],
     group: "Website",

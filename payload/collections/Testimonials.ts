@@ -14,6 +14,12 @@ export const Testimonials: CollectionConfig = {
     plural: "Wat klanten zeggen",
   },
   admin: {
+    components: {
+      views: {
+        // De lijstweergave uit het ontwerp.
+        list: { Component: "/payload/components/ListView#default" },
+      },
+    },
     useAsTitle: "attribution",
     defaultColumns: ["attribution", "order", "published"],
     group: "Website",

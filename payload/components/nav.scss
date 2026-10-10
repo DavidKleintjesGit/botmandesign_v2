@@ -147,3 +147,16 @@
     }
   }
 }
+
+/*
+ * Payload berekent de breedte van de zijbalkkolom zelf, afgestemd op zijn eigen
+ * navigatie. Die van ons is 236px breed, dus zetten we de kolom daarop — anders
+ * krijgt hij 0px en schuift de inhoud eroverheen.
+ *
+ * Onder 1024px laten we het aan Payload: daar schuift de balk in en uit beeld.
+ */
+@media (min-width: 1024px) {
+  .template-default {
+    grid-template-columns: 236px 1fr;
+  }
+}

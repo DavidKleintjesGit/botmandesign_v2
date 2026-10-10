@@ -14,6 +14,12 @@ export const Products: CollectionConfig = {
     plural: "Producten",
   },
   admin: {
+    components: {
+      views: {
+        // De lijstweergave uit het ontwerp.
+        list: { Component: "/payload/components/ListView#default" },
+      },
+    },
     useAsTitle: "name",
     defaultColumns: ["name", "category", "priceCents", "stock", "published"],
     group: "Webshop",

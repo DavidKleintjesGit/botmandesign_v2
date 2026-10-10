@@ -5,6 +5,12 @@ export const Users: CollectionConfig = {
   slug: "users",
   auth: true,
   admin: {
+    components: {
+      views: {
+        // De lijstweergave uit het ontwerp.
+        list: { Component: "/payload/components/ListView#default" },
+      },
+    },
     useAsTitle: "email",
     group: "Instellingen",
   },
