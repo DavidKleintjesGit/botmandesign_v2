@@ -77,7 +77,9 @@ export default function ServicesSection({ services }: { services: Record<string,
   return (
     <section
       ref={sectionRef}
-      className="w-full relative overflow-hidden flex flex-col items-center pt-10 pb-56 md:pb-72 lg:pb-96"
+      // De onderruimte was 224 tot 384 pixels kale cedar; daar viel de pagina
+      // stil voordat het verhaal eronder begon.
+      className="w-full relative overflow-hidden flex flex-col items-center pt-10 pb-24 md:pb-32"
       style={{
         backgroundColor: "var(--color-cedar)",
       }}

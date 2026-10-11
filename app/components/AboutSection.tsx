@@ -80,6 +80,29 @@ export default function AboutSection() {
           className="absolute inset-0 rounded-l-lg border-b border-l border-t"
           style={{ borderColor: "rgba(182, 163, 144, 0.4)" }}
         />
+
+        {/*
+         * Het beeld liep met een kaarsrechte rand tegen de cedar aan, boven en
+         * onder. Deze twee banden laten het eruit opkomen en er weer in
+         * verdwijnen — dezelfde manier waarop beeld elders op de site in de
+         * grond oplost.
+         */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-28 md:h-40"
+          style={{
+            background:
+              "linear-gradient(to bottom, var(--color-cedar) 0%, rgba(103, 92, 83, 0.75) 35%, rgba(103, 92, 83, 0) 100%)",
+          }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-40"
+          style={{
+            background:
+              "linear-gradient(to top, var(--color-cedar) 0%, rgba(103, 92, 83, 0.75) 35%, rgba(103, 92, 83, 0) 100%)",
+          }}
+          aria-hidden
+        />
       </div>
     </section>
   );
