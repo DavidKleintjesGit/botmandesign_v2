@@ -5,6 +5,7 @@ import { useState } from "react";
 import PageIntro from "./PageIntro";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageProvider";
+import type { Service } from "@/app/content/services";
 
 const contactCopy = {
   en: {
@@ -24,6 +25,7 @@ const contactCopy = {
     required: "Please complete all fields.",
     failed: "We could not send your message. Please try again later or email us directly.",
     choose: "Choose a subject",
+    other: "Something else",
   },
   nl: {
     label: "CONTACT",
@@ -42,16 +44,9 @@ const contactCopy = {
     required: "Vul alle velden in.",
     failed: "Versturen is niet gelukt. Probeer het later opnieuw of mail ons direct.",
     choose: "Kies een onderwerp",
+    other: "Iets anders",
   },
 };
-
-const INQUIRY_OPTIONS = [
-  { value: "turn-key-projects", label: "Turn-key Projects" },
-  { value: "interior-upgrade", label: "Interior Upgrade" },
-  { value: "restyling", label: "Restyling" },
-  { value: "b2b-partnerships", label: "B2B Partnerships" },
-  { value: "other", label: "Overig" },
-];
 
 const DIRECT = [
   { label: "studio@botmandesign.com", href: "mailto:studio@botmandesign.com" },
@@ -71,9 +66,19 @@ type Status = "idle" | "sending" | "sent" | "error";
  * houdt daarom dezelfde kop als de andere onderliggende pagina's en gaat
  * daarna meteen over in het formulier.
  */
-export default function ContactPageContent() {
+export default function ContactPageContent({ services }: { services: Record<string, Service> }) {
   const { language } = useLanguage();
   const copy = contactCopy[language];
+
+  /*
+   * De onderwerpen zijn de diensten zoals ze in het beheer staan, niet een
+   * eigen lijstje hier: voegt Bas een dienst toe of hernoemt hij er een, dan
+   * staat die meteen ook in dit formulier.
+   *
+   * Wat verstuurd wordt is de naam en niet de slug, zodat in de mail "Turn-key
+   * Projects" staat en niet "turn-key-projects".
+   */
+  const subjects = Object.values(services).map((service) => service[language].name);
 
   const [status, setStatus] = useState<Status>("idle");
   const [feedback, setFeedback] = useState("");
@@ -193,11 +198,14 @@ export default function ContactPageContent() {
                   <option value="" disabled style={{ color: "var(--color-cedar)" }}>
                     {copy.choose}
                   </option>
-                  {INQUIRY_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value} style={{ color: "var(--color-cedar)" }}>
-                      {option.label}
+                  {subjects.map((subject) => (
+                    <option key={subject} value={subject} style={{ color: "var(--color-cedar)" }}>
+                      {subject}
                     </option>
                   ))}
+                  <option value={copy.other} style={{ color: "var(--color-cedar)" }}>
+                    {copy.other}
+                  </option>
                 </select>
               </label>
 
