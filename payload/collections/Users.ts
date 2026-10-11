@@ -6,6 +6,11 @@ export const Users: CollectionConfig = {
   auth: true,
   admin: {
     components: {
+      Description: {
+        path: "/payload/components/EditKicker#default",
+        clientProps: { singular: "Gebruiker", nieuw: "Nieuwe gebruiker" },
+      },
+      edit: { SaveButton: "/payload/components/SaveBar#default" },
       views: {
         // De lijstweergave uit het ontwerp.
         list: { Component: "/payload/components/ListView#default" },

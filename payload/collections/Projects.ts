@@ -14,6 +14,11 @@ export const Projects: CollectionConfig = {
   },
   admin: {
     components: {
+      Description: {
+        path: "/payload/components/EditKicker#default",
+        clientProps: { singular: "Project", nieuw: "Nieuw project" },
+      },
+      edit: { SaveButton: "/payload/components/SaveBar#default" },
       views: {
         // De lijstweergave uit het ontwerp.
         list: { Component: "/payload/components/ListView#default" },
@@ -29,69 +34,88 @@ export const Projects: CollectionConfig = {
   },
   defaultSort: "number",
   fields: [
+    /*
+     * De velden staan in genoemde blokken, zoals in het ontwerp. Een blok met
+     * losse velden is een collapsible; een blok dat uit één reeks bestaat is de
+     * reeks zelf, want die brengt zijn eigen kop en toelichting al mee.
+     */
     {
-      name: "title",
-      type: "text",
-      label: "Titel",
-      required: true,
-      localized: true,
-    },
-    {
-      name: "slug",
-      type: "text",
-      label: "Adres in de URL",
-      required: true,
-      unique: true,
-      admin: {
-        description: "Bijvoorbeeld villa-oltera — dit wordt /projecten/villa-oltera.",
-      },
-    },
-    {
-      type: "row",
+      type: "collapsible",
+      label: "Algemeen",
       fields: [
         {
-          name: "number",
+          name: "title",
           type: "text",
-          label: "Volgnummer",
+          label: "Titel",
           required: true,
+          localized: true,
+        },
+        {
+          name: "slug",
+          type: "text",
+          label: "Adres in de URL",
+          required: true,
+          unique: true,
           admin: {
-            width: "33%",
-            description: "01, 02, 03 — bepaalt ook de volgorde.",
+            description:
+              "Bijvoorbeeld villa-oltera — dit wordt /projecten/villa-oltera.",
           },
         },
         {
-          name: "year",
-          type: "text",
-          label: "Jaar",
-          required: true,
-          admin: { width: "33%" },
-        },
-        {
-          name: "category",
-          type: "text",
-          label: "Categorie",
-          defaultValue: "Interior design",
-          localized: true,
-          admin: { width: "34%" },
+          type: "row",
+          fields: [
+            {
+              name: "number",
+              type: "text",
+              label: "Volgnummer",
+              required: true,
+              admin: {
+                width: "33%",
+                description: "01, 02, 03 — bepaalt ook de volgorde.",
+              },
+            },
+            {
+              name: "year",
+              type: "text",
+              label: "Jaar",
+              required: true,
+              admin: { width: "33%" },
+            },
+            {
+              name: "category",
+              type: "text",
+              label: "Categorie",
+              defaultValue: "Interior design",
+              localized: true,
+              admin: { width: "34%" },
+            },
+          ],
         },
       ],
     },
     {
-      name: "cardImage",
-      type: "upload",
-      relationTo: "media",
-      label: "Hoofdbeeld",
-      required: true,
-      admin: {
-        description: "Het beeld in het overzicht en bovenaan de projectpagina.",
-      },
-    },
-    {
-      name: "intro",
-      type: "textarea",
-      label: "Inleiding",
-      localized: true,
-      required: true,
+      type: "collapsible",
+      label: "Hoofdbeeld & inleiding",
+      fields: [
+        {
+          name: "cardImage",
+          type: "upload",
+          relationTo: "media",
+          label: "Hoofdbeeld",
+          required: true,
+          admin: {
+            description:
+              "Het beeld in het overzicht en bovenaan de projectpagina.",
+          },
+        },
+        {
+          name: "intro",
+          type: "textarea",
+          label: "Inleiding",
+          localized: true,
+          required: true,
+        },
+      ],
     },
     {
       name: "slides",
@@ -146,16 +170,26 @@ export const Projects: CollectionConfig = {
           type: "text",
           label: "Materialen",
           localized: true,
-          admin: { description: "Bijvoorbeeld Boucle · Eikenhout · Natuursteen · Brons." },
+          admin: {
+            description:
+              "Bijvoorbeeld Boucle · Eikenhout · Natuursteen · Brons.",
+          },
         },
       ],
     },
     {
-      name: "published",
-      type: "checkbox",
-      label: "Zichtbaar op de site",
-      defaultValue: true,
+      // In het ontwerp staat dit in de zijkolom onder de kop Publicatie.
+      type: "collapsible",
+      label: "Publicatie",
       admin: { position: "sidebar" },
+      fields: [
+        {
+          name: "published",
+          type: "checkbox",
+          label: "Zichtbaar op de site",
+          defaultValue: true,
+        },
+      ],
     },
   ],
 };

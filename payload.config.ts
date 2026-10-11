@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { buildConfig } from "payload";
+import { nl } from "@payloadcms/translations/languages/nl";
 
 import { Media } from "./payload/collections/Media";
 import { Products } from "./payload/collections/Products";
@@ -25,12 +26,16 @@ const databaseUrl =
 export default buildConfig({
   admin: {
     user: Users.slug,
+    // Het ontwerp is licht; de donkere variant van Payload laten we weg.
+    theme: "light",
     meta: {
       titleSuffix: " — Botman Design",
     },
     components: {
       // De zijbalk uit het ontwerp in plaats van die van Payload.
       Nav: "/payload/components/Nav#default",
+      // Zet de taalcode klaar voor het blokje achter een vertaalbaar veld.
+      providers: ["/payload/components/LocaleCode#default"],
       views: {
         // Het beginscherm uit het ontwerp in plaats van de standaardlijst.
         dashboard: {
@@ -38,6 +43,16 @@ export default buildConfig({
         },
       },
     },
+  },
+
+  /*
+   * Het beheer is voor Bas, niet voor een ontwikkelaar. Alles wat Payload zelf
+   * aan knoppen en labels meebrengt staat daarmee in het Nederlands, net als de
+   * veldnamen die we zelf schrijven.
+   */
+  i18n: {
+    supportedLanguages: { nl },
+    fallbackLanguage: "nl",
   },
 
   collections: [Projects, ServicesCollection, Testimonials, Products, Media, Users],

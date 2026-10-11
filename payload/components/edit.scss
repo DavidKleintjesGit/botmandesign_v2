@@ -1,0 +1,468 @@
+/*
+ * Het bewerkscherm, met de maten uit het ontwerp.
+ *
+ * Anders dan bij de zijbalk, het beginscherm en de lijst is dit geen eigen
+ * component maar een jasje over dat van Payload. Dat is hier met opzet: in dit
+ * scherm zit alles wat moeilijk is — formulierstatus, validatie, talen,
+ * uploads, slepen en neerzetten, opslaan. Dat opnieuw bouwen levert niets op
+ * wat je ziet, en veel wat stuk kan.
+ *
+ * De opbouw kwam al overeen: het ontwerp is duidelijk getekend naar dit
+ * scherm. Wat hier gebeurt is dus kleuren, maatvoering en het weglaten van wat
+ * het ontwerp niet heeft.
+ */
+
+/* ── Kop ─────────────────────────────────────────────────────────────── */
+
+.doc-header {
+  display: flex;
+  flex-direction: column;
+  padding-top: 28px;
+  padding-bottom: 0;
+
+  /* Het ontwerp kent geen tabbladen; er is maar één weergave per document. */
+  .doc-tabs {
+    display: none;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 40px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--bd-ink);
+  }
+
+  /* De omschrijving van de collectie staat boven de titel, als bovenregel. */
+  &__header {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__after-header {
+    order: -1;
+    margin: 0 0 8px;
+  }
+
+  .custom-view-description {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--bd-muted);
+  }
+}
+
+/* ── Opslaan en de rest van de bediening ─────────────────────────────── */
+
+/*
+ * De knoppen staan in het ontwerp op de regel van de titel. Payload zet ze
+ * eronder, in een eigen balk. Ze staan in een andere tak van de boom dan de
+ * titel, dus ze bij elkaar leggen kan niet met flex — vandaar dat de balk
+ * rechtsboven wordt vastgezet.
+ */
+.template-default__wrap {
+  position: relative;
+}
+
+.doc-controls {
+  position: absolute;
+  top: 34px;
+  right: var(--gutter-h, 40px);
+  left: auto;
+  width: auto;
+  z-index: 2;
+  padding: 0;
+
+  &__wrapper {
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  &__controls-wrapper {
+    margin: 0;
+  }
+
+  /* De data staan in het ontwerp onderaan de zijkolom, niet hier. */
+  &__meta {
+    display: none;
+  }
+
+  &__divider {
+    display: none;
+  }
+
+  .btn--style-primary {
+    height: 38px;
+    padding: 0 22px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+.bd-savebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    height: 38px;
+    padding: 0 16px;
+    border: 1px solid #d9d2c6;
+    border-radius: 7px;
+    background: var(--bd-paper);
+    color: var(--bd-ink);
+    font-size: 14px;
+    text-decoration: none;
+
+    &:hover {
+      border-color: var(--bd-stone);
+    }
+  }
+}
+
+/* ── Secties ─────────────────────────────────────────────────────────── */
+
+.document-fields__main {
+  .collapsible-field {
+    margin-bottom: 16px;
+    padding: 24px 26px 26px;
+    background: var(--bd-paper);
+    border: 1px solid var(--bd-line);
+    border-radius: 10px;
+  }
+
+  .collapsible-field .collapsible {
+    border: none;
+    background: none;
+  }
+
+  /* De kop van een sectie. Dichtklappen hoort niet bij het ontwerp. */
+  .collapsible-field > .collapsible > .collapsible__toggle-wrap {
+    padding: 0;
+    margin-bottom: 20px;
+    border: none;
+    background: none;
+
+    /* Een sectie hoort in het ontwerp niet dicht te kunnen klappen. */
+    .collapsible__toggle {
+      display: none;
+    }
+
+    .collapsible__indicator {
+      display: none;
+    }
+
+    .row-label {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 22px;
+      color: var(--bd-ink);
+      background: none;
+      padding: 0;
+    }
+  }
+
+  .collapsible-field .collapsible__content {
+    padding: 0;
+  }
+}
+
+/* ── Velden ──────────────────────────────────────────────────────────── */
+
+.collection-edit {
+  .field-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--bd-ink);
+
+    .required {
+      color: var(--bd-accent);
+      margin: 0;
+    }
+
+    /*
+     * Payload zet de taal als "— Nederlands" achter het label. Het ontwerp
+     * heeft daar een klein omlijnd blokje met de taalcode. Die code staat in
+     * --bd-locale, dat LocaleCode op <html> zet.
+     */
+    .localized {
+      font-size: 0;
+      color: transparent;
+
+      &::after {
+        content: var(--bd-locale, "NL");
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 16px;
+        color: var(--bd-muted);
+        border: 1px solid var(--bd-line-2);
+        border-radius: 4px;
+        padding: 0 5px;
+      }
+    }
+  }
+
+  .field-description {
+    margin-top: 7px;
+    font-size: 12px;
+    color: var(--bd-muted);
+    text-wrap: pretty;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  .react-select__control {
+    height: 42px;
+    min-height: 42px;
+    padding: 0 12px;
+    font-size: 14px;
+    background: var(--bd-paper);
+    border: 1px solid var(--bd-line-2);
+    border-radius: 7px;
+    color: var(--bd-ink);
+    box-shadow: none;
+  }
+
+  textarea {
+    padding: 11px 12px;
+    min-height: 84px;
+    font-size: 14px;
+    line-height: 1.55;
+    background: var(--bd-paper);
+    border: 1px solid var(--bd-line-2);
+    border-radius: 7px;
+    color: var(--bd-ink);
+    box-shadow: none;
+  }
+}
+
+/* ── Rijen in een reeks ──────────────────────────────────────────────── */
+
+/*
+ * Een blok dat uit één reeks bestaat is in het ontwerp ook een kaart. De reeks
+ * brengt zijn eigen kop en toelichting al mee, dus die hoeft er geen
+ * collapsible omheen.
+ */
+.document-fields__main > div > .render-fields > .field-type.array-field {
+  margin-bottom: 16px;
+  padding: 24px 26px 26px;
+  background: var(--bd-paper);
+  border: 1px solid var(--bd-line);
+  border-radius: 10px;
+}
+
+.array-field {
+  &__header {
+    margin-bottom: 10px;
+
+    .field-label {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 22px;
+    }
+
+    /* "Alles inklappen" en het plakbord zitten niet in het ontwerp. */
+    &-actions {
+      display: none;
+    }
+  }
+
+  &__row.collapsible {
+    border: 1px solid var(--bd-line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bd-paper);
+
+    .collapsible__toggle-wrap {
+      padding: 10px 14px;
+      background: var(--bd-wash);
+      border: none;
+    }
+
+    .collapsible__content {
+      padding: 16px 14px;
+      border-top: 1px solid #efebe4;
+    }
+  }
+
+  &__add-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 42px;
+    margin-top: 10px;
+    background: none;
+    border: 1px dashed #cfc6b8;
+    border-radius: 8px;
+    color: #5d574f;
+    font-weight: 500;
+
+    &:hover {
+      border-color: var(--bd-stone);
+      color: var(--bd-ink);
+      background: var(--bd-wash);
+    }
+  }
+}
+
+/* ── Beeld kiezen ────────────────────────────────────────────────────── */
+
+.upload-field-card {
+  padding: 10px;
+  background: var(--bd-wash);
+  border: 1px solid var(--bd-line);
+  border-radius: 8px;
+}
+
+.dropzone,
+.upload__dropzone {
+  border: 1px dashed #cfc6b8;
+  border-radius: 8px;
+  background: var(--bd-wash);
+
+  &:hover {
+    border-color: var(--bd-stone);
+    background: #f6f3ee;
+  }
+}
+
+/* ── Zijkolom ────────────────────────────────────────────────────────── */
+
+.document-fields {
+  /*
+   * De zijkolom bestaat uit kaarten, niet uit één kaart met alles erin. Elk
+   * blok dat er staat is er zelf een.
+   */
+  &__sidebar-fields {
+    padding: 0;
+    background: none;
+    border: none;
+  }
+
+  &__sidebar .collapsible-field {
+    margin-bottom: 16px;
+    padding: 20px;
+    background: var(--bd-paper);
+    border: 1px solid var(--bd-line);
+    border-radius: 10px;
+  }
+
+  /* Een kaart waar het ontwerp geen kop boven heeft staan. */
+  &__sidebar .bd-kaart-zonder-kop > .collapsible > .collapsible__toggle-wrap {
+    display: none;
+  }
+
+  /* In de zijkolom is een collapsible een eigen kaartje met een bovenregel. */
+  &__sidebar .collapsible-field {
+    .collapsible {
+      border: none;
+      background: none;
+    }
+
+    .collapsible__toggle-wrap {
+      padding: 0;
+      margin-bottom: 14px;
+      border: none;
+
+      /* Een sectie hoort in het ontwerp niet dicht te kunnen klappen. */
+      .collapsible__toggle {
+        display: none;
+      }
+
+      .collapsible__indicator {
+        display: none;
+      }
+
+      .row-label {
+        padding: 0;
+        background: none;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--bd-muted);
+      }
+    }
+
+    .collapsible__content {
+      padding: 0;
+    }
+  }
+}
+
+/*
+ * Een aanvinkvak is in het ontwerp een schuifje: label links, schuifje rechts.
+ */
+.collection-edit .checkbox-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  .field-label {
+    order: -1;
+    margin: 0;
+    font-size: 14px;
+  }
+
+  &__input {
+    position: relative;
+    flex-shrink: 0;
+    width: 38px;
+    height: 22px;
+    border: none;
+    border-radius: 11px;
+    background: var(--bd-line-2);
+    transition: background 0.2s ease;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      transition: left 0.2s ease;
+    }
+
+    input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .checkbox-input__icon {
+      display: none;
+    }
+  }
+
+  &__input:has(input:checked) {
+    background: var(--bd-ink);
+
+    &::after {
+      left: 19px;
+    }
+  }
+}

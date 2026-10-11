@@ -8,6 +8,11 @@ export const Media: CollectionConfig = {
   slug: "media",
   admin: {
     components: {
+      Description: {
+        path: "/payload/components/EditKicker#default",
+        clientProps: { singular: "Bestand", nieuw: "Uploaden" },
+      },
+      edit: { SaveButton: "/payload/components/SaveBar#default" },
       views: {
         // De lijstweergave uit het ontwerp.
         list: { Component: "/payload/components/ListView#default" },
@@ -34,7 +39,8 @@ export const Media: CollectionConfig = {
       label: "Omschrijving van het beeld",
       required: true,
       admin: {
-        description: "Wat is er te zien? Voorleessoftware en zoekmachines gebruiken dit.",
+        description:
+          "Wat is er te zien? Voorleessoftware en zoekmachines gebruiken dit.",
       },
     },
   ],

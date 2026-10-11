@@ -15,6 +15,11 @@ export const Products: CollectionConfig = {
   },
   admin: {
     components: {
+      Description: {
+        path: "/payload/components/EditKicker#default",
+        clientProps: { singular: "Product", nieuw: "Nieuw product" },
+      },
+      edit: { SaveButton: "/payload/components/SaveBar#default" },
       views: {
         // De lijstweergave uit het ontwerp.
         list: { Component: "/payload/components/ListView#default" },
@@ -29,56 +34,68 @@ export const Products: CollectionConfig = {
     read: () => true,
   },
   fields: [
+    /*
+     * De velden staan in genoemde blokken, zoals in het ontwerp. Een blok met
+     * losse velden is een collapsible; een blok dat uit één reeks bestaat is de
+     * reeks zelf, want die brengt zijn eigen kop en toelichting al mee.
+     */
     {
-      name: "name",
-      type: "text",
-      label: "Naam",
-      required: true,
-      localized: true,
-    },
-    {
-      name: "slug",
-      type: "text",
-      label: "Adres in de URL",
-      required: true,
-      unique: true,
-    },
-    {
-      type: "row",
+      type: "collapsible",
+      label: "Algemeen",
       fields: [
         {
-          name: "category",
-          type: "select",
-          label: "Categorie",
+          name: "name",
+          type: "text",
+          label: "Naam",
           required: true,
-          options: [
-            { label: "Vazen", value: "vazen" },
-            { label: "Schalen", value: "schalen" },
-            { label: "Verlichting", value: "verlichting" },
-            { label: "Sculptuur", value: "objecten" },
+          localized: true,
+        },
+        {
+          name: "slug",
+          type: "text",
+          label: "Adres in de URL",
+          required: true,
+          unique: true,
+        },
+        {
+          type: "row",
+          fields: [
+            {
+              name: "category",
+              type: "select",
+              label: "Categorie",
+              required: true,
+              options: [
+                { label: "Vazen", value: "vazen" },
+                { label: "Schalen", value: "schalen" },
+                { label: "Verlichting", value: "verlichting" },
+                { label: "Sculptuur", value: "objecten" },
+              ],
+              admin: { width: "33%" },
+            },
+            {
+              name: "priceCents",
+              type: "number",
+              label: "Prijs in centen",
+              required: true,
+              min: 0,
+              admin: {
+                width: "33%",
+                description: "8900 betekent € 89,00.",
+              },
+            },
+            {
+              name: "stock",
+              type: "number",
+              label: "Voorraad",
+              min: 0,
+              admin: {
+                width: "34%",
+                description:
+                  "Leeg laten betekent onbeperkt. 0 toont 'uitverkocht'.",
+              },
+            },
           ],
-          admin: { width: "33%" },
-        },
-        {
-          name: "priceCents",
-          type: "number",
-          label: "Prijs in centen",
-          required: true,
-          min: 0,
-          admin: {
-            width: "33%",
-            description: "8900 betekent € 89,00.",
-          },
-        },
-        {
-          name: "stock",
-          type: "number",
-          label: "Voorraad",
-          min: 0,
-          admin: {
-            width: "34%",
-            description: "Leeg laten betekent onbeperkt. 0 toont 'uitverkocht'.",
-          },
         },
       ],
     },
@@ -100,18 +117,24 @@ export const Products: CollectionConfig = {
       ],
     },
     {
-      name: "tagline",
-      type: "text",
-      label: "Eén regel onder de titel",
-      localized: true,
-      required: true,
-    },
-    {
-      name: "description",
-      type: "textarea",
-      label: "Omschrijving",
-      localized: true,
-      required: true,
+      type: "collapsible",
+      label: "Tekst",
+      fields: [
+        {
+          name: "tagline",
+          type: "text",
+          label: "Eén regel onder de titel",
+          localized: true,
+          required: true,
+        },
+        {
+          name: "description",
+          type: "textarea",
+          label: "Omschrijving",
+          localized: true,
+          required: true,
+        },
+      ],
     },
     {
       name: "specs",
@@ -145,11 +168,18 @@ export const Products: CollectionConfig = {
       ],
     },
     {
-      name: "published",
-      type: "checkbox",
-      label: "Zichtbaar in de collectie",
-      defaultValue: true,
+      // In het ontwerp staat dit in de zijkolom onder de kop Publicatie.
+      type: "collapsible",
+      label: "Publicatie",
       admin: { position: "sidebar" },
+      fields: [
+        {
+          name: "published",
+          type: "checkbox",
+          label: "Zichtbaar in de collectie",
+          defaultValue: true,
+        },
+      ],
     },
   ],
 };
