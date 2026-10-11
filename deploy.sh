@@ -35,10 +35,16 @@ cp -r public .deploy/public
 # Eén tar-stream in plaats van scp per bestand: één verbinding, en het houdt
 # de bestandsnamen heel die Next.js met rare tekens uitspuugt.
 echo "→ kopiëren naar $HOST:$APP"
+#
+# De hele map weg en opnieuw aanleggen, niet alleen de zichtbare inhoud: in
+# .next/cache houdt Next zijn eigen kopie van de vooraf gerenderde pagina's bij.
+# Die map begint met een punt, dus $APP/* liet hem staan, en dan bleef de server
+# die oude pagina's opdienen — X-Nextjs-Cache: HIT — terwijl de nieuwe er al
+# naast lagen. De database staat buiten deze map en raakt dit niet.
 tar -cf - -C .deploy . | ssh "$HOST" "
   set -eu
+  rm -rf '$APP'
   mkdir -p '$APP'
-  rm -rf '$APP'/*
   tar -xf - -C '$APP'
 "
 

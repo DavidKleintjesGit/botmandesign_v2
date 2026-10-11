@@ -1,4 +1,15 @@
+"use client";
+
+import { usePageSurface, INK_TRANSITION } from "./PageSurface";
+
 export default function SocialMediaLabel() {
+  /*
+   * Zelfde regel als de taalschakelaar eronder: op de champagne grond van de
+   * collectie valt champagne weg, dus gaan de iconen daar naar cedar.
+   */
+  const { light } = usePageSurface();
+  const ink = light ? "var(--color-cedar)" : "var(--color-champagne)";
+
   return (
     <div className="fixed right-0 top-1/2 transform -translate-y-28 z-40">
       <div 
@@ -7,7 +18,8 @@ export default function SocialMediaLabel() {
           fontFamily: 'var(--font-cormorant-garamond), serif',
           width: '50px',
           backgroundColor: 'transparent',
-          borderColor: 'var(--color-almond)',
+          borderColor: light ? 'rgba(103, 92, 83, 0.4)' : 'var(--color-almond)',
+          transition: INK_TRANSITION,
           boxShadow: '0 4px 30px rgba(0,0,0,0.08)',
         }}
       >
@@ -15,7 +27,7 @@ export default function SocialMediaLabel() {
           <a 
             href="#" 
             className="transition-all duration-300 hover:scale-110"
-            style={{ color: "var(--color-champagne)" }}
+            style={{ color: ink, transition: INK_TRANSITION }}
             aria-label="Instagram"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -25,7 +37,7 @@ export default function SocialMediaLabel() {
           <a 
             href="#" 
             className="transition-all duration-300 hover:scale-110"
-            style={{ color: "#eee3d3" }}
+            style={{ color: ink, transition: INK_TRANSITION }}
             aria-label="LinkedIn"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -35,7 +47,7 @@ export default function SocialMediaLabel() {
           <a 
             href="#" 
             className="transition-all duration-300 hover:scale-110"
-            style={{ color: "#eee3d3" }}
+            style={{ color: ink, transition: INK_TRANSITION }}
             aria-label="Facebook"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">

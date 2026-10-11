@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 
 import SiteHeader from "./SiteHeader";
 import LanguageLabel from "./LanguageLabel";
+import SocialMediaLabel from "./SocialMediaLabel";
 
 /*
  * De navigatie en de taalschakelaar staan hier, in de layout, in plaats van in
@@ -36,6 +37,8 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
   return (
     <SetHiddenContext.Provider value={setHidden}>
       <SiteHeader hidden={hidden} />
+      {/* De rail rechts: social boven het midden, taal eronder — op elke pagina. */}
+      <SocialMediaLabel />
       <LanguageLabel />
       {children}
     </SetHiddenContext.Provider>

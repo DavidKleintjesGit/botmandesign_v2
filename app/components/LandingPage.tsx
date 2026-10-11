@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import Header from "./Header";
-import SocialMediaLabel from "./SocialMediaLabel";
 import LoadingPage from "./LoadingPage";
 import CookiePopup from "./CookiePopup";
 import BusinessCardComponent from "./BusinessCardComponent";
@@ -77,7 +76,6 @@ export default function LandingPage({ projects, services, testimonials }: Landin
         timeWait={showInitialLoading ? 2.5 : 3}
       />
       <BusinessCardComponent showCardAfterRef={headerTriggerRef} hideCardAfterRef={hideCardAfterRef} />
-      <SocialMediaLabel />
       <div ref={headerTriggerRef}>
         <Header />
       </div>

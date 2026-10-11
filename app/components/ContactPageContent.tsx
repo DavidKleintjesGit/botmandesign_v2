@@ -1,20 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
+import PageIntro from "./PageIntro";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageProvider";
 
 const contactCopy = {
   en: {
     label: "CONTACT",
-    heroLine1: "Every interior",
-    heroLine2: "begins with",
-    heroLine3: "a conversation.",
-    panelTitle: "A great interior starts with a great conversation.",
-    panelBody:
+    title: "Every interior begins",
+    titleAccent: "with a conversation.",
+    intro:
       "Send us a short message — we'll get back to you within 1–2 business days to find a moment that works for both of us.",
+    panelTitle: "A great interior starts with a great conversation.",
+    directLabel: "OR REACH US DIRECTLY",
     formName: "Name",
     formEmail: "Email",
     formInquiry: "Subject",
@@ -28,12 +28,12 @@ const contactCopy = {
   },
   nl: {
     label: "CONTACT",
-    heroLine1: "Elk interieur",
-    heroLine2: "begint met",
-    heroLine3: "een gesprek.",
-    panelTitle: "Een goed interieur begint met een goed gesprek.",
-    panelBody:
+    title: "Elk interieur begint",
+    titleAccent: "met een gesprek.",
+    intro:
       "Stuur ons een kort bericht — we nemen binnen 1–2 werkdagen contact op om samen een moment te vinden.",
+    panelTitle: "Een goed interieur begint met een goed gesprek.",
+    directLabel: "OF NEEM DIRECT CONTACT OP",
     formName: "Naam",
     formEmail: "E-mail",
     formInquiry: "Onderwerp",
@@ -55,11 +55,24 @@ const INQUIRY_OPTIONS = [
   { value: "other", label: "Overig" },
 ];
 
+const DIRECT = [
+  { label: "studio@botmandesign.com", href: "mailto:studio@botmandesign.com" },
+  { label: "+31 6 12 34 56 78", href: "tel:+31612345678" },
+];
+
 const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
 const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
 type Status = "idle" | "sending" | "sent" | "error";
 
+/*
+ * De contactpagina is een formulier, verder niets.
+ *
+ * Er stond een beeldvullende foto boven, maar die vroeg hier alleen aandacht:
+ * wie hier komt wil iets opsturen, niet nog een interieur bekijken. De pagina
+ * houdt daarom dezelfde kop als de andere onderliggende pagina's en gaat
+ * daarna meteen over in het formulier.
+ */
 export default function ContactPageContent() {
   const { language } = useLanguage();
   const copy = contactCopy[language];
@@ -130,69 +143,39 @@ export default function ContactPageContent() {
 
   return (
     <div>
-      {/* HERO */}
-      <header className="relative h-screen w-full overflow-hidden">
-        <Image
-          src="/images/design/contact-hero.jpg"
-          alt="Interieur door Botman Design"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
+      <PageIntro label={copy.label} title={copy.title} titleAccent={copy.titleAccent} intro={copy.intro} />
 
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 z-20 h-64"
-          style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0))" }}
-        />
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-96"
-          style={{
-            background:
-              "linear-gradient(to top, var(--color-cedar) 0%, rgba(103, 92, 83, 0.9) 30%, rgba(103, 92, 83, 0.5) 60%, rgba(103, 92, 83, 0) 100%)",
-          }}
-        />
-
-        <div className="absolute inset-x-0 bottom-0 z-30 pb-20 md:pb-28">
-          <div className="container mx-auto px-4 text-center md:px-8">
-            <p
-              className="mb-6 text-sm uppercase md:text-base"
-              style={{ ...sans, color: "var(--color-champagne)" }}
-            >
-              {copy.label}
-            </p>
-            <h1
-              className="text-4xl font-light uppercase tracking-wider md:text-5xl"
-              style={{ ...serif, letterSpacing: "0.15em", color: "var(--color-champagne)" }}
-            >
-              {copy.heroLine1}
-              <br />
-              {copy.heroLine2}
-              <br />
-              <span style={{ color: "var(--color-almond)" }}>{copy.heroLine3}</span>
-            </h1>
-          </div>
-        </div>
-      </header>
-
-      {/* FORMULIER */}
-      <section id="form" className="w-full py-20 md:py-28">
+      <section id="form" className="w-full pb-24 md:pb-36">
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex flex-col gap-14 md:flex-row md:gap-20">
             <div className="md:w-2/5">
               <h2
-                className="mb-8 text-2xl font-light uppercase tracking-wider md:text-3xl"
+                className="mb-10 text-2xl font-light uppercase tracking-wider md:text-3xl"
                 style={{ ...serif, letterSpacing: "0.1em", color: "var(--color-champagne)" }}
               >
                 {copy.panelTitle}
               </h2>
 
-              <p
-                className="text-lg leading-relaxed md:text-xl"
-                style={{ ...serif, color: "var(--color-almond)" }}
-              >
-                {copy.panelBody}
+              {/*
+               * Niet iedereen wil een formulier invullen. De directe gegevens
+               * staan daarom naast het formulier en niet alleen in de footer.
+               */}
+              <p className="mb-4 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+                {copy.directLabel}
               </p>
+
+              <div className="flex flex-col gap-2">
+                {DIRECT.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="w-fit text-lg transition-opacity duration-300 hover:opacity-70 md:text-xl"
+                    style={{ ...serif, color: "var(--color-champagne)" }}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-8 md:w-3/5">
