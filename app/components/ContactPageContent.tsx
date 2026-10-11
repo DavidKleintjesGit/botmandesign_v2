@@ -144,13 +144,17 @@ export default function ContactPageContent() {
       <PageIntro label={copy.label} title={copy.title} titleAccent={copy.titleAccent} intro={copy.intro} />
 
       {/*
-       * Het formulier staat rechts, de directe gegevens links. Het formulier
-       * blijft op leesbare breedte staan in plaats van de halve pagina te
-       * vullen: een invulregel van zeshonderd pixels is al ruim.
+       * Een derde voor de directe gegevens, twee derde voor het formulier.
+       *
+       * Het formulier mag breed zijn zolang de invulregels dat niet worden:
+       * naam en e-mail staan daarom naast elkaar, onderwerp en bericht eronder
+       * over de volle breedte. Zo vult het de kolom met een indeling in plaats
+       * van met uitgerekte regels, en leest het van boven naar beneden als
+       * twee korte vragen gevolgd door twee lange.
        */}
       <section id="form" className="w-full pb-24 md:pb-36">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col gap-14 md:flex-row md:items-start md:justify-between md:gap-20">
+          <div className="grid gap-14 md:grid-cols-3 md:gap-16">
             <div>
               <p className="mb-4 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
                 {copy.directLabel}
@@ -170,16 +174,18 @@ export default function ContactPageContent() {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex w-full flex-col gap-8 md:max-w-xl">
-              <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
-                {copy.formName}
-                <input type="text" name="name" style={fieldStyle} />
-              </label>
+            <form onSubmit={handleSubmit} className="flex w-full flex-col gap-8 md:col-span-2">
+              <div className="grid gap-8 md:grid-cols-2">
+                <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+                  {copy.formName}
+                  <input type="text" name="name" style={fieldStyle} />
+                </label>
 
-              <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
-                {copy.formEmail}
-                <input type="email" name="email" style={fieldStyle} />
-              </label>
+                <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+                  {copy.formEmail}
+                  <input type="email" name="email" style={fieldStyle} />
+                </label>
+              </div>
 
               <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
                 {copy.formInquiry}
@@ -199,7 +205,7 @@ export default function ContactPageContent() {
                 {copy.formMessage}
                 <textarea
                   name="message"
-                  rows={4}
+                  rows={6}
                   style={{ ...fieldStyle, resize: "vertical", fontFamily: "var(--font-cormorant-garamond), serif" }}
                 />
               </label>
