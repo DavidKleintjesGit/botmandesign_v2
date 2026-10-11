@@ -37,9 +37,23 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
   return (
     <SetHiddenContext.Provider value={setHidden}>
       <SiteHeader hidden={hidden} />
-      {/* De rail rechts: social boven het midden, taal eronder — op elke pagina. */}
-      <SocialMediaLabel />
-      <LanguageLabel />
+
+      {/*
+       * De rail rechts: social boven het midden, taal eronder — op elke
+       * pagina, behalve zolang de diashow het scherm vult. Daar hoort niets
+       * overheen te liggen; je kijkt dan naar een ruimte, niet naar een site.
+       */}
+      <div
+        className="transition-all duration-500"
+        style={{
+          transform: hidden ? "translateX(100%)" : "translateX(0)",
+          opacity: hidden ? 0 : 1,
+          pointerEvents: hidden ? "none" : "auto",
+        }}
+      >
+        <SocialMediaLabel />
+        <LanguageLabel />
+      </div>
       {children}
     </SetHiddenContext.Provider>
   );

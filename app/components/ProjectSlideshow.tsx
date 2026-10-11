@@ -158,9 +158,11 @@ function Slide({
   }
 
   if (slide.layout === "duo") {
+    /* Op een telefoon passen twee staande beelden niet naast elkaar; daar
+       staan ze boven elkaar, elk op de halve hoogte. */
     return (
-      <div className="absolute inset-0 z-[3] flex flex-col justify-center gap-8 px-[clamp(20px,5vw,80px)] py-[clamp(72px,10vh,120px)]" style={laag}>
-        <div className="flex min-h-0 flex-1 gap-[clamp(12px,2vw,28px)]">
+      <div className="absolute inset-0 z-[3] flex flex-col justify-center gap-6 px-[clamp(16px,5vw,80px)] py-[clamp(64px,10vh,120px)] md:gap-8" style={laag}>
+        <div className="flex min-h-0 flex-1 flex-col gap-3 md:flex-row md:gap-[clamp(12px,2vw,28px)]">
           {[slide.img, slide.imgTwo].filter(Boolean).map((src, i) => (
             <div key={src} className="relative min-h-0 flex-1 overflow-hidden">
               <Image
@@ -190,10 +192,97 @@ function Slide({
     );
   }
 
-  if (slide.layout === "tekst") {
+  if (slide.layout === "versprongen") {
+    /*
+     * Twee beelden van verschillende maat, waarvan het tweede een stuk zakt.
+     * Een paar van gelijke blokken is rustig; dit geeft spanning zonder dat het
+     * rommelig wordt.
+     */
     return (
-      <div className="absolute inset-0 z-[3] grid grid-cols-1 items-center gap-[clamp(24px,4vw,64px)] px-[clamp(20px,5vw,80px)] py-[clamp(72px,10vh,120px)] md:grid-cols-2" style={laag}>
-        <div className="relative hidden h-full overflow-hidden md:block">
+      <div className="absolute inset-0 z-[3] flex flex-col items-stretch gap-4 px-[clamp(16px,5vw,80px)] py-[clamp(64px,10vh,120px)] md:flex-row md:items-center md:gap-[clamp(16px,3vw,48px)]" style={laag}>
+        <div className="relative h-[46%] overflow-hidden md:h-[78%] md:basis-[58%]">
+          <Image
+            src={slide.img}
+            alt={slide.caption || title}
+            fill
+            loading={eerste ? undefined : "lazy"}
+            priority={eerste}
+            sizes="58vw"
+            className="object-cover"
+            style={{
+              transform: active ? "translateY(0)" : "translateY(26px)",
+              transition: "transform 1000ms cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
+          />
+        </div>
+
+        <div className="flex min-h-0 flex-1 flex-col justify-end md:h-full md:pb-[6%]">
+          {slide.imgTwo && (
+            <div className="relative h-[60%] w-full overflow-hidden md:h-[58%]">
+              <Image
+                src={slide.imgTwo}
+                alt={slide.caption || title}
+                fill
+                loading="lazy"
+                sizes="38vw"
+                className="object-cover"
+                style={{
+                  transform: active ? "translateY(0)" : "translateY(40px)",
+                  transition: "transform 1000ms cubic-bezier(0.22, 1, 0.36, 1) 160ms",
+                }}
+              />
+            </div>
+          )}
+
+          {slide.caption && (
+            <div className="mt-7">
+              <Tekst slide={slide} nummer={nummer} actief={active} />
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (slide.layout === "portret") {
+    /* Eén staand beeld met veel lucht eromheen — een stil moment in de reeks. */
+    return (
+      <div className="absolute inset-0 z-[3] flex flex-col items-center justify-center gap-5 px-[clamp(16px,5vw,80px)] py-[clamp(64px,10vh,120px)] md:flex-row md:gap-[clamp(24px,5vw,80px)]" style={laag}>
+        <div className="relative h-[62%] w-full shrink-0 overflow-hidden md:h-full md:w-[min(42vw,480px)]">
+          <Image
+            src={slide.img}
+            alt={slide.caption || title}
+            fill
+            loading={eerste ? undefined : "lazy"}
+            priority={eerste}
+            sizes="(max-width: 768px) 100vw, 480px"
+            className="object-cover"
+            style={{
+              transform: active ? "scale(1)" : "scale(1.05)",
+              transition: "transform 1400ms cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
+          />
+        </div>
+
+        {slide.caption && (
+          <div className="w-full max-w-sm">
+            <Tekst slide={slide} nummer={nummer} actief={active} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (slide.layout === "tekst") {
+    /*
+     * Beeld links, een echt stuk tekst rechts. Hier is ruimte voor uitleg: wat
+     * er gedaan is en waarom. Vandaar de bredere regel en de lijn erboven —
+     * het moet lezen als een alinea, niet als een bijschrift dat te groot is
+     * uitgevallen.
+     */
+    return (
+      <div className="absolute inset-0 z-[3] grid grid-cols-1 content-center items-center gap-6 overflow-y-auto px-[clamp(16px,5vw,80px)] py-[clamp(64px,10vh,120px)] md:grid-cols-[1fr_1fr] md:gap-[clamp(24px,4vw,72px)] md:overflow-visible" style={laag}>
+        <div className="relative h-[34vh] overflow-hidden md:h-full">
           <Image
             src={slide.img}
             alt={slide.caption || title}
@@ -210,7 +299,7 @@ function Slide({
         </div>
 
         <div className="max-w-xl">
-          <Tekst slide={slide} nummer={nummer} actief={active} />
+          <Tekst slide={slide} nummer={nummer} actief={active} uitgebreid />
         </div>
       </div>
     );
@@ -255,12 +344,15 @@ function Tekst({
   actief,
   groot = false,
   centered = false,
+  uitgebreid = false,
 }: {
   slide: ProjectSlide;
   nummer: string;
   actief: boolean;
   groot?: boolean;
   centered?: boolean;
+  /** Een stuk uitleg in plaats van een bijschrift: bredere regel, meer lucht. */
+  uitgebreid?: boolean;
 }) {
   const beweging = {
     opacity: actief ? 1 : 0,
@@ -270,8 +362,16 @@ function Tekst({
 
   return (
     <div className={centered ? "max-w-3xl text-center" : undefined} style={beweging}>
+      {uitgebreid && (
+        <span
+          className="mb-7 block h-px w-14"
+          style={{ backgroundColor: "rgba(182, 163, 144, 0.6)" }}
+          aria-hidden
+        />
+      )}
+
       <p
-        className="mb-4 text-[11px] uppercase md:text-xs"
+        className={`text-[11px] uppercase md:text-xs ${uitgebreid ? "mb-5" : "mb-4"}`}
         style={{ ...sans, letterSpacing: "0.2em", color: "#cbbfa9" }}
       >
         {nummer}
@@ -280,7 +380,9 @@ function Tekst({
 
       {slide.caption && (
         <p
-          className={`mb-4 font-light italic ${groot ? "text-4xl md:text-6xl" : "text-3xl md:text-4xl"}`}
+          className={`font-light italic ${uitgebreid ? "mb-6" : "mb-4"} ${
+            groot ? "text-4xl md:text-6xl" : uitgebreid ? "text-3xl md:text-5xl" : "text-3xl md:text-4xl"
+          }`}
           style={{ ...serif, color: "var(--color-champagne)" }}
         >
           {slide.caption}
@@ -289,7 +391,11 @@ function Tekst({
 
       {slide.body && (
         <p
-          className={`text-base leading-relaxed md:text-lg ${centered ? "mx-auto max-w-xl" : "max-w-md"}`}
+          className={
+            uitgebreid
+              ? "max-w-prose text-lg leading-[1.75] md:text-xl"
+              : `text-base leading-relaxed md:text-lg ${centered ? "mx-auto max-w-xl" : "max-w-md"}`
+          }
           style={{ ...serif, color: "var(--color-almond)" }}
         >
           {slide.body}

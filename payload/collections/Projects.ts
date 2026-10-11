@@ -136,6 +136,8 @@ export const Projects: CollectionConfig = {
           options: [
             { label: "Eén beeld, schermvullend", value: "vol" },
             { label: "Twee beelden naast elkaar", value: "duo" },
+            { label: "Twee beelden, versprongen", value: "versprongen" },
+            { label: "Eén staand beeld, met lucht eromheen", value: "portret" },
             { label: "Beeld met tekst ernaast", value: "tekst" },
             { label: "Alleen tekst — een adempauze", value: "rust" },
           ],
@@ -155,7 +157,9 @@ export const Projects: CollectionConfig = {
           relationTo: "media",
           label: "Tweede beeld",
           admin: {
-            condition: (_data, siblingData) => siblingData?.layout === "duo",
+            condition: (_data, siblingData) =>
+              siblingData?.layout === "duo" ||
+              siblingData?.layout === "versprongen",
             description: "Komt rechts van het eerste te staan.",
           },
         },
@@ -177,6 +181,10 @@ export const Projects: CollectionConfig = {
           type: "textarea",
           label: "Toelichting",
           localized: true,
+          admin: {
+            description:
+              "Bij 'Beeld met tekst ernaast' is dit de plek om echt iets uit te leggen — een alinea, geen bijschrift.",
+          },
         },
       ],
     },

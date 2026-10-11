@@ -6,7 +6,13 @@ import type { Language } from "./i18n";
  * geeft ruimte om iets uit te leggen, en een dia met alleen tekst is een
  * adempauze tussen twee reeksen beeld door.
  */
-export type SlideLayout = "vol" | "duo" | "tekst" | "rust";
+export type SlideLayout =
+  | "vol"
+  | "duo"
+  | "versprongen"
+  | "portret"
+  | "tekst"
+  | "rust";
 
 export interface ProjectSlide {
   layout: SlideLayout;
