@@ -16,8 +16,13 @@ export default function PageIntro({
   titleAccent?: string;
   intro?: string;
 }) {
+  /*
+   * Geen eigen achtergrond: die komt van body, zodat dit blok meeverloopt
+   * wanneer je vanaf de collectie binnenkomt. Schilderde het zelf cedar, dan
+   * stond de kop meteen in de nieuwe kleur terwijl de rest nog overging.
+   */
   return (
-    <section className="w-full pt-40 pb-16 md:pt-52 md:pb-24" style={{ backgroundColor: "var(--color-cedar)" }}>
+    <section className="w-full pt-40 pb-16 md:pt-52 md:pb-24">
       <div className="container mx-auto px-4 md:px-8">
         <p
           className="mb-6 text-sm uppercase md:text-base"

@@ -152,7 +152,7 @@ export default function ProjectDetail({ slug, projects }: { slug: string; projec
         </div>
       </Link>
 
-      <div className="w-full py-10 text-center" style={{ backgroundColor: "var(--color-cedar)" }}>
+      <div className="w-full py-10 text-center">
         <Link
           href="/projecten"
           className="inline-block rounded-full border px-5 py-2.5 text-sm font-light uppercase tracking-wider transition-all duration-300 hover:opacity-90"
