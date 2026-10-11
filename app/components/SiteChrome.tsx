@@ -42,18 +42,15 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
        * De rail rechts: social boven het midden, taal eronder — op elke
        * pagina, behalve zolang de diashow het scherm vult. Daar hoort niets
        * overheen te liggen; je kijkt dan naar een ruimte, niet naar een site.
+       *
+       * Het wegschuiven doet de pil zelf en niet een wikkel eromheen. Een
+       * transform op een ouder maakt die namelijk het referentiekader voor
+       * alles wat daarbinnen fixed staat, en dan hangt de rail niet meer aan
+       * het scherm maar aan een blokje van nul pixels hoog — en verdwijnt hij
+       * overal uit beeld in plaats van alleen in de diashow.
        */}
-      <div
-        className="transition-all duration-500"
-        style={{
-          transform: hidden ? "translateX(100%)" : "translateX(0)",
-          opacity: hidden ? 0 : 1,
-          pointerEvents: hidden ? "none" : "auto",
-        }}
-      >
-        <SocialMediaLabel />
-        <LanguageLabel />
-      </div>
+      <SocialMediaLabel hidden={hidden} />
+      <LanguageLabel hidden={hidden} />
       {children}
     </SetHiddenContext.Provider>
   );

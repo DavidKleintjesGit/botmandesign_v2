@@ -1,0 +1,60 @@
+/* De vormkiezer bij een dia. */
+
+.bd-vormkiezer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+
+  &__kop {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--bd-ink);
+  }
+
+  &__rij {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  &__knop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 104px;
+    padding: 12px 8px 10px;
+    background: var(--bd-paper);
+    border: 1px solid var(--bd-line-2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease;
+
+    &:hover {
+      border-color: var(--bd-stone);
+      background: var(--bd-wash);
+    }
+
+    /* De gekozen vorm krijgt een dubbele rand in plaats van een vulling, zodat
+       de tekening zelf leesbaar blijft. */
+    &--aan {
+      border-color: var(--bd-ink);
+      box-shadow: inset 0 0 0 1px var(--bd-ink);
+    }
+  }
+
+  &__naam {
+    font-size: 12px;
+    line-height: 1.3;
+    text-align: center;
+    color: var(--bd-ink);
+  }
+
+  &__uitleg {
+    font-size: 12px;
+    color: var(--bd-muted);
+  }
+}

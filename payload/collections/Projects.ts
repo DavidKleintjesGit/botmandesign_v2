@@ -141,6 +141,10 @@ export const Projects: CollectionConfig = {
             { label: "Beeld met tekst ernaast", value: "tekst" },
             { label: "Alleen tekst — een adempauze", value: "rust" },
           ],
+          admin: {
+            // Tekeningetjes in plaats van een keuzelijst; zie SlideLayoutField.
+            components: { Field: "/payload/components/SlideLayoutField#default" },
+          },
         },
         {
           name: "image",
