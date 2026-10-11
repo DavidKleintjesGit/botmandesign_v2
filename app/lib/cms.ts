@@ -2,7 +2,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 
 import type { Product, ProductCategory } from "@/app/content/products";
-import type { Project } from "@/app/content/projects";
+import type { SlideLayout, Project } from "@/app/content/projects";
 import type { Service } from "@/app/content/services";
 import type { Testimonial } from "@/app/content/testimonials";
 
@@ -59,7 +59,9 @@ export async function fetchProjects(): Promise<Project[]> {
   return result.docs.map((doc) => {
     const slidesFor = (language: "nl" | "en") =>
       ((doc.slides ?? []) as Row[]).map((slide) => ({
+        layout: (slide.layout as SlideLayout) ?? "vol",
         img: imageUrl(slide.image as MediaLike),
+        imgTwo: slide.imageTwo ? imageUrl(slide.imageTwo as MediaLike) : undefined,
         caption: pick(slide.caption as Localized<string>, language),
         sub: pick(slide.sub as Localized<string>, language),
         body: pick(slide.body as Localized<string>, language),

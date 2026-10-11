@@ -128,11 +128,36 @@ export const Projects: CollectionConfig = {
       },
       fields: [
         {
+          name: "layout",
+          type: "select",
+          label: "Hoe komt deze dia in beeld",
+          defaultValue: "vol",
+          required: true,
+          options: [
+            { label: "Eén beeld, schermvullend", value: "vol" },
+            { label: "Twee beelden naast elkaar", value: "duo" },
+            { label: "Beeld met tekst ernaast", value: "tekst" },
+            { label: "Alleen tekst — een adempauze", value: "rust" },
+          ],
+        },
+        {
           name: "image",
           type: "upload",
           relationTo: "media",
           label: "Beeld",
-          required: true,
+          admin: {
+            condition: (_data, siblingData) => siblingData?.layout !== "rust",
+          },
+        },
+        {
+          name: "imageTwo",
+          type: "upload",
+          relationTo: "media",
+          label: "Tweede beeld",
+          admin: {
+            condition: (_data, siblingData) => siblingData?.layout === "duo",
+            description: "Komt rechts van het eerste te staan.",
+          },
         },
         {
           name: "caption",
