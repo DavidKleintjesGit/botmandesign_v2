@@ -144,15 +144,33 @@ export default function ContactPageContent() {
       <PageIntro label={copy.label} title={copy.title} titleAccent={copy.titleAccent} intro={copy.intro} />
 
       {/*
-       * Eén kolom in plaats van twee. Een invulregel die de halve pagina breed
-       * is leest slecht, en links bleef een leeg vlak over. Het formulier staat
-       * nu in het midden op leesbare breedte, met de directe gegevens eronder
-       * voor wie liever geen formulier invult.
+       * Het formulier staat rechts, de directe gegevens links. Het formulier
+       * blijft op leesbare breedte staan in plaats van de halve pagina te
+       * vullen: een invulregel van zeshonderd pixels is al ruim.
        */}
       <section id="form" className="w-full pb-24 md:pb-36">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="w-full max-w-xl">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+          <div className="flex flex-col gap-14 md:flex-row md:items-start md:justify-between md:gap-20">
+            <div>
+              <p className="mb-4 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+                {copy.directLabel}
+              </p>
+
+              <div className="flex flex-col gap-2">
+                {DIRECT.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="w-fit text-lg transition-opacity duration-300 hover:opacity-70 md:text-xl"
+                    style={{ ...serif, color: "var(--color-champagne)" }}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex w-full flex-col gap-8 md:max-w-xl">
               <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
                 {copy.formName}
                 <input type="text" name="name" style={fieldStyle} />
@@ -211,28 +229,6 @@ export default function ContactPageContent() {
                 </p>
               )}
             </form>
-
-            <div
-              className="mt-16 border-t pt-10"
-              style={{ borderColor: "rgba(182, 163, 144, 0.3)" }}
-            >
-              <p className="mb-4 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
-                {copy.directLabel}
-              </p>
-
-              <div className="flex flex-col gap-2 md:flex-row md:gap-10">
-                {DIRECT.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="w-fit text-lg transition-opacity duration-300 hover:opacity-70 md:text-xl"
-                    style={{ ...serif, color: "var(--color-champagne)" }}
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </section>
