@@ -66,6 +66,7 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
   const { light } = usePageSurface();
   const [compact, setCompact] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [projectsOpen, setProjectsOpen] = useState(false);
 
   /*
    * De balk mag het beeld niet in de weg zitten maar moet wel bereikbaar
@@ -126,8 +127,17 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
   // De diashow op een projectpagina kan de balk ook helemaal onderdrukken.
   const visible = revealed && !hidden;
 
+  /*
+   * Projecten heeft twee weergaven die we naast elkaar beoordelen. Zolang dat
+   * zo is hangt er een klein menuutje onder; valt de keuze, dan wordt het weer
+   * één link.
+   */
+  const projectConcepten = [
+    { key: "concept-1", label: "Concept 1", href: "/projecten" },
+    { key: "concept-2", label: "Concept 2", href: "/concept-2" },
+  ];
+
   const leftLinks = [
-    { key: "projects", label: t.navProjects, href: "/projecten" },
     { key: "services", label: t.navServices, href: "/services" },
     { key: "shop", label: t.navShop, href: "/collectie" },
   ];
@@ -189,6 +199,49 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
             {!compact ? (
               <>
                 <div className="-mt-3 flex items-center gap-8">
+                  <div
+                    className="relative"
+                    onMouseEnter={() => setProjectsOpen(true)}
+                    onMouseLeave={() => setProjectsOpen(false)}
+                  >
+                    <Link
+                      href="/projecten"
+                      className="flex items-center gap-2 text-sm font-light uppercase tracking-wider transition-colors"
+                      style={linkStyle}
+                      onFocus={() => setProjectsOpen(true)}
+                    >
+                      {t.navProjects}
+                      <span
+                        aria-hidden
+                        className="text-[9px] transition-transform duration-300"
+                        style={{ transform: projectsOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+                      >
+                        &#9660;
+                      </span>
+                    </Link>
+
+                    <div
+                      className="absolute left-0 top-full flex flex-col gap-3 pt-4 transition-all duration-300"
+                      style={{
+                        opacity: projectsOpen ? 1 : 0,
+                        transform: projectsOpen ? "translateY(0)" : "translateY(-6px)",
+                        pointerEvents: projectsOpen ? "auto" : "none",
+                      }}
+                    >
+                      {projectConcepten.map((concept) => (
+                        <Link
+                          key={concept.key}
+                          href={concept.href}
+                          className="whitespace-nowrap text-xs font-light uppercase tracking-wider transition-opacity duration-300 hover:opacity-70"
+                          style={linkStyle}
+                          onClick={() => setProjectsOpen(false)}
+                        >
+                          {concept.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+
                   {leftLinks.map((link) => (
                     <Link
                       key={link.key}
@@ -283,7 +336,12 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
             </button>
 
             <nav className="flex flex-col gap-6">
-              {[...leftLinks, ...rightLinks].map((link) => (
+              {[
+                { key: "projects", label: t.navProjects, href: "/projecten" },
+                ...projectConcepten.map((c) => ({ ...c, label: "— " + c.label })),
+                ...leftLinks,
+                ...rightLinks,
+              ].map((link) => (
                 <Link
                   key={link.key}
                   href={link.href}
