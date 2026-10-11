@@ -5,7 +5,39 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { useLanguage } from "./LanguageProvider";
-import { usePageSurface, INK_TRANSITION } from "./PageSurface";
+import { usePageSurface, INK_TRANSITION, FADE_TRANSITION } from "./PageSurface";
+
+/*
+ * Het woordmerk is champagne, en op de champagne grond van de collectie
+ * verdwijnt het dus. Er is een tweede bestand in cedar — alleen de kleur
+ * verschilt, de vorm van de letters is dezelfde. Een afbeelding kan niet van
+ * kleur verlopen, dus liggen ze over elkaar en wisselen ze met hun dekking.
+ */
+function Wordmark({ light, width, height }: { light: boolean; width: number; height: number }) {
+  const common = {
+    alt: "Botman Design",
+    width,
+    height,
+    className: "h-auto",
+    priority: true,
+  };
+
+  return (
+    <span className="relative block" style={{ width }}>
+      <Image
+        {...common}
+        src="/images/Botman Design Logo-03-A.png"
+        style={{ opacity: light ? 0 : 1, transition: FADE_TRANSITION }}
+      />
+      <Image
+        {...common}
+        src="/images/Botman Design Logo-03-A-cedar.png"
+        className="absolute inset-0 h-auto"
+        style={{ opacity: light ? 1 : 0, transition: FADE_TRANSITION }}
+      />
+    </span>
+  );
+}
 
 const COMPACT_BREAKPOINT = 1024;
 const SCROLL_THRESHOLD = 40;
@@ -175,14 +207,7 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
                   style={{ transform: "translateX(-50%)" }}
                   aria-label="Botman Design"
                 >
-                  <Image
-                    src="/images/Botman Design Logo-03-A.png"
-                    alt="Botman Design"
-                    width={240}
-                    height={80}
-                    className="h-auto"
-                    priority
-                  />
+                  <Wordmark light={light} width={240} height={80} />
                 </Link>
 
                 <div className="-mt-3 flex items-center gap-8">
@@ -202,14 +227,7 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
             ) : (
               <>
                 <Link href="/" aria-label="Botman Design">
-                  <Image
-                    src="/images/Botman Design Logo-03-A.png"
-                    alt="Botman Design"
-                    width={180}
-                    height={60}
-                    className="h-auto"
-                    priority
-                  />
+                  <Wordmark light={light} width={180} height={60} />
                 </Link>
 
                 <div className="flex items-center gap-5">

@@ -13,7 +13,6 @@ const contactCopy = {
     titleAccent: "with a conversation.",
     intro:
       "Send us a short message — we'll get back to you within 1–2 business days to find a moment that works for both of us.",
-    panelTitle: "A great interior starts with a great conversation.",
     directLabel: "OR REACH US DIRECTLY",
     formName: "Name",
     formEmail: "Email",
@@ -32,7 +31,6 @@ const contactCopy = {
     titleAccent: "met een gesprek.",
     intro:
       "Stuur ons een kort bericht — we nemen binnen 1–2 werkdagen contact op om samen een moment te vinden.",
-    panelTitle: "Een goed interieur begint met een goed gesprek.",
     directLabel: "OF NEEM DIRECT CONTACT OP",
     formName: "Naam",
     formEmail: "E-mail",
@@ -145,40 +143,16 @@ export default function ContactPageContent() {
     <div>
       <PageIntro label={copy.label} title={copy.title} titleAccent={copy.titleAccent} intro={copy.intro} />
 
+      {/*
+       * Eén kolom in plaats van twee. Een invulregel die de halve pagina breed
+       * is leest slecht, en links bleef een leeg vlak over. Het formulier staat
+       * nu in het midden op leesbare breedte, met de directe gegevens eronder
+       * voor wie liever geen formulier invult.
+       */}
       <section id="form" className="w-full pb-24 md:pb-36">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col gap-14 md:flex-row md:gap-20">
-            <div className="md:w-2/5">
-              <h2
-                className="mb-10 text-2xl font-light uppercase tracking-wider md:text-3xl"
-                style={{ ...serif, letterSpacing: "0.1em", color: "var(--color-champagne)" }}
-              >
-                {copy.panelTitle}
-              </h2>
-
-              {/*
-               * Niet iedereen wil een formulier invullen. De directe gegevens
-               * staan daarom naast het formulier en niet alleen in de footer.
-               */}
-              <p className="mb-4 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
-                {copy.directLabel}
-              </p>
-
-              <div className="flex flex-col gap-2">
-                {DIRECT.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="w-fit text-lg transition-opacity duration-300 hover:opacity-70 md:text-xl"
-                    style={{ ...serif, color: "var(--color-champagne)" }}
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="flex flex-col gap-8 md:w-3/5">
+          <div className="w-full max-w-xl">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
               <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
                 {copy.formName}
                 <input type="text" name="name" style={fieldStyle} />
@@ -207,7 +181,7 @@ export default function ContactPageContent() {
                 {copy.formMessage}
                 <textarea
                   name="message"
-                  rows={5}
+                  rows={4}
                   style={{ ...fieldStyle, resize: "vertical", fontFamily: "var(--font-cormorant-garamond), serif" }}
                 />
               </label>
@@ -237,6 +211,28 @@ export default function ContactPageContent() {
                 </p>
               )}
             </form>
+
+            <div
+              className="mt-16 border-t pt-10"
+              style={{ borderColor: "rgba(182, 163, 144, 0.3)" }}
+            >
+              <p className="mb-4 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+                {copy.directLabel}
+              </p>
+
+              <div className="flex flex-col gap-2 md:flex-row md:gap-10">
+                {DIRECT.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="w-fit text-lg transition-opacity duration-300 hover:opacity-70 md:text-xl"
+                    style={{ ...serif, color: "var(--color-champagne)" }}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>

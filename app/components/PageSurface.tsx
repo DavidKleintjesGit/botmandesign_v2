@@ -21,6 +21,9 @@ const DURATION_MS = 650;
 
 export const INK_TRANSITION = `color ${DURATION_MS}ms cubic-bezier(0.4, 0, 0.2, 1), border-color ${DURATION_MS}ms cubic-bezier(0.4, 0, 0.2, 1)`;
 
+/** Voor wat niet van kleur kán veranderen, zoals het woordmerk: twee versies die over elkaar heen vervagen. */
+export const FADE_TRANSITION = `opacity ${DURATION_MS}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+
 interface Surface {
   /** De achtergrond van deze pagina. */
   color: string;
