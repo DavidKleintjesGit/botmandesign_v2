@@ -4,8 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import SiteHeader from "./SiteHeader";
-import LanguageLabel from "./LanguageLabel";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageProvider";
 import {
@@ -61,9 +59,6 @@ export default function ShopOverview({ products }: { products: Product[] }) {
 
   return (
     <div>
-      <SiteHeader />
-      <LanguageLabel />
-
       <section className="w-full pt-40 pb-12 md:pt-52 md:pb-16">
         <div className="container mx-auto px-4 md:px-8">
           <p className="mb-6 text-sm uppercase md:text-base" style={{ ...sans, color: INK }}>

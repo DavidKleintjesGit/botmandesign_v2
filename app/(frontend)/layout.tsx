@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Cormorant_Garamond, Montserrat } from "next/font/goo
 import "./globals.css";
 import { LanguageProvider } from "@/app/components/LanguageProvider";
 import PageSurface from "@/app/components/PageSurface";
+import SiteChrome from "@/app/components/SiteChrome";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,7 +46,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${cormorantGaramond.variable} ${montserrat.variable} antialiased`}
       >
         <PageSurface />
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <SiteChrome>{children}</SiteChrome>
+        </LanguageProvider>
       </body>
     </html>
   );

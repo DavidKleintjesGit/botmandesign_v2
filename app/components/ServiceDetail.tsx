@@ -3,8 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import SiteHeader from "./SiteHeader";
-import LanguageLabel from "./LanguageLabel";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageProvider";
 import type { Service } from "@/app/content/services";
@@ -38,9 +36,6 @@ export default function ServiceDetail({ slug, services }: { slug: string; servic
 
   return (
     <div>
-      <SiteHeader />
-      <LanguageLabel />
-
       {/* HERO — beeldvullend met het verloop naar cedar, zoals de header op de homepage */}
       <header className="relative h-screen w-full overflow-hidden">
         <Image

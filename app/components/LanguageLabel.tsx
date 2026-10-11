@@ -3,11 +3,7 @@
 import { useLanguage } from "./LanguageProvider";
 import { usePageSurface, INK_TRANSITION } from "./PageSurface";
 
-interface LanguageLabelProps {
-  onLanguageChange?: () => void;
-}
-
-export default function LanguageLabel({ onLanguageChange }: LanguageLabelProps) {
+export default function LanguageLabel() {
   const { language, setLanguage } = useLanguage();
   const selectedLanguage = language === "nl" ? "NL" : "EN";
 
@@ -24,7 +20,6 @@ export default function LanguageLabel({ onLanguageChange }: LanguageLabelProps) 
   const handleLanguageClick = (next: "NL" | "EN") => {
     if (next === selectedLanguage) return;
     setLanguage(next === "NL" ? "nl" : "en");
-    onLanguageChange?.();
   };
 
   return (

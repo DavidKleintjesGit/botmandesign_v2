@@ -3,8 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import SiteHeader from "./SiteHeader";
-import LanguageLabel from "./LanguageLabel";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageProvider";
 import { aboutCopy } from "@/app/content/about";
@@ -19,9 +17,6 @@ export default function AboutPageContent() {
 
   return (
     <div>
-      <SiteHeader />
-      <LanguageLabel />
-
       <section className="w-full pt-40 pb-16 md:pt-52 md:pb-24">
         <div className="container mx-auto px-4 md:px-8">
           <p className="mb-6 text-sm uppercase md:text-base" style={{ ...sans, color: "var(--color-champagne)" }}>

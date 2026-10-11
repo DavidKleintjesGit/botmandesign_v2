@@ -4,8 +4,7 @@ import { useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import SiteHeader from "./SiteHeader";
-import LanguageLabel from "./LanguageLabel";
+import { useNavHidden } from "./SiteChrome";
 import Footer from "./Footer";
 import ProjectSlideshow from "./ProjectSlideshow";
 import { useLanguage } from "./LanguageProvider";
@@ -23,6 +22,8 @@ export default function ProjectDetail({ slug, projects }: { slug: string; projec
   const { language } = useLanguage();
   const [navHidden, setNavHidden] = useState(false);
   const handleImmersiveChange = useCallback((immersive: boolean) => setNavHidden(immersive), []);
+  useNavHidden(navHidden);
+
   const project = projects.find((item) => item.slug === slug);
 
   if (!project) return null;
@@ -34,9 +35,6 @@ export default function ProjectDetail({ slug, projects }: { slug: string; projec
 
   return (
     <div>
-      <SiteHeader hidden={navHidden} />
-      <LanguageLabel />
-
       {/* HERO */}
       <header className="relative h-screen w-full overflow-hidden">
         <Image

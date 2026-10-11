@@ -2,9 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Header from "./Header";
-import SiteHeader from "./SiteHeader";
 import SocialMediaLabel from "./SocialMediaLabel";
-import LanguageLabel from "./LanguageLabel";
 import LoadingPage from "./LoadingPage";
 import CookiePopup from "./CookiePopup";
 import BusinessCardComponent from "./BusinessCardComponent";
@@ -14,6 +12,7 @@ import ServicesSection from "./ServicesSection";
 import AboutSection from "./AboutSection";
 import TestimonialSection from "./TestimonialSection";
 import CTA from "./CTA";
+import { useLanguage } from "./LanguageProvider";
 import Footer from "./Footer";
 
 import type { Project } from "@/app/content/projects";
@@ -33,6 +32,7 @@ export default function LandingPage({ projects, services, testimonials }: Landin
   const [showInitialLoading, setShowInitialLoading] = useState(true);
   const [showLanguageLoading, setShowLanguageLoading] = useState(false);
   const [loadingKey, setLoadingKey] = useState(0);
+  const { language } = useLanguage();
 
   useEffect(() => {
     const scrollToTop = () => {
@@ -53,13 +53,19 @@ export default function LandingPage({ projects, services, testimonials }: Landin
     return () => clearTimeout(timer);
   }, []);
 
-  const handleLanguageChange = () => {
+  const eersteTaal = useRef(language);
+
+  useEffect(() => {
+    // Alleen bij een wissel, niet bij het eerste bezoek.
+    if (eersteTaal.current === language) return;
+    eersteTaal.current = language;
+
     setShowLanguageLoading(true);
     setLoadingKey((prev) => prev + 1);
-    setTimeout(() => {
-      setShowLanguageLoading(false);
-    }, 3850);
-  };
+
+    const timer = setTimeout(() => setShowLanguageLoading(false), 3850);
+    return () => clearTimeout(timer);
+  }, [language]);
 
   return (
     <div className="font-sans" style={{ backgroundColor: "var(--color-mist)" }}>
@@ -70,10 +76,8 @@ export default function LandingPage({ projects, services, testimonials }: Landin
         fadeOut
         timeWait={showInitialLoading ? 2.5 : 3}
       />
-      <SiteHeader />
       <BusinessCardComponent showCardAfterRef={headerTriggerRef} hideCardAfterRef={hideCardAfterRef} />
       <SocialMediaLabel />
-      <LanguageLabel onLanguageChange={handleLanguageChange} />
       <div ref={headerTriggerRef}>
         <Header />
       </div>

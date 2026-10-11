@@ -3,8 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import SiteHeader from "./SiteHeader";
-import LanguageLabel from "./LanguageLabel";
 import Footer from "./Footer";
 import PageIntro from "./PageIntro";
 import { useLanguage } from "./LanguageProvider";
@@ -39,9 +37,6 @@ export default function ServicesOverview({ services }: { services: Record<string
 
   return (
     <div>
-      <SiteHeader />
-      <LanguageLabel />
-
       <PageIntro label={copy.label} title={copy.title} intro={copy.intro} />
 
       <section className="w-full pb-24 md:pb-32">
