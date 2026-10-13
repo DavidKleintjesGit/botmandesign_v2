@@ -66,7 +66,11 @@ export default function LandingPage({ projects, services, testimonials }: Landin
   }, [language]);
 
   return (
-    <div className="font-sans" style={{ backgroundColor: "var(--color-mist)" }}>
+    /*
+     * Cedar en niet mist: mist is bijna wit, en overal waar twee secties
+     * elkaar net niet raken schijnt dat als een streep door het beeld.
+     */
+    <div className="font-sans" style={{ backgroundColor: "var(--color-cedar)" }}>
       <LoadingPage
         key={loadingKey}
         show={showInitialLoading || showLanguageLoading}

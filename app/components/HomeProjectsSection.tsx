@@ -7,140 +7,79 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useLanguage } from "./LanguageProvider";
-import { zonderJaartal } from "./ProjectCard";
 import type { Project } from "@/app/content/projects";
-
-const sectionCopy = {
-  nl: {
-    label: "Werk",
-    title: "Geselecteerd werk",
-    body: "Elk project begint bij hoe iemand wil leven. De indeling, de materialen en het licht volgen daaruit — niet andersom.",
-    link: "Alle projecten",
-  },
-  en: {
-    label: "Work",
-    title: "Selected work",
-    body: "Every project starts with how someone wants to live. The layout, the materials and the light follow from that — not the other way round.",
-    link: "All projects",
-  },
-};
-
-const CEDAR = "#675C53";
-const CEDAR_RGB = "103, 92, 83";
-
-/*
- * De rest van de site laat beeld in cedar oplossen in plaats van er met een
- * harde rand tegenaan te zetten. Deze twee banden doen hetzelfde aan de kop en
- * de voet van de reeks, zodat hij uit het pin-effect erboven komt en weer in de
- * dienstensectie eronder verdwijnt.
- */
-const FADE_FROM_TOP = `linear-gradient(to bottom, ${CEDAR} 0%, rgba(${CEDAR_RGB}, 0.93) 12%, rgba(${CEDAR_RGB}, 0.65) 32%, rgba(${CEDAR_RGB}, 0.25) 52%, rgba(${CEDAR_RGB}, 0) 72%)`;
-const FADE_TO_BOTTOM = `linear-gradient(to top, ${CEDAR} 0%, rgba(${CEDAR_RGB}, 0.93) 12%, rgba(${CEDAR_RGB}, 0.65) 32%, rgba(${CEDAR_RGB}, 0.25) 52%, rgba(${CEDAR_RGB}, 0) 72%)`;
 
 gsap.registerPlugin(ScrollTrigger);
 
 /*
- * Hoeveel de reeks lager begint en al scrollend naar zijn plek komt. Genoeg om
- * te zien dat hij van onderen komt, te weinig om als een truc te lezen.
+ * Hoeveel de kolommen opschuiven terwijl je er langs scrollt. De rechterkolom
+ * loopt iets verder door dan de linker, waardoor het beeld blijft bewegen
+ * zonder dat er iets verspringt.
  */
-const OPKOMST = 140;
-
-const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
-const sans = { fontFamily: "var(--font-montserrat)" } as const;
+const LOOP_LINKS = -90;
+const LOOP_RECHTS = -150;
 
 /*
- * Twee kolommen beeld van rand tot rand, zonder tussenruimte. De hoogtes
- * verschillen per beeld, waardoor de kolommen vanzelf uit de pas gaan lopen —
- * dat is wat het rustige ritme geeft. In het gat dat daardoor links ontstaat
- * valt een tekstblok op cedar, zodat de reeks ademt.
+ * Beeld, verder niets.
+ *
+ * Hier stond een kop, een tekstblok en een verloop aan de boven- en onderkant.
+ * Dat haalde de vaart eruit: je kwam uit een stilstaand citaat en kreeg eerst
+ * weer woorden. Nu komt het werk meteen, en komt het al scrollend omhoog.
  */
 export default function HomeProjectsSection({ projects }: { projects: Project[] }) {
-  const { language } = useLanguage();
-  const copy = sectionCopy[language];
   const sectionRef = useRef<HTMLElement>(null);
+  const linksRef = useRef<HTMLDivElement>(null);
+  const rechtsRef = useRef<HTMLDivElement>(null);
 
-  const [a, b, c, d, e] = projects.slice(0, 5);
+  const [a, b, c, d, e, f] = projects.slice(0, 6);
 
-  /*
-   * De reeks komt van onderen omhoog terwijl het citaat erboven loslaat. Het
-   * hangt aan de scroll en niet aan een tijdsduur, zodat het precies zo snel
-   * gaat als jij scrolt — anders loopt het achter je muis aan.
-   */
   useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
+    const sectie = sectionRef.current;
+    const links = linksRef.current;
+    const rechts = rechtsRef.current;
+    if (!sectie || !links || !rechts) return;
+
+    // Op een smal scherm staan de kolommen onder elkaar; dan heeft het geen zin.
+    const smal = window.matchMedia("(max-width: 768px)");
+    const stil = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (smal.matches || stil.matches) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { y: OPKOMST },
-        {
-          y: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el,
-            start: "top bottom",
-            end: "top 40%",
-            scrub: 0.4,
-          },
-        },
-      );
-    }, el);
+      gsap.to(links, {
+        y: LOOP_LINKS,
+        ease: "none",
+        scrollTrigger: { trigger: sectie, start: "top bottom", end: "bottom top", scrub: 0.6 },
+      });
+
+      gsap.to(rechts, {
+        y: LOOP_RECHTS,
+        ease: "none",
+        scrollTrigger: { trigger: sectie, start: "top bottom", end: "bottom top", scrub: 0.6 },
+      });
+    }, sectie);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full" style={{ backgroundColor: "var(--color-cedar)" }}>
-      {/* Kop boven de reeks */}
-      <div className="container mx-auto px-4 pb-14 pt-20 md:px-8 md:pb-20 md:pt-28">
-        <p className="mb-6 text-sm uppercase md:text-base" style={{ ...sans, color: "var(--color-champagne)" }}>
-          {copy.label}
-        </p>
-
-        <h2
-          className="text-3xl font-light uppercase tracking-wider md:text-4xl lg:text-5xl"
-          style={{ ...serif, letterSpacing: "0.15em", color: "var(--color-champagne)" }}
-        >
-          {copy.title}
-        </h2>
-      </div>
-
-      <div className="relative">
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          {/*
-            De linkerkolom bepaalt de hoogte; rechts vult het tekstblok met
-            flex-1 precies het verschil op. Zo eindigen beide kolommen gelijk in
-            plaats van met een rafelige onderrand.
-          */}
-          <div className="flex flex-col">
-            <ProjectTile project={a} ratio="4 / 5" priority />
-            <ProjectTile project={c} ratio="4 / 3" />
-            <ProjectTile project={e} ratio="1 / 1" />
-          </div>
-
-          <div className="flex flex-col">
-            <ProjectTile project={b} ratio="1 / 1" />
-            <TextTile body={copy.body} link={copy.link} />
-            <ProjectTile project={d} ratio="4 / 5" />
-          </div>
+    <section
+      ref={sectionRef}
+      className="w-full overflow-hidden"
+      style={{ backgroundColor: "var(--color-cedar)" }}
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        <div ref={linksRef} className="flex flex-col">
+          <ProjectTile project={a} ratio="4 / 5" priority />
+          <ProjectTile project={c} ratio="4 / 3" />
+          <ProjectTile project={e} ratio="1 / 1" />
         </div>
 
-        {/* De reeks komt uit het cedar tevoorschijn en lost er weer in op. */}
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-40 md:h-56"
-          style={{ background: FADE_FROM_TOP }}
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-40 md:h-56"
-          style={{ background: FADE_TO_BOTTOM }}
-          aria-hidden
-        />
+        <div ref={rechtsRef} className="flex flex-col">
+          <ProjectTile project={b} ratio="1 / 1" />
+          <ProjectTile project={d} ratio="4 / 5" />
+          <ProjectTile project={f ?? a} ratio="4 / 3" />
+        </div>
       </div>
-
-      {/* Rust tussen de reeks en de dienstensectie eronder. */}
-      <div className="h-20 md:h-32" aria-hidden />
     </section>
   );
 }
@@ -150,11 +89,13 @@ function ProjectTile({
   ratio,
   priority = false,
 }: {
-  project: Project;
+  project?: Project;
   ratio: string;
   priority?: boolean;
 }) {
   const { language } = useLanguage();
+
+  if (!project) return null;
 
   return (
     <Link
@@ -169,54 +110,12 @@ function ProjectTile({
         priority={priority}
         loading={priority ? undefined : "lazy"}
         sizes="(max-width: 768px) 100vw, 50vw"
-        className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+        className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
       />
 
-      {/* De naam komt pas op bij aanwijzen, zodat de reeks als beeld blijft lezen. */}
-      <div
-        className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ backgroundColor: "rgba(10, 9, 7, 0.45)" }}
-      >
-        <p className="text-xs uppercase" style={{ ...sans, letterSpacing: "0.2em", color: "#cbbfa9" }}>
-          {zonderJaartal(project[language].category)}
-        </p>
-
-        <p
-          className="text-2xl font-light italic md:text-3xl"
-          style={{ ...serif, color: "var(--color-champagne)" }}
-        >
-          {project.title}
-        </p>
-      </div>
-
-      <span className="sr-only">{language === "nl" ? "Bekijk project" : "View project"}</span>
+      <span className="sr-only">
+        {language === "nl" ? `Bekijk ${project.title}` : `View ${project.title}`}
+      </span>
     </Link>
-  );
-}
-
-function TextTile({ body, link }: { body: string; link: string }) {
-  return (
-    <div
-      className="flex flex-1 flex-col justify-center px-8 py-16 md:px-14 md:py-20"
-      style={{ backgroundColor: "var(--color-cedar)" }}
-    >
-      <p className="mb-10 text-lg leading-relaxed md:text-xl" style={{ ...serif, color: "var(--color-almond)" }}>
-        {body}
-      </p>
-
-      <Link
-        href="/projecten"
-        className="inline-block self-start rounded-full border px-5 py-2.5 text-sm font-light uppercase tracking-wider transition-all duration-300 hover:opacity-90"
-        style={{
-          ...sans,
-          letterSpacing: "0.15em",
-          backgroundColor: "transparent",
-          borderColor: "var(--color-almond)",
-          color: "var(--color-champagne)",
-        }}
-      >
-        {link}
-      </Link>
-    </div>
   );
 }

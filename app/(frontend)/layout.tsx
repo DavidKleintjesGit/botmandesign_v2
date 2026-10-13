@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cormorant_Garamond, Montserrat } from "next/font/google";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 import { LanguageProvider } from "@/app/components/LanguageProvider";
 import PageSurface from "@/app/components/PageSurface";
 import SiteChrome from "@/app/components/SiteChrome";
+import SmoothScroll from "@/app/components/SmoothScroll";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,6 +48,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${cormorantGaramond.variable} ${montserrat.variable} antialiased`}
       >
         <PageSurface />
+        <SmoothScroll />
         <LanguageProvider>
           <SiteChrome>{children}</SiteChrome>
         </LanguageProvider>

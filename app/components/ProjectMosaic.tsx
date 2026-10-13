@@ -1,12 +1,13 @@
 "use client";
 
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import Footer from "./Footer";
 import { zonderJaartal } from "./ProjectCard";
 import { useLanguage } from "./LanguageProvider";
-import { projectContent, type Project } from "@/app/content/projects";
+import { projectContent, type Project, type ProjectSlide } from "@/app/content/projects";
 
 const copyPer = {
   nl: {
@@ -30,59 +31,87 @@ const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
 /*
  * Het ritme van de banden. Elk getal is een breuk van de schermbreedte; elke
- * rij is samen precies één scherm breed en één scherm hoog.
+ * rij is samen precies één scherm breed.
  *
- * Het patroon herhaalt zich zolang er beeld is, maar begint nooit op dezelfde
- * plek: een rij van twee halve wordt gevolgd door een hele, dan een tweederde
- * met een derde ernaast. Daardoor leest het als compositie en niet als raster.
+ * De hoogtes wisselen mee: een hele band staat hoger dan een rij van drie. Dat
+ * verschil is wat het laat lezen als compositie en niet als raster.
  */
-const RITME: number[][] = [
-  [1],
-  [2 / 3, 1 / 3],
-  [1 / 2, 1 / 2],
-  [1],
-  [1 / 3, 2 / 3],
-  [1 / 2, 1 / 2],
-  [1],
-  [2 / 3, 1 / 3],
-  [1 / 3, 1 / 3, 1 / 3],
-  [1 / 2, 1 / 2],
+const RITME: { breedtes: number[]; hoogte: string }[] = [
+  { breedtes: [1], hoogte: "88vh" },
+  { breedtes: [2 / 3, 1 / 3], hoogte: "76vh" },
+  { breedtes: [1 / 2, 1 / 2], hoogte: "82vh" },
+  { breedtes: [1], hoogte: "94vh" },
+  { breedtes: [1 / 3, 2 / 3], hoogte: "76vh" },
+  { breedtes: [1 / 2, 1 / 2], hoogte: "70vh" },
+  { breedtes: [1 / 3, 1 / 3, 1 / 3], hoogte: "64vh" },
 ];
 
-/** Verdeelt de beelden over de banden, zolang er beeld is. */
-function bandenVoor(beelden: string[]): { breedtes: number[]; beelden: string[] }[] {
-  const banden: { breedtes: number[]; beelden: string[] }[] = [];
-  let i = 0;
+type Band = { soort: "band"; breedtes: number[]; hoogte: string; beelden: string[] };
+type Tekst = { soort: "tekst"; sub: string; kop: string; body: string };
+type Blok = Band | Tekst;
+
+/*
+ * De reeks uit het beheer wordt een reeks blokken.
+ *
+ * Een dia die op "alleen tekst" of "beeld met tekst" staat wordt hier een
+ * tekstvlak; de rest levert zijn beeld aan de banden. Zo bepaalt Bas per dia
+ * waar de woorden vallen, zonder dat daar een apart veld voor nodig is.
+ */
+function blokkenVoor(slides: ProjectSlide[], opening: string): Blok[] {
+  const blokken: Blok[] = [];
+  let wachtrij: string[] = [];
   let stap = 0;
 
-  while (i < beelden.length) {
-    const breedtes = RITME[stap % RITME.length];
-    const deel = beelden.slice(i, i + breedtes.length);
+  const legen = () => {
+    while (wachtrij.length > 0) {
+      const { breedtes, hoogte } = RITME[stap % RITME.length];
+      const deel = wachtrij.slice(0, breedtes.length);
 
-    // Een laatste rij die niet vol raakt wordt zo breed als wat er nog is.
-    if (deel.length < breedtes.length) {
-      banden.push({
-        breedtes: deel.map(() => 1 / deel.length),
+      blokken.push({
+        soort: "band",
+        // Een rij die niet vol raakt verdeelt de breedte over wat er is.
+        breedtes: deel.length < breedtes.length ? deel.map(() => 1 / deel.length) : breedtes,
+        hoogte,
         beelden: deel,
       });
-    } else {
-      banden.push({ breedtes, beelden: deel });
+
+      wachtrij = wachtrij.slice(deel.length);
+      stap += 1;
+    }
+  };
+
+  for (const slide of slides) {
+    if (slide.layout === "rust" || slide.layout === "tekst") {
+      legen();
+
+      if (slide.caption || slide.body) {
+        blokken.push({ soort: "tekst", sub: slide.sub, kop: slide.caption, body: slide.body });
+      }
+
+      // Een dia met tekst én beeld geeft zijn beeld alsnog aan de reeks mee.
+      if (slide.layout === "tekst" && slide.img && slide.img !== opening) {
+        wachtrij.push(slide.img);
+      }
+
+      continue;
     }
 
-    i += deel.length;
-    stap += 1;
+    for (const src of [slide.img, slide.imgTwo]) {
+      if (src && src !== opening && !wachtrij.includes(src)) wachtrij.push(src);
+    }
   }
 
-  return banden;
+  legen();
+  return blokken;
 }
 
 /*
- * Een projectpagina als doorlopend muurvlak van beeld.
+ * Een projectpagina als doorlopend muurvlak van beeld, met af en toe een vlak
+ * om iets uit te leggen.
  *
- * Geen bijschriften, geen tussenkoppen: je loopt van ruimte naar ruimte en de
- * foto's doen het werk. De naam van het project staat één keer, rechtsonder op
- * het openingsbeeld, en onderaan blijft een smalle balk staan met de weg terug
- * en de vraag of je zelf iets wil beginnen.
+ * De blokken komen zacht in beeld in plaats van er ineens te staan. Dat is wat
+ * het scrollen rustig maakt — ik heb het bij kabaz nagemeten: geen vloeiende
+ * scroll, geen parallax, maar blokken die invloeien terwijl ze binnenkomen.
  */
 export default function ProjectMosaic({ slug, projects }: { slug: string; projects: Project[] }) {
   const { language } = useLanguage();
@@ -93,24 +122,21 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
   if (!project) return null;
 
   const content = projectContent(project, language);
-
-  /* Alles wat er aan beeld is, in volgorde en zonder dubbelingen. */
-  const beelden = Array.from(
-    new Set(
-      [project.cardImage, ...content.slides.flatMap((s) => [s.img, s.imgTwo])].filter(
-        (src): src is string => Boolean(src),
-      ),
-    ),
-  );
-
-  const [opening, ...rest] = beelden;
-  const banden = bandenVoor(rest);
-
+  const opening = project.cardImage;
+  const blokken = blokkenVoor(content.slides, opening);
   const anderen = projects.filter((item) => item.slug !== slug).slice(0, 3);
 
   return (
-    // Onderaan ruimte voor de balk die blijft staan, anders dekt hij de footer af.
     <div style={{ backgroundColor: "var(--color-cedar)", paddingBottom: "56px" }}>
+      {/*
+       * Zonder JavaScript komt er niets in beeld — de blokken beginnen immers
+       * doorzichtig en worden pas door de waarnemer aangezet. Dan staat alles
+       * er gewoon meteen.
+       */}
+      <noscript>
+        <style>{"[data-onthulling]{opacity:1!important;transform:none!important}"}</style>
+      </noscript>
+
       {/* OPENING — één beeld, met de naam rechtsonder */}
       <header className="relative h-screen w-full overflow-hidden">
         <Image src={opening} alt={project.title} fill priority sizes="100vw" className="object-cover" />
@@ -136,27 +162,40 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
         </div>
       </header>
 
+      {/* De inleiding, direct onder het openingsbeeld. */}
+      <Onthulling>
+        <TekstVlak sub={zonderJaartal(content.category)} kop={project.title} body={content.intro} />
+      </Onthulling>
+
       {/* HET MUURVLAK */}
-      {banden.map((band, index) => (
-        <div key={`band-${index}`} className="flex h-[70vh] w-full md:h-screen">
-          {band.beelden.map((src, kolom) => (
-            <div
-              key={`${src}-${kolom}`}
-              className="relative h-full overflow-hidden"
-              style={{ width: `${band.breedtes[kolom] * 100}%` }}
-            >
-              <Image
-                src={src}
-                alt={project.title}
-                fill
-                loading="lazy"
-                sizes={`${Math.round(band.breedtes[kolom] * 100)}vw`}
-                className="object-cover"
-              />
+      {blokken.map((blok, index) =>
+        blok.soort === "tekst" ? (
+          <Onthulling key={`tekst-${index}`}>
+            <TekstVlak sub={blok.sub} kop={blok.kop} body={blok.body} />
+          </Onthulling>
+        ) : (
+          <Onthulling key={`band-${index}`}>
+            <div className="flex w-full" style={{ height: blok.hoogte }}>
+              {blok.beelden.map((src, kolom) => (
+                <div
+                  key={`${src}-${kolom}`}
+                  className="group relative h-full overflow-hidden"
+                  style={{ width: `${blok.breedtes[kolom] * 100}%` }}
+                >
+                  <Image
+                    src={src}
+                    alt={project.title}
+                    fill
+                    loading="lazy"
+                    sizes={`${Math.round(blok.breedtes[kolom] * 100)}vw`}
+                    className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      ))}
+          </Onthulling>
+        ),
+      )}
 
       {/* MEER INSPIRATIE */}
       <section className="w-full py-20 md:py-28">
@@ -178,7 +217,7 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
                     fill
                     loading="lazy"
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                    className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
                   />
                 </div>
 
@@ -241,5 +280,92 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
         </div>
       </div>
     </div>
+  );
+}
+
+/*
+ * Laat zien wat erin zit zodra het in beeld komt, één keer.
+ *
+ * Een waarnemer en geen scrollteller: die kost niets zolang er niets gebeurt,
+ * en hij werkt ook als je met een sprong ergens middenin belandt.
+ */
+function Onthulling({ children }: { children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [zichtbaar, setZichtbaar] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    // Zonder waarnemer staat alles er gewoon; het effect is een toevoeging.
+    if (typeof IntersectionObserver === "undefined") {
+      setZichtbaar(true);
+      return;
+    }
+
+    const waarnemer = new IntersectionObserver(
+      ([item]) => {
+        if (item.isIntersecting) {
+          setZichtbaar(true);
+          waarnemer.disconnect();
+        }
+      },
+      // Pas beginnen als het blok een stuk voorbij de onderrand is.
+      { rootMargin: "0px 0px -12% 0px" },
+    );
+
+    waarnemer.observe(el);
+    return () => waarnemer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      data-onthulling
+      style={{
+        opacity: zichtbaar ? 1 : 0,
+        transform: zichtbaar ? "translateY(0)" : "translateY(28px)",
+        transition: "opacity 900ms ease-out, transform 900ms cubic-bezier(0.22, 1, 0.36, 1)",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/* Een vlak om iets uit te leggen, tussen het beeld door. */
+function TekstVlak({ sub, kop, body }: { sub?: string; kop?: string; body?: string }) {
+  if (!kop && !body) return null;
+
+  return (
+    <section className="w-full py-24 md:py-32" style={{ backgroundColor: "var(--color-champagne)" }}>
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="max-w-3xl">
+          {sub && (
+            <p
+              className="mb-6 text-[11px] uppercase md:text-xs"
+              style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-cedar)" }}
+            >
+              {sub}
+            </p>
+          )}
+
+          {kop && (
+            <h2 className="mb-8 text-3xl font-light md:text-4xl" style={{ ...serif, color: "var(--color-black)" }}>
+              {kop}
+            </h2>
+          )}
+
+          {body && (
+            <p
+              className="max-w-prose text-lg leading-[1.75] md:text-xl"
+              style={{ ...serif, color: "var(--color-cedar)" }}
+            >
+              {body}
+            </p>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
