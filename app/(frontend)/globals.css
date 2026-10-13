@@ -116,3 +116,82 @@ body {
     -webkit-mask-position: -100% 200%;
   }
 }
+
+/* ── Typografie ───────────────────────────────────────────────────────
+ *
+ * Vier stijlen, verder niets. Er stonden zestien lettergroottes en vijf
+ * spatiëringen door elkaar; elke nieuwe sectie bedacht zijn eigen maat. Wie
+ * iets toevoegt kiest hier een van de vier.
+ *
+ *   t-kop     de kop van een pagina of sectie
+ *   t-titel   de naam van iets: een project, een dienst, een product
+ *   t-label   alles wat klein en in hoofdletters staat
+ *   t-tekst   lopende tekst
+ *
+ * De kleur zit er niet in. Die hangt af van de grond waarop je staat en komt
+ * uit twee variabelen die PageSurface per pagina zet: sterk voor wat moet
+ * opvallen, zacht voor de rest. Op cedar is dat champagne en almond, op de
+ * lichte grond van de collectie zwart en cedar.
+ */
+
+:root {
+  --ink-sterk: var(--color-champagne);
+  --ink-zacht: var(--color-almond);
+}
+
+.t-kop {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 300;
+  font-size: clamp(28px, 3.6vw, 48px);
+  line-height: 1.15;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-sterk);
+}
+
+.t-titel {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 300;
+  font-size: clamp(22px, 2.2vw, 34px);
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  color: var(--ink-sterk);
+}
+
+.t-label {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-zacht);
+}
+
+.t-tekst {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 300;
+  font-size: clamp(16px, 1.1vw, 19px);
+  line-height: 1.7;
+  color: var(--ink-zacht);
+}
+
+/* Dezelfde stijl, maar in de kleur die wél opvalt. */
+.t-label--sterk,
+.t-tekst--sterk {
+  color: var(--ink-sterk);
+}
+
+/*
+ * Een invoerveld staat in een label, en erfde daardoor de hoofdletters en de
+ * brede spatiëring van dat label. Wat je typt hoort gewoon leesbaar te zijn.
+ */
+.t-label input,
+.t-label textarea,
+.t-label select {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 17px;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink-sterk);
+}

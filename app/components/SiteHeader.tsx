@@ -13,7 +13,15 @@ import { usePageSurface, INK_TRANSITION, FADE_TRANSITION } from "./PageSurface";
  * verschilt, de vorm van de letters is dezelfde. Een afbeelding kan niet van
  * kleur verlopen, dus liggen ze over elkaar en wisselen ze met hun dekking.
  */
-function Wordmark({ light, width, height }: { light: boolean; width: number; height: number }) {
+function Wordmark({
+  light,
+  width,
+  height,
+}: {
+  light: boolean;
+  width: number;
+  height: number;
+}) {
   const common = {
     alt: "Botman Design",
     width,
@@ -113,20 +121,14 @@ export default function SiteHeader() {
 
   const inkColor = light ? "var(--color-cedar)" : "var(--color-champagne)";
 
-  const linkStyle = {
-    fontFamily: "var(--font-montserrat)",
-    letterSpacing: "0.15em",
-    color: inkColor,
-    transition: INK_TRANSITION,
-  } as const;
+  /* De navigatie gebruikt de labelstijl; alleen de kleur verloopt per pagina. */
+  const linkStyle = { color: inkColor, transition: INK_TRANSITION } as const;
 
   const contactPill = (
     <Link
       href="/contact"
-      className="inline-block rounded-full border px-5 py-2.5 text-sm font-light uppercase tracking-wider transition-all duration-300 hover:opacity-90"
+      className="t-label inline-block rounded-full border px-5 py-2.5 transition-all duration-300 hover:opacity-90"
       style={{
-        fontFamily: "var(--font-montserrat)",
-        letterSpacing: "0.15em",
         backgroundColor: "transparent",
         borderColor: light ? "rgba(103, 92, 83, 0.45)" : "var(--color-almond)",
         color: inkColor,
@@ -170,7 +172,7 @@ export default function SiteHeader() {
                     <Link
                       key={link.key}
                       href={link.href}
-                      className="text-sm font-light uppercase tracking-wider transition-colors"
+                      className="t-label transition-colors"
                       style={linkStyle}
                     >
                       {link.label}
@@ -192,7 +194,7 @@ export default function SiteHeader() {
                     <Link
                       key={link.key}
                       href={link.href}
-                      className="text-sm font-light uppercase tracking-wider transition-colors"
+                      className="t-label transition-colors"
                       style={linkStyle}
                     >
                       {link.label}
@@ -279,7 +281,7 @@ export default function SiteHeader() {
                   key={link.key}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="text-sm font-light uppercase tracking-wider"
+                  className="t-label"
                   style={linkStyle}
                 >
                   {link.label}
@@ -292,10 +294,9 @@ export default function SiteHeader() {
             <Link
               href="/contact"
               onClick={() => setMenuOpen(false)}
-              className="inline-block rounded-full border px-5 py-3 text-center text-sm font-light uppercase tracking-wider"
+              className="t-label inline-block rounded-full border px-5 py-3 text-center"
               style={{
                 fontFamily: "var(--font-montserrat)",
-                letterSpacing: "0.15em",
                 borderColor: "var(--color-almond)",
                 color: "var(--color-champagne)",
               }}

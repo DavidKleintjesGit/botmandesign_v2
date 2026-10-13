@@ -44,13 +44,25 @@ function surfaceFor(pathname: string): Surface {
   return { color: "var(--color-cedar)", light: false };
 }
 
+/*
+ * De twee inktkleuren die bij een grond horen. De typografie kent alleen
+ * sterk en zacht; welke kleuren dat zijn hangt af van waar je op staat.
+ */
+function inktVoor(light: boolean): string {
+  return light
+    ? "--ink-sterk: var(--color-black); --ink-zacht: var(--color-cedar);"
+    : "--ink-sterk: var(--color-champagne); --ink-zacht: var(--color-almond);";
+}
+
 /** Voor componenten die zich naar de grond moeten voegen, zoals de navigatie. */
 export function usePageSurface(): Surface {
   return surfaceFor(usePathname() ?? "/");
 }
 
 export default function PageSurface() {
-  const { color } = usePageSurface();
+  const { color, light } = usePageSurface();
 
-  return <style>{`body { background-color: ${color}; }`}</style>;
+  return (
+    <style>{`body { background-color: ${color}; ${inktVoor(light)} }`}</style>
+  );
 }

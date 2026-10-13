@@ -47,10 +47,13 @@ const INK = "var(--color-black)";
 const INK_SOFT = "var(--color-cedar)";
 const LINE = "rgba(103, 92, 83, 0.25)";
 
-const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
-const sans = { fontFamily: "var(--font-montserrat)" } as const;
-
-export default function ProductDetail({ slug, products }: { slug: string; products: Product[] }) {
+export default function ProductDetail({
+  slug,
+  products,
+}: {
+  slug: string;
+  products: Product[];
+}) {
   const { language } = useLanguage();
   const product = products.find((item) => item.slug === slug);
 
@@ -66,18 +69,17 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
     <div>
       <section className="w-full pt-40 pb-20 md:pt-52 md:pb-28">
         <div className="container mx-auto px-4 md:px-8">
-          <Link
-            href="/collectie"
-            className="mb-10 inline-block text-xs uppercase"
-            style={{ ...sans, letterSpacing: "0.15em", color: INK_SOFT }}
-          >
+          <Link href="/collectie" className="t-label mb-10 inline-block">
             &larr; {copy.back}
           </Link>
 
           <div className="flex flex-col gap-12 md:flex-row md:gap-20">
             {/* Beeld */}
             <div className="md:w-1/2">
-              <div className="relative overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 5" }}>
+              <div
+                className="relative overflow-hidden rounded-lg"
+                style={{ aspectRatio: "4 / 5" }}
+              >
                 <div
                   className="pointer-events-none absolute inset-0"
                   style={{
@@ -98,34 +100,23 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
 
             {/* Gegevens */}
             <div className="flex flex-col md:w-1/2">
-              <p
-                className="mb-4 text-xs uppercase"
-                style={{ ...sans, letterSpacing: "0.2em", color: INK_SOFT }}
-              >
+              <p className="t-label mb-4">
                 {categoryLabels[product.category][language]}
               </p>
 
-              <h1
-                className="mb-5 text-3xl font-light uppercase tracking-wider md:text-4xl"
-                style={{ ...serif, letterSpacing: "0.12em", color: INK }}
-              >
-                {content.name}
-              </h1>
+              <h1 className="t-kop mb-5">{content.name}</h1>
 
-              <p className="mb-8 text-lg leading-relaxed md:text-xl" style={{ ...serif, color: INK_SOFT }}>
-                {content.description}
-              </p>
+              <p className="t-tekst mb-8">{content.description}</p>
 
-              <p className="mb-2 text-2xl md:text-3xl" style={{ ...serif, color: INK }}>
+              <p className="t-tekst mb-2">
                 {formatPrice(product.priceCents, language)}
               </p>
 
               {!soldOut && product.stock !== null && product.stock <= 3 && (
-                <p
-                  className="mb-6 text-xs uppercase"
-                  style={{ ...sans, letterSpacing: "0.15em", color: INK_SOFT }}
-                >
-                  {product.stock === 1 ? copy.lastOne : copy.fewLeft(product.stock)}
+                <p className="t-label mb-6">
+                  {product.stock === 1
+                    ? copy.lastOne
+                    : copy.fewLeft(product.stock)}
                 </p>
               )}
 
@@ -136,10 +127,8 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
               */}
               <Link
                 href={`/contact?product=${product.slug}`}
-                className="mb-10 inline-block self-start rounded-full border px-6 py-3 text-sm font-light uppercase tracking-wider transition-all duration-300 hover:opacity-90"
+                className="t-label mb-10 inline-block self-start rounded-full border px-6 py-3 transition-all duration-300 hover:opacity-90"
                 style={{
-                  ...sans,
-                  letterSpacing: "0.15em",
                   backgroundColor: soldOut ? "transparent" : INK,
                   borderColor: soldOut ? "rgba(103, 92, 83, 0.4)" : INK,
                   color: soldOut ? INK : SURFACE,
@@ -149,22 +138,16 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
               </Link>
 
               <div style={{ borderTop: `1px solid ${LINE}` }} className="pt-8">
-                <p
-                  className="mb-5 text-xs uppercase"
-                  style={{ ...sans, letterSpacing: "0.2em", color: INK }}
-                >
-                  {copy.specs}
-                </p>
+                <p className="t-label mb-5">{copy.specs}</p>
 
                 <dl className="flex flex-col gap-3">
                   {content.specs.map((spec) => (
-                    <div key={spec.label} className="flex justify-between gap-6">
-                      <dt className="text-base" style={{ ...serif, color: INK_SOFT }}>
-                        {spec.label}
-                      </dt>
-                      <dd className="text-right text-base" style={{ ...serif, color: INK }}>
-                        {spec.value}
-                      </dd>
+                    <div
+                      key={spec.label}
+                      className="flex justify-between gap-6"
+                    >
+                      <dt className="t-tekst">{spec.label}</dt>
+                      <dd className="t-tekst">{spec.value}</dd>
                     </div>
                   ))}
                 </dl>
@@ -175,19 +158,24 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
       </section>
 
       {related.length > 0 && (
-        <section className="w-full pb-24 md:pb-32" style={{ borderTop: `1px solid ${LINE}` }}>
+        <section
+          className="w-full pb-24 md:pb-32"
+          style={{ borderTop: `1px solid ${LINE}` }}
+        >
           <div className="container mx-auto px-4 pt-20 md:px-8 md:pt-28">
-            <p
-              className="mb-10 text-sm uppercase md:text-base"
-              style={{ ...sans, color: INK }}
-            >
-              {copy.alsoInteresting}
-            </p>
+            <p className="t-label mb-10">{copy.alsoInteresting}</p>
 
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
               {related.map((item) => (
-                <Link key={item.slug} href={`/collectie/${item.slug}`} className="group block text-center">
-                  <div className="relative mb-4 overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 5" }}>
+                <Link
+                  key={item.slug}
+                  href={`/collectie/${item.slug}`}
+                  className="group block text-center"
+                >
+                  <div
+                    className="relative mb-4 overflow-hidden rounded-lg"
+                    style={{ aspectRatio: "4 / 5" }}
+                  >
                     <Image
                       src={item.images[0]}
                       alt={item[language].name}
@@ -197,13 +185,8 @@ export default function ProductDetail({ slug, products }: { slug: string; produc
                       className="object-contain p-6 transition-transform duration-700 group-hover:scale-[1.05]"
                     />
                   </div>
-                  <h3
-                    className="mb-1 text-lg font-light uppercase tracking-wider"
-                    style={{ ...serif, letterSpacing: "0.1em", color: INK }}
-                  >
-                    {item[language].name}
-                  </h3>
-                  <p className="text-base" style={{ ...serif, color: INK_SOFT }}>
+                  <h3 className="t-label mb-1">{item[language].name}</h3>
+                  <p className="t-tekst">
                     {formatPrice(item.priceCents, language)}
                   </p>
                 </Link>

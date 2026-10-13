@@ -30,19 +30,26 @@ export default function CookiePopup() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
-      <div 
+      <div
         className="backdrop-blur-md border-t shadow-2xl"
-        style={{ 
-          fontFamily: 'var(--font-cormorant-garamond), serif',
+        style={{
+          fontFamily: "var(--font-cormorant-garamond), serif",
           backgroundColor: "var(--color-cedar)",
-          borderColor: "var(--color-almond)"
+          borderColor: "var(--color-almond)",
         }}
       >
         <div className="container mx-auto px-8 md:px-12 py-3">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex-1 text-left">
-              <p className="text-sm leading-relaxed" style={{ color: "var(--color-champagne)", fontFamily: 'var(--font-cormorant-garamond), serif' }}>
-                Wij gebruiken cookies om uw browse-ervaring te verbeteren en ons verkeer te analyseren.
+              <p
+                className="text-sm leading-relaxed"
+                style={{
+                  color: "var(--color-champagne)",
+                  fontFamily: "var(--font-cormorant-garamond), serif",
+                }}
+              >
+                Wij gebruiken cookies om uw browse-ervaring te verbeteren en ons
+                verkeer te analyseren.
               </p>
             </div>
             <div className="flex gap-3 justify-end">
@@ -50,13 +57,18 @@ export default function CookiePopup() {
                 onClick={handleDecline}
                 className="uppercase text-xs font-semibold tracking-wider px-6 py-2 rounded transition-all duration-300 cursor-pointer whitespace-nowrap"
                 style={{
-                  fontFamily: 'var(--font-cormorant-garamond), serif',
-                  letterSpacing: '0.15em',
+                  fontFamily: "var(--font-cormorant-garamond), serif",
+                  letterSpacing: "0.15em",
                   color: "var(--color-champagne)",
-                  backgroundColor: "transparent"
+                  backgroundColor: "transparent",
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--color-almond)"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor =
+                    "var(--color-almond)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
               >
                 Weigeren
               </button>
@@ -64,13 +76,19 @@ export default function CookiePopup() {
                 onClick={handleAgree}
                 className="uppercase text-xs font-semibold tracking-wider px-6 py-2 rounded transition-all duration-300 cursor-pointer whitespace-nowrap"
                 style={{
-                  fontFamily: 'var(--font-cormorant-garamond), serif',
-                  letterSpacing: '0.15em',
+                  fontFamily: "var(--font-cormorant-garamond), serif",
+                  letterSpacing: "0.15em",
                   color: "var(--color-black)",
-                  backgroundColor: "var(--color-champagne)"
+                  backgroundColor: "var(--color-champagne)",
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--color-almond)"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--color-champagne)"}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor =
+                    "var(--color-almond)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor =
+                    "var(--color-champagne)")
+                }
               >
                 Accepteren
               </button>
@@ -81,5 +99,3 @@ export default function CookiePopup() {
     </div>
   );
 }
-
-

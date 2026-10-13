@@ -10,11 +10,12 @@ import { projectContent, type Project } from "@/app/content/projects";
 
 const overviewCopy = {
   en: { label: "PROJECTS", title1: "Selected works.", title2: "One vision." },
-  nl: { label: "PROJECTEN", title1: "Geselecteerd werk.", title2: "Eén visie." },
+  nl: {
+    label: "PROJECTEN",
+    title1: "Geselecteerd werk.",
+    title2: "Eén visie.",
+  },
 };
-
-const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
-const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
 /*
  * De breedteverdeling per project, nagemeten op kabaz.nl/projecten: twee
@@ -49,7 +50,11 @@ function beeldenVan(project: Project, language: "nl" | "en"): string[] {
  * kaarten met tekst eronder maar beeld van rand tot rand — wie hier komt wil
  * zien, niet lezen. De naam komt pas als je er met de muis overheen gaat.
  */
-export default function ProjectsOverview({ projects }: { projects: Project[] }) {
+export default function ProjectsOverview({
+  projects,
+}: {
+  projects: Project[];
+}) {
   const { language } = useLanguage();
   const copy = overviewCopy[language];
 
@@ -57,19 +62,12 @@ export default function ProjectsOverview({ projects }: { projects: Project[] }) 
     <div>
       <section className="w-full pt-40 pb-14 md:pt-52 md:pb-20">
         <div className="container mx-auto px-4 md:px-8">
-          <p className="mb-6 text-sm uppercase md:text-base" style={{ ...sans, color: "var(--color-champagne)" }}>
-            {copy.label}
-          </p>
+          <p className="t-label t-label--sterk mb-6">{copy.label}</p>
 
-          <h1
-            className="text-3xl font-light uppercase tracking-wider md:text-4xl lg:text-5xl"
-            style={{ ...serif, letterSpacing: "0.15em", color: "var(--color-champagne)" }}
-          >
+          <h1 className="t-kop">
             {copy.title1}
             <br />
-            <span className="italic" style={{ color: "var(--color-almond)" }}>
-              {copy.title2}
-            </span>
+            <span style={{ color: "var(--ink-zacht)" }}>{copy.title2}</span>
           </h1>
         </div>
       </section>
@@ -80,13 +78,18 @@ export default function ProjectsOverview({ projects }: { projects: Project[] }) 
         const content = projectContent(project, language);
 
         return (
-          <div key={project.slug} className="flex w-full flex-col md:h-[50vh] md:flex-row">
+          <div
+            key={project.slug}
+            className="flex w-full flex-col md:h-[50vh] md:flex-row"
+          >
             {beelden.map((src, k) => (
               <Link
                 key={`${project.slug}-${k}`}
                 href={`/projecten/${project.slug}`}
                 className="group relative aspect-[4/3] w-full overflow-hidden md:aspect-auto md:h-full md:w-[var(--breed)]"
-                style={{ "--breed": `${breedtes[k] * 100}%` } as React.CSSProperties}
+                style={
+                  { "--breed": `${breedtes[k] * 100}%` } as React.CSSProperties
+                }
               >
                 <Image
                   src={src}
@@ -103,19 +106,8 @@ export default function ProjectsOverview({ projects }: { projects: Project[] }) 
                   className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                   style={{ backgroundColor: "rgba(10, 9, 7, 0.42)" }}
                 >
-                  <p
-                    className="text-[11px] uppercase md:text-xs"
-                    style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-almond)" }}
-                  >
-                    {zonderJaartal(content.category)}
-                  </p>
-
-                  <p
-                    className="text-3xl font-light md:text-4xl"
-                    style={{ ...serif, color: "var(--color-champagne)" }}
-                  >
-                    {project.title}
-                  </p>
+                  <p className="t-label">{zonderJaartal(content.category)}</p>
+                  <p className="t-titel">{project.title}</p>
                 </div>
               </Link>
             ))}

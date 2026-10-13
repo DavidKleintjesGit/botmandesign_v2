@@ -5,9 +5,6 @@ import Link from "next/link";
 
 import type { Project } from "@/app/content/projects";
 
-const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
-const sans = { fontFamily: "var(--font-montserrat)" } as const;
-
 /*
  * De categorie uit het beheer draagt het jaartal mee — "INTERIOR DESIGN — 2024".
  * Op een kaart staat alleen waar het project over gaat; het jaartal hoort bij
@@ -38,34 +35,36 @@ export default function ProjectCard({
   className?: string;
 }) {
   return (
-    <Link href={`/projecten/${project.slug}`} className={`group block ${className ?? ""}`}>
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: featured ? "16 / 9" : "3 / 4" }}>
+    <Link
+      href={`/projecten/${project.slug}`}
+      className={`group block ${className ?? ""}`}
+    >
+      <div
+        className="relative w-full overflow-hidden"
+        style={{ aspectRatio: featured ? "16 / 9" : "3 / 4" }}
+      >
         <Image
           src={project.cardImage}
           alt={project.title}
           fill
           priority={featured}
           loading={featured ? undefined : "lazy"}
-          sizes={featured ? "(max-width: 768px) 100vw, 1100px" : "(max-width: 768px) 100vw, 50vw"}
+          sizes={
+            featured
+              ? "(max-width: 768px) 100vw, 1100px"
+              : "(max-width: 768px) 100vw, 50vw"
+          }
           className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
         />
       </div>
 
       <div className="mt-6 flex items-end justify-between gap-6">
         <div>
-          <p
-            className="mb-2 text-xs uppercase md:text-[13px]"
-            style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-almond)" }}
-          >
+          <p className="t-label mb-2">
             {zonderJaartal(project[language].category)}
           </p>
 
-          <h3
-            className={`font-light ${featured ? "text-3xl md:text-5xl" : "text-2xl md:text-3xl"}`}
-            style={{ ...serif, color: "var(--color-champagne)" }}
-          >
-            {project.title}
-          </h3>
+          <h3 className="t-titel">{project.title}</h3>
         </div>
 
         {/* Schuift een haarbreedte mee als je de kaart aanwijst. */}

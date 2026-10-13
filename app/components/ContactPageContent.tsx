@@ -22,7 +22,8 @@ const contactCopy = {
     sending: "Sending",
     success: "Thank you — your message has been sent.",
     required: "Please complete all fields.",
-    failed: "We could not send your message. Please try again later or email us directly.",
+    failed:
+      "We could not send your message. Please try again later or email us directly.",
     choose: "Choose a subject",
     other: "Something else",
   },
@@ -41,7 +42,8 @@ const contactCopy = {
     sending: "Versturen",
     success: "Dank u — uw bericht is verstuurd.",
     required: "Vul alle velden in.",
-    failed: "Versturen is niet gelukt. Probeer het later opnieuw of mail ons direct.",
+    failed:
+      "Versturen is niet gelukt. Probeer het later opnieuw of mail ons direct.",
     choose: "Kies een onderwerp",
     other: "Iets anders",
   },
@@ -51,9 +53,6 @@ const DIRECT = [
   { label: "studio@botmandesign.com", href: "mailto:studio@botmandesign.com" },
   { label: "+31 6 12 34 56 78", href: "tel:+31612345678" },
 ];
-
-const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
-const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -65,7 +64,11 @@ type Status = "idle" | "sending" | "sent" | "error";
  * houdt daarom dezelfde kop als de andere onderliggende pagina's en gaat
  * daarna meteen over in het formulier.
  */
-export default function ContactPageContent({ services }: { services: Record<string, Service> }) {
+export default function ContactPageContent({
+  services,
+}: {
+  services: Record<string, Service>;
+}) {
   const { language } = useLanguage();
   const copy = contactCopy[language];
 
@@ -77,7 +80,9 @@ export default function ContactPageContent({ services }: { services: Record<stri
    * Wat verstuurd wordt is de naam en niet de slug, zodat in de mail "Turn-key
    * Projects" staat en niet "turn-key-projects".
    */
-  const subjects = Object.values(services).map((service) => service[language].name);
+  const subjects = Object.values(services).map(
+    (service) => service[language].name,
+  );
 
   const [status, setStatus] = useState<Status>("idle");
   const [feedback, setFeedback] = useState("");
@@ -94,7 +99,12 @@ export default function ContactPageContent({ services }: { services: Record<stri
       message: String(data.get("message") ?? ""),
     };
 
-    if (!payload.name || !payload.email || !payload.inquiryType || !payload.message) {
+    if (
+      !payload.name ||
+      !payload.email ||
+      !payload.inquiryType ||
+      !payload.message
+    ) {
       setStatus("error");
       setFeedback(copy.required);
       return;
@@ -127,7 +137,7 @@ export default function ContactPageContent({ services }: { services: Record<stri
   }
 
   const fieldStyle = {
-    ...serif,
+    fontFamily: "var(--font-cormorant-garamond), serif",
     border: "none",
     borderBottom: "1px solid rgba(182, 163, 144, 0.45)",
     background: "transparent",
@@ -135,12 +145,6 @@ export default function ContactPageContent({ services }: { services: Record<stri
     fontSize: "1.05rem",
     color: "var(--color-champagne)",
     outline: "none",
-  } as const;
-
-  const labelTextStyle = {
-    ...sans,
-    letterSpacing: "0.15em",
-    color: "var(--color-almond)",
   } as const;
 
   return (
@@ -161,26 +165,15 @@ export default function ContactPageContent({ services }: { services: Record<stri
           <div className="grid items-stretch gap-14 md:grid-cols-[5fr_6fr] md:gap-20 lg:gap-28">
             {/* WAT WE TE ZEGGEN HEBBEN */}
             <div className="flex flex-col">
-              <p
-                className="mb-6 text-sm uppercase md:text-base"
-                style={{ ...sans, color: "var(--color-champagne)" }}
-              >
-                {copy.label}
-              </p>
+              <p className="t-label t-label--sterk mb-6">{copy.label}</p>
 
-              <h1
-                // In een smallere kolom brak de kop in vier regels; dit houdt het op twee.
-                className="mb-10 text-[26px] font-light uppercase leading-[1.25] md:text-3xl lg:text-[40px]"
-                style={{ ...serif, letterSpacing: "0.1em", color: "var(--color-champagne)" }}
-              >
+              <h1 className="t-kop mb-10">
                 {copy.title}
                 <br />
-                <span style={{ color: "var(--color-almond)" }}>{copy.titleAccent}</span>
+                <span style={{ color: "var(--ink-zacht)" }}>
+                  {copy.titleAccent}
+                </span>
               </h1>
-
-              <p className="text-lg leading-relaxed md:text-xl" style={{ ...serif, color: "var(--color-almond)" }}>
-                {copy.intro}
-              </p>
 
               {/*
                * Voor wie liever geen formulier invult. Onderaan de kolom, met
@@ -190,17 +183,14 @@ export default function ContactPageContent({ services }: { services: Record<stri
                 className="mt-14 border-t pt-10 md:mt-auto"
                 style={{ borderColor: "rgba(182, 163, 144, 0.25)" }}
               >
-                <p className="mb-5 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
-                  {copy.directLabel}
-                </p>
+                <p className="t-label mb-5">{copy.directLabel}</p>
 
                 <div className="flex flex-col gap-2">
                   {DIRECT.map((item) => (
                     <a
                       key={item.href}
                       href={item.href}
-                      className="w-fit text-lg transition-opacity duration-300 hover:opacity-70 md:text-xl"
-                      style={{ ...serif, color: "var(--color-champagne)" }}
+                      className="t-tekst t-tekst--sterk w-fit transition-opacity duration-300 hover:opacity-70"
                     >
                       {item.label}
                     </a>
@@ -216,49 +206,64 @@ export default function ContactPageContent({ services }: { services: Record<stri
               className="flex w-full flex-col gap-8 md:border-l md:pl-20 lg:pl-28"
               style={{ borderColor: "rgba(182, 163, 144, 0.22)" }}
             >
-              <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+              <p className="t-tekst mb-2 max-w-md">{copy.intro}</p>
+
+              <label className="t-label flex flex-col gap-3">
                 {copy.formName}
                 <input type="text" name="name" style={fieldStyle} />
               </label>
 
-              <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+              <label className="t-label flex flex-col gap-3">
                 {copy.formEmail}
                 <input type="email" name="email" style={fieldStyle} />
               </label>
 
-              <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+              <label className="t-label flex flex-col gap-3">
                 {copy.formInquiry}
                 <select name="inquiryType" defaultValue="" style={fieldStyle}>
-                  <option value="" disabled style={{ color: "var(--color-cedar)" }}>
+                  <option
+                    value=""
+                    disabled
+                    style={{ color: "var(--color-cedar)" }}
+                  >
                     {copy.choose}
                   </option>
                   {subjects.map((subject) => (
-                    <option key={subject} value={subject} style={{ color: "var(--color-cedar)" }}>
+                    <option
+                      key={subject}
+                      value={subject}
+                      style={{ color: "var(--color-cedar)" }}
+                    >
                       {subject}
                     </option>
                   ))}
-                  <option value={copy.other} style={{ color: "var(--color-cedar)" }}>
+                  <option
+                    value={copy.other}
+                    style={{ color: "var(--color-cedar)" }}
+                  >
                     {copy.other}
                   </option>
                 </select>
               </label>
 
-              <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+              <label className="t-label flex flex-col gap-3">
                 {copy.formMessage}
                 <textarea
                   name="message"
                   rows={5}
-                  style={{ ...fieldStyle, resize: "vertical", fontFamily: "var(--font-cormorant-garamond), serif" }}
+                  style={{
+                    ...fieldStyle,
+                    resize: "vertical",
+                    fontFamily: "var(--font-cormorant-garamond), serif",
+                  }}
                 />
               </label>
 
               <button
                 type="submit"
                 disabled={status === "sending"}
-                className="mt-2 inline-block cursor-pointer self-start rounded-full border px-6 py-2.5 text-sm font-light uppercase tracking-wider transition-all duration-300 hover:opacity-90 disabled:opacity-60"
+                className="t-label mt-2 inline-block cursor-pointer self-start rounded-full border px-6 py-2.5 transition-all duration-300 hover:opacity-90 disabled:opacity-60"
                 style={{
-                  ...sans,
-                  letterSpacing: "0.15em",
                   backgroundColor: "var(--color-champagne)",
                   borderColor: "var(--color-champagne)",
                   color: "var(--color-cedar)",
@@ -269,8 +274,10 @@ export default function ContactPageContent({ services }: { services: Record<stri
 
               {feedback && (
                 <p
-                  className="text-base leading-relaxed"
-                  style={{ ...serif, color: status === "sent" ? "var(--color-champagne)" : "#e0b4a4" }}
+                  className="t-tekst"
+                  style={{
+                    color: status === "sent" ? "var(--ink-sterk)" : "#e0b4a4",
+                  }}
                   role="status"
                 >
                   {feedback}

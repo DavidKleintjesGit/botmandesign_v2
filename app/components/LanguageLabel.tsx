@@ -24,24 +24,23 @@ export default function LanguageLabel() {
 
   return (
     <div className="fixed right-0 top-1/2 transform translate-y-28 z-40">
-      <div 
+      <div
         className="backdrop-blur-xl pl-4 pr-2 py-4 rounded-l-[2rem] border-l"
-        style={{ 
-          fontFamily: 'var(--font-cormorant-garamond), serif',
-          width: '50px',
-          backgroundColor: 'transparent',
-          borderColor: light ? 'rgba(103, 92, 83, 0.4)' : 'var(--color-almond)',
+        style={{
+          fontFamily: "var(--font-cormorant-garamond), serif",
+          width: "50px",
+          backgroundColor: "transparent",
+          borderColor: light ? "rgba(103, 92, 83, 0.4)" : "var(--color-almond)",
           transition: INK_TRANSITION,
-          boxShadow: '0 4px 30px rgba(0,0,0,0.08)',
+          boxShadow: "0 4px 30px rgba(0,0,0,0.08)",
         }}
       >
         <div className="flex flex-col items-center gap-6">
-          <button 
+          <button
             onClick={() => handleLanguageClick("NL")}
-            className="uppercase text-sm font-semibold tracking-wider transition-all duration-300 hover:scale-110 cursor-pointer"
+            className="t-label transition-all duration-300 hover:scale-110 cursor-pointer"
             style={{
-              fontFamily: 'var(--font-cormorant-garamond), serif',
-              letterSpacing: '0.15em',
+              fontFamily: "var(--font-cormorant-garamond), serif",
               color: selectedLanguage === "NL" ? chosen : other,
               transition: INK_TRANSITION + ", transform 300ms ease",
             }}
@@ -49,12 +48,11 @@ export default function LanguageLabel() {
           >
             NL
           </button>
-          <button 
+          <button
             onClick={() => handleLanguageClick("EN")}
-            className="uppercase text-sm font-semibold tracking-wider transition-all duration-300 hover:scale-110 cursor-pointer"
+            className="t-label transition-all duration-300 hover:scale-110 cursor-pointer"
             style={{
-              fontFamily: 'var(--font-cormorant-garamond), serif',
-              letterSpacing: '0.15em',
+              fontFamily: "var(--font-cormorant-garamond), serif",
               color: selectedLanguage === "EN" ? chosen : other,
               transition: INK_TRANSITION + ", transform 300ms ease",
             }}
@@ -67,4 +65,3 @@ export default function LanguageLabel() {
     </div>
   );
 }
-

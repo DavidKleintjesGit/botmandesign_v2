@@ -14,7 +14,11 @@ const sectionCopy = {
   nl: { label: "Onze studio services", more: "Meer info" },
 };
 
-export default function ServicesSection({ services }: { services: Record<string, Service> }) {
+export default function ServicesSection({
+  services,
+}: {
+  services: Record<string, Service>;
+}) {
   const { language } = useLanguage();
   const copy = sectionCopy[language];
   const sectionRef = useRef<HTMLElement>(null);
@@ -44,7 +48,7 @@ export default function ServicesSection({ services }: { services: Record<string,
         duration: 1,
         ease: "power2.out",
       },
-      0
+      0,
     );
 
     return () => {
@@ -85,77 +89,30 @@ export default function ServicesSection({ services }: { services: Record<string,
       }}
     >
       <div className="container mx-auto px-4 md:px-8 w-full">
-        <p
-          className="text-sm md:text-base leading-relaxed uppercase mb-8 md:mb-10 text-center"
-          style={{
-            fontFamily: "var(--font-montserrat)",
-            color: "var(--color-champagne)",
-          }}
-        >
-          {copy.label}
-        </p>
+        <p className="t-label t-label--sterk mb-8 md:mb-10">{copy.label}</p>
         <div className="flex flex-col md:flex-row md:items-stretch gap-12 md:gap-0">
           {blocks.map((block, i) => (
-            <div key={block.slug} className="flex flex-col md:flex-1 md:flex-row md:min-h-0">
+            <div
+              key={block.slug}
+              className="flex flex-col md:flex-1 md:flex-row md:min-h-0"
+            >
               <div
                 ref={(el) => {
                   blockRefs.current[i] = el;
                 }}
                 className="flex flex-col text-center items-center md:flex-1 md:px-8 md:h-full min-h-0"
               >
-                <h3
-                  className="text-xl md:text-2xl font-light uppercase tracking-wider mb-8"
-                  style={{
-                    fontFamily: "var(--font-cormorant-garamond), serif",
-                    letterSpacing: "0.04em",
-                    wordSpacing: "0.25em",
-                    color: "var(--color-champagne)",
-                  }}
-                >
-                  {block.title}
-                </h3>
-                <p
-                  className="text-sm md:text-base leading-relaxed mb-2"
-                  style={{
-                    fontFamily: "var(--font-montserrat)",
-                    color: "var(--color-champagne)",
-                  }}
-                >
-                  {block.text}
-                </p>
+                <h3 className="t-titel mb-8">{block.title}</h3>
+                <p className="t-tekst t-tekst--sterk mb-2">{block.text}</p>
                 <div className="flex-1 space-y-4 mb-10">
-                  <p
-                    className="text-sm md:text-base leading-relaxed"
-                    style={{
-                      fontFamily: "var(--font-cormorant-garamond), serif",
-                      color: "var(--color-almond)",
-                    }}
-                  >
-                    {block.description}
-                  </p>
-                  <p
-                    className="text-sm md:text-base leading-relaxed"
-                    style={{
-                      fontFamily: "var(--font-cormorant-garamond), serif",
-                      color: "var(--color-almond)",
-                    }}
-                  >
-                    {block.descriptionExtra}
-                  </p>
+                  <p className="t-tekst">{block.description}</p>
+                  <p className="t-tekst">{block.descriptionExtra}</p>
                 </div>
                 <div className="mt-auto flex flex-col items-center gap-3">
-                  <p
-                    className="text-lg leading-relaxed"
-                    style={{
-                      fontFamily: "var(--font-cormorant-garamond), serif",
-                      color: "var(--color-champagne)",
-                    }}
-                  >
-                    {block.priceFrom}
-                  </p>
+                  <p className="t-tekst t-tekst--sterk">{block.priceFrom}</p>
                   <Link
                     href={`/services/${block.slug}`}
-                    className="inline-block px-5 py-2.5 rounded-full border uppercase text-sm font-light tracking-wider transition-all duration-300 hover:opacity-90"
+                    className="t-label inline-block px-5 py-2.5 rounded-full border transition-all duration-300 hover:opacity-90"
                     style={{
                       fontFamily: "var(--font-montserrat)",
                       letterSpacing: "0.15em",
@@ -172,7 +129,10 @@ export default function ServicesSection({ services }: { services: Record<string,
                 <div className="hidden md:flex md:items-center md:flex-shrink-0 md:self-stretch">
                   <div
                     className="w-px h-40 md:h-52"
-                    style={{ backgroundColor: "var(--color-almond)", opacity: 0.5 }}
+                    style={{
+                      backgroundColor: "var(--color-almond)",
+                      opacity: 0.5,
+                    }}
                     aria-hidden
                   />
                 </div>

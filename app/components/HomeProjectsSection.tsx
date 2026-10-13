@@ -26,7 +26,11 @@ const LOOP_RECHTS = -150;
  * Dat haalde de vaart eruit: je kwam uit een stilstaand citaat en kreeg eerst
  * weer woorden. Nu komt het werk meteen, en komt het al scrollend omhoog.
  */
-export default function HomeProjectsSection({ projects }: { projects: Project[] }) {
+export default function HomeProjectsSection({
+  projects,
+}: {
+  projects: Project[];
+}) {
   const sectionRef = useRef<HTMLElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
   const rechtsRef = useRef<HTMLDivElement>(null);
@@ -48,13 +52,23 @@ export default function HomeProjectsSection({ projects }: { projects: Project[] 
       gsap.to(links, {
         y: LOOP_LINKS,
         ease: "none",
-        scrollTrigger: { trigger: sectie, start: "top bottom", end: "bottom top", scrub: 0.6 },
+        scrollTrigger: {
+          trigger: sectie,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.6,
+        },
       });
 
       gsap.to(rechts, {
         y: LOOP_RECHTS,
         ease: "none",
-        scrollTrigger: { trigger: sectie, start: "top bottom", end: "bottom top", scrub: 0.6 },
+        scrollTrigger: {
+          trigger: sectie,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.6,
+        },
       });
     }, sectie);
 
@@ -114,7 +128,9 @@ function ProjectTile({
       />
 
       <span className="sr-only">
-        {language === "nl" ? `Bekijk ${project.title}` : `View ${project.title}`}
+        {language === "nl"
+          ? `Bekijk ${project.title}`
+          : `View ${project.title}`}
       </span>
     </Link>
   );

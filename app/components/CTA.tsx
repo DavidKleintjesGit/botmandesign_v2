@@ -15,7 +15,10 @@ export default function CTA() {
   const copy = homeCopy[language];
 
   return (
-    <section className="relative h-screen w-full overflow-hidden" style={{ zIndex: 10 }}>
+    <section
+      className="relative h-screen w-full overflow-hidden"
+      style={{ zIndex: 10 }}
+    >
       <div className="absolute inset-0 h-full w-full">
         <Image
           src="/images/image (3).png"
@@ -46,30 +49,13 @@ export default function CTA() {
 
       <div className="absolute inset-x-0 bottom-0 z-30 pb-20 md:pb-28">
         <div className="container mx-auto flex flex-col items-center gap-6 px-4 text-center md:px-8">
-          <h2
-            className="text-4xl font-light uppercase tracking-wider md:text-5xl"
-            style={{
-              fontFamily: "var(--font-cormorant-garamond), serif",
-              letterSpacing: "0.15em",
-              color: "var(--color-champagne)",
-            }}
-          >
-            {copy.ctaTitle}
-          </h2>
+          <h2 className="t-kop">{copy.ctaTitle}</h2>
 
-          <p
-            className="max-w-xl text-lg leading-relaxed md:text-xl"
-            style={{
-              fontFamily: "var(--font-cormorant-garamond), serif",
-              color: "var(--color-almond)",
-            }}
-          >
-            {copy.ctaBody}
-          </p>
+          <p className="t-tekst max-w-xl">{copy.ctaBody}</p>
 
           <Link
             href="/contact"
-            className="mt-4 inline-block rounded-full border px-6 py-2.5 text-sm font-light uppercase tracking-wider transition-all duration-300 hover:opacity-90"
+            className="t-label mt-4 inline-block rounded-full border px-6 py-2.5 transition-all duration-300 hover:opacity-90"
             style={{
               fontFamily: "var(--font-montserrat)",
               letterSpacing: "0.15em",

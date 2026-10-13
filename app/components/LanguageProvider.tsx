@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useSyncExternalStore } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useSyncExternalStore,
+} from "react";
 
 import {
   DEFAULT_LANGUAGE,
@@ -50,7 +56,11 @@ function getServerSnapshot(): Language {
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const language = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const language = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -67,7 +77,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t: siteCopy[language] }}>
+    <LanguageContext.Provider
+      value={{ language, setLanguage, t: siteCopy[language] }}
+    >
       {children}
     </LanguageContext.Provider>
   );
@@ -75,6 +87,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
 export function useLanguage(): LanguageContextValue {
   const context = useContext(LanguageContext);
-  if (!context) throw new Error("useLanguage must be used inside a LanguageProvider");
+  if (!context)
+    throw new Error("useLanguage must be used inside a LanguageProvider");
   return context;
 }

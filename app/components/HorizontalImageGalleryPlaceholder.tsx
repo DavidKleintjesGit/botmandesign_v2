@@ -207,7 +207,10 @@ export default function HorizontalImageGalleryPlaceholder() {
         className="absolute inset-0 z-0 pointer-events-none"
         aria-hidden
       >
-        <div className="absolute inset-0" style={{ filter: "brightness(0.72)" }}>
+        <div
+          className="absolute inset-0"
+          style={{ filter: "brightness(0.72)" }}
+        >
           <Image
             src={SECTION_IMAGE}
             alt=""
@@ -223,15 +226,7 @@ export default function HorizontalImageGalleryPlaceholder() {
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center gap-8 px-12 text-center md:px-20 lg:px-28">
-        <p
-          className="text-sm leading-relaxed uppercase md:text-base"
-          style={{
-            color: "var(--color-champagne)",
-            fontFamily: "var(--font-montserrat)",
-          }}
-        >
-          BAS BOTMAN
-        </p>
+        <p className="t-label t-label--sterk">BAS BOTMAN</p>
 
         {/*
           De regels liggen over elkaar heen zodat de hoogte niet verspringt bij
@@ -241,7 +236,7 @@ export default function HorizontalImageGalleryPlaceholder() {
           {LINES[language].map((line, index) => (
             <h2
               key={line.from}
-              className={`flex flex-col items-center gap-0 text-3xl font-light uppercase tracking-wider transition-all duration-700 md:text-5xl lg:text-6xl ${
+              className={`t-kop flex flex-col items-center gap-0 text-[clamp(28px,5vw,64px)] transition-all duration-700 ${
                 index === 0 ? "relative" : "absolute inset-0"
               }`}
               style={{
@@ -250,7 +245,8 @@ export default function HorizontalImageGalleryPlaceholder() {
                 wordSpacing: "0.25em",
                 color: "var(--color-champagne)",
                 opacity: index === activeLine ? 1 : 0,
-                transform: index === activeLine ? "translateY(0)" : "translateY(12px)",
+                transform:
+                  index === activeLine ? "translateY(0)" : "translateY(12px)",
               }}
               aria-hidden={index !== activeLine}
             >

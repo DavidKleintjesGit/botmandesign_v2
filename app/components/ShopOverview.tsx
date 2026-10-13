@@ -45,9 +45,6 @@ const SURFACE = "var(--color-champagne)";
 const INK = "var(--color-black)";
 const INK_SOFT = "var(--color-cedar)";
 
-const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
-const sans = { fontFamily: "var(--font-montserrat)" } as const;
-
 export default function ShopOverview({ products }: { products: Product[] }) {
   const { language } = useLanguage();
   const copy = shopCopy[language];
@@ -55,32 +52,23 @@ export default function ShopOverview({ products }: { products: Product[] }) {
   const [active, setActive] = useState<ProductCategory | "all">("all");
 
   const categories = Array.from(new Set(products.map((p) => p.category)));
-  const shown = active === "all" ? products : products.filter((p) => p.category === active);
+  const shown =
+    active === "all" ? products : products.filter((p) => p.category === active);
 
   return (
     <div>
       <section className="w-full pt-40 pb-12 md:pt-52 md:pb-16">
         <div className="container mx-auto px-4 md:px-8">
-          <p className="mb-6 text-sm uppercase md:text-base" style={{ ...sans, color: INK }}>
-            {copy.label}
-          </p>
+          <p className="t-label mb-6">{copy.label}</p>
 
           <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
-            <h1
-              className="text-3xl font-light uppercase tracking-wider md:text-4xl lg:text-5xl"
-              style={{ ...serif, letterSpacing: "0.15em", color: INK }}
-            >
+            <h1 className="t-kop">
               {copy.title}
               <br />
               <span style={{ color: INK_SOFT }}>{copy.titleAccent}</span>
             </h1>
 
-            <p
-              className="max-w-md text-lg leading-relaxed md:text-xl"
-              style={{ ...serif, color: INK_SOFT }}
-            >
-              {copy.intro}
-            </p>
+            <p className="t-tekst max-w-md">{copy.intro}</p>
           </div>
         </div>
       </section>
@@ -89,7 +77,11 @@ export default function ShopOverview({ products }: { products: Product[] }) {
       <section className="w-full pb-12">
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex flex-wrap gap-3">
-            <CategoryButton label={copy.all} active={active === "all"} onClick={() => setActive("all")} />
+            <CategoryButton
+              label={copy.all}
+              active={active === "all"}
+              onClick={() => setActive("all")}
+            />
             {categories.map((category) => (
               <CategoryButton
                 key={category}
@@ -106,7 +98,11 @@ export default function ShopOverview({ products }: { products: Product[] }) {
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {shown.map((product) => (
-              <ProductCard key={product.slug} product={product} soldOutLabel={copy.soldOut} />
+              <ProductCard
+                key={product.slug}
+                product={product}
+                soldOutLabel={copy.soldOut}
+              />
             ))}
           </div>
         </div>
@@ -130,10 +126,8 @@ function CategoryButton({
     <button
       type="button"
       onClick={onClick}
-      className="cursor-pointer rounded-full border px-5 py-2 text-xs uppercase transition-all duration-300"
+      className="t-label cursor-pointer rounded-full border px-5 py-2 transition-all duration-300"
       style={{
-        ...sans,
-        letterSpacing: "0.15em",
         backgroundColor: active ? INK : "transparent",
         borderColor: active ? INK : "rgba(103, 92, 83, 0.4)",
         color: active ? SURFACE : INK,
@@ -144,7 +138,13 @@ function CategoryButton({
   );
 }
 
-function ProductCard({ product, soldOutLabel }: { product: Product; soldOutLabel: string }) {
+function ProductCard({
+  product,
+  soldOutLabel,
+}: {
+  product: Product;
+  soldOutLabel: string;
+}) {
   const { language } = useLanguage();
   const content = product[language];
   const soldOut = isSoldOut(product);
@@ -152,13 +152,19 @@ function ProductCard({ product, soldOutLabel }: { product: Product; soldOutLabel
   return (
     // Tekst gecentreerd onder het object; links uitgelijnd leest scheef
     // naast een beeld dat zelf in het midden staat.
-    <Link href={`/collectie/${product.slug}`} className="group block text-center">
+    <Link
+      href={`/collectie/${product.slug}`}
+      className="group block text-center"
+    >
       {/*
         De artikelen staan als uitgeknipt object op het cedar in plaats van in
         een omlijnde kaart. Een zachte gloed eronder geeft ze grond, zodat ze
         zweven in plaats van te plakken.
       */}
-      <div className="relative mb-5 overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 5" }}>
+      <div
+        className="relative mb-5 overflow-hidden rounded-lg"
+        style={{ aspectRatio: "4 / 5" }}
+      >
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -176,10 +182,8 @@ function ProductCard({ product, soldOutLabel }: { product: Product; soldOutLabel
 
         {soldOut && (
           <div
-            className="absolute left-4 top-4 rounded-full px-3 py-1.5 text-[10px] uppercase"
+            className="t-label absolute left-4 top-4 rounded-full px-3 py-1.5"
             style={{
-              ...sans,
-              letterSpacing: "0.15em",
               backgroundColor: INK_SOFT,
               color: SURFACE,
             }}
@@ -189,20 +193,11 @@ function ProductCard({ product, soldOutLabel }: { product: Product; soldOutLabel
         )}
       </div>
 
-      <h2
-        className="mb-2 text-xl font-light uppercase tracking-wider"
-        style={{ ...serif, letterSpacing: "0.1em", color: INK }}
-      >
-        {content.name}
-      </h2>
+      <h2 className="t-titel mb-2">{content.name}</h2>
 
-      <p className="mb-3 text-base leading-relaxed" style={{ ...serif, color: INK_SOFT }}>
-        {content.tagline}
-      </p>
+      <p className="t-tekst mb-3">{content.tagline}</p>
 
-      <p className="text-lg" style={{ ...serif, color: INK }}>
-        {formatPrice(product.priceCents, language)}
-      </p>
+      <p className="t-tekst">{formatPrice(product.priceCents, language)}</p>
     </Link>
   );
 }

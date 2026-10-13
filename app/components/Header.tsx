@@ -22,10 +22,13 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full h-screen relative overflow-hidden" style={{ zIndex: 10 }}>
+    <header
+      className="w-full h-screen relative overflow-hidden"
+      style={{ zIndex: 10 }}
+    >
       {/* Video - loads immediately, stays hidden until ready */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
-        <div 
+        <div
           className="absolute"
           style={{
             top: "50%",
@@ -36,7 +39,7 @@ export default function Header() {
             minHeight: "56.25vw",
             transform: "translate(-50%, -50%)",
             opacity: videoReady ? 1 : 0,
-            transition: "none"
+            transition: "none",
           }}
         >
           <iframe
@@ -47,20 +50,20 @@ export default function Header() {
             allowFullScreen
             onLoad={handleVideoReady}
             className="w-full h-full"
-            style={{ 
-              pointerEvents: "none"
+            style={{
+              pointerEvents: "none",
             }}
           />
         </div>
       </div>
 
       {/* Image - stays on top until video is ready, then fades out */}
-      <div 
+      <div
         className="absolute inset-0 w-full h-full"
         style={{
           opacity: videoReady ? 0 : 1,
           transition: videoReady ? "opacity 0.2s" : "none",
-          zIndex: videoReady ? 0 : 10
+          zIndex: videoReady ? 0 : 10,
         }}
       >
         <img
@@ -71,18 +74,20 @@ export default function Header() {
       </div>
 
       {/* Gradient overlay at top for navbar visibility */}
-      <div 
+      <div
         className="absolute top-0 left-0 right-0 h-64 pointer-events-none z-20"
         style={{
-          background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0))"
+          background:
+            "linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0))",
         }}
       />
 
       {/* Gradient overlay at bottom - fades to black to connect with ImageGallery */}
-      <div 
+      <div
         className="absolute bottom-0 left-0 right-0 h-96 pointer-events-none z-20"
         style={{
-          background: "linear-gradient(to top, #020203 0%, rgba(2, 2, 3, 0.9) 30%, rgba(2, 2, 3, 0.5) 60%, rgba(0, 0, 0, 0) 100%)"
+          background:
+            "linear-gradient(to top, #020203 0%, rgba(2, 2, 3, 0.9) 30%, rgba(2, 2, 3, 0.5) 60%, rgba(0, 0, 0, 0) 100%)",
         }}
       />
 
@@ -90,7 +95,7 @@ export default function Header() {
       <div className="absolute bottom-16 left-1/2 z-30 flex w-full max-w-xl -translate-x-1/2 flex-col items-center gap-6 px-4 text-center">
         <Link
           href="/projecten"
-          className="border-b pb-2 text-sm font-light uppercase tracking-wider transition-opacity duration-300 hover:opacity-80"
+          className="t-label t-label--sterk border-b pb-2 transition-opacity duration-300 hover:opacity-80"
           style={{
             fontFamily: "var(--font-montserrat)",
             letterSpacing: "0.15em",
@@ -112,4 +117,3 @@ export default function Header() {
     </header>
   );
 }
-

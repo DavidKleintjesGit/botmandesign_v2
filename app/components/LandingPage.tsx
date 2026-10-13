@@ -22,7 +22,11 @@ interface LandingPageProps {
   testimonials: Testimonial[];
 }
 
-export default function LandingPage({ projects, services, testimonials }: LandingPageProps) {
+export default function LandingPage({
+  projects,
+  services,
+  testimonials,
+}: LandingPageProps) {
   const headerTriggerRef = useRef<HTMLDivElement>(null);
   const galleryPlaceholderRef = useRef<HTMLDivElement>(null);
   const hideCardAfterRef = useRef<HTMLDivElement>(null);
@@ -69,7 +73,10 @@ export default function LandingPage({ projects, services, testimonials }: Landin
      * Cedar en niet mist: mist is bijna wit, en overal waar twee secties
      * elkaar net niet raken schijnt dat als een streep door het beeld.
      */
-    <div className="font-sans" style={{ backgroundColor: "var(--color-cedar)" }}>
+    <div
+      className="font-sans"
+      style={{ backgroundColor: "var(--color-cedar)" }}
+    >
       <LoadingPage
         key={loadingKey}
         show={showInitialLoading || showLanguageLoading}
@@ -77,7 +84,10 @@ export default function LandingPage({ projects, services, testimonials }: Landin
         fadeOut
         timeWait={showInitialLoading ? 2.5 : 3}
       />
-      <BusinessCardComponent showCardAfterRef={headerTriggerRef} hideCardAfterRef={hideCardAfterRef} />
+      <BusinessCardComponent
+        showCardAfterRef={headerTriggerRef}
+        hideCardAfterRef={hideCardAfterRef}
+      />
       <div ref={headerTriggerRef}>
         <Header />
       </div>

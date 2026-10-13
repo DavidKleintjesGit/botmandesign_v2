@@ -6,7 +6,11 @@ import Link from "next/link";
 import Footer from "./Footer";
 import { zonderJaartal } from "./ProjectCard";
 import { useLanguage } from "./LanguageProvider";
-import { projectContent, type Project, type ProjectSlide } from "@/app/content/projects";
+import {
+  projectContent,
+  type Project,
+  type ProjectSlide,
+} from "@/app/content/projects";
 
 const copyPer = {
   nl: {
@@ -24,9 +28,6 @@ const copyPer = {
     tel: "+31 6 12 34 56 78",
   },
 };
-
-const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
-const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
 /*
  * De breedteverdelingen, nagemeten op kabaz.nl: hele breedte, twee halve,
@@ -55,7 +56,9 @@ const RITME: number[][] = [
 const MINSTENS_RIJEN_TUSSEN = 2;
 
 type Tekst = { sub: string; kop: string; body: string };
-type Cel = { breedte: number } & ({ soort: "beeld"; src: string } | ({ soort: "tekst" } & Tekst));
+type Cel = { breedte: number } & (
+  { soort: "beeld"; src: string } | ({ soort: "tekst" } & Tekst)
+);
 type Rij = Cel[];
 
 /** Alle beelden uit de reeks, op volgorde, zonder het openingsbeeld. */
@@ -74,8 +77,16 @@ function beeldenVoor(slides: ProjectSlide[], opening: string): string[] {
 /** De tekstvlakken die in de reeks staan. */
 function tekstenVoor(slides: ProjectSlide[]): Tekst[] {
   return slides
-    .filter((s) => (s.layout === "rust" || s.layout === "tekst") && (s.caption || s.body))
-    .map((s) => ({ soort: "tekst" as const, sub: s.sub, kop: s.caption, body: s.body }));
+    .filter(
+      (s) =>
+        (s.layout === "rust" || s.layout === "tekst") && (s.caption || s.body),
+    )
+    .map((s) => ({
+      soort: "tekst" as const,
+      sub: s.sub,
+      kop: s.caption,
+      body: s.body,
+    }));
 }
 
 /**
@@ -88,7 +99,11 @@ function tekstenVoor(slides: ProjectSlide[]): Tekst[] {
  * Nooit in de laatste rij: een project hoort te eindigen op een ruimte, niet
  * op een alinea.
  */
-function rijenVoor(slides: ProjectSlide[], opening: string, inleiding: Tekst): Rij[] {
+function rijenVoor(
+  slides: ProjectSlide[],
+  opening: string,
+  inleiding: Tekst,
+): Rij[] {
   const beelden = beeldenVoor(slides, opening);
   const teksten = [inleiding, ...tekstenVoor(slides)];
 
@@ -98,8 +113,14 @@ function rijenVoor(slides: ProjectSlide[], opening: string, inleiding: Tekst): R
    * Afronden en niet afkappen, anders schuift alles naar voren en staat de
    * laatste helft van de pagina zonder woorden.
    */
-  const schatting = Math.max(1, Math.round(beelden.length / 2.2) + teksten.length);
-  const ruimte = Math.max(MINSTENS_RIJEN_TUSSEN, Math.round(schatting / (teksten.length + 1)));
+  const schatting = Math.max(
+    1,
+    Math.round(beelden.length / 2.2) + teksten.length,
+  );
+  const ruimte = Math.max(
+    MINSTENS_RIJEN_TUSSEN,
+    Math.round(schatting / (teksten.length + 1)),
+  );
 
   const rijen: Rij[] = [];
   let i = 0;
@@ -108,7 +129,8 @@ function rijenVoor(slides: ProjectSlide[], opening: string, inleiding: Tekst): R
   while (i < beelden.length) {
     const nummer = rijen.length + 1;
     const nogBeeldNa = beelden.length - i > 1;
-    const tekstBeurt = nogBeeldNa && nummer % ruimte === 0 && volgende < teksten.length;
+    const tekstBeurt =
+      nogBeeldNa && nummer % ruimte === 0 && volgende < teksten.length;
 
     if (tekstBeurt) {
       const tekst = teksten[volgende];
@@ -130,7 +152,13 @@ function rijenVoor(slides: ProjectSlide[], opening: string, inleiding: Tekst): R
      * was, dan slaan we hem over.
      */
     let beurt = rijen.length;
-    const vorigeVol = rijen.length > 0 && rijen[rijen.length - 1].length === 1;
+
+    /*
+     * Het openingsbeeld is zelf al een vol scherm, dus de eerste rij telt als
+     * de tweede: ook die mag niet de volle breedte pakken.
+     */
+    const vorigeVol =
+      rijen.length === 0 || rijen[rijen.length - 1].length === 1;
 
     if (vorigeVol && RITME[beurt % RITME.length].length === 1) beurt += 1;
 
@@ -158,7 +186,13 @@ function rijenVoor(slides: ProjectSlide[], opening: string, inleiding: Tekst): R
  * foto's doen het werk. Af en toe een smalle strook om iets te vertellen, en
  * onderaan blijft een balk staan met de weg terug.
  */
-export default function ProjectMosaic({ slug, projects }: { slug: string; projects: Project[] }) {
+export default function ProjectMosaic({
+  slug,
+  projects,
+}: {
+  slug: string;
+  projects: Project[];
+}) {
   const { language } = useLanguage();
   const copy = copyPer[language];
 
@@ -176,35 +210,40 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
   const anderen = projects.filter((item) => item.slug !== slug).slice(0, 3);
 
   return (
-    <div style={{ backgroundColor: "var(--color-cedar)", paddingBottom: "56px" }}>
+    <div
+      style={{ backgroundColor: "var(--color-cedar)", paddingBottom: "56px" }}
+    >
       {/* OPENING — één beeld, met de naam rechtsonder */}
       <header className="relative h-screen w-full overflow-hidden">
-        <Image src={opening} alt={project.title} fill priority sizes="100vw" className="object-cover" />
+        <Image
+          src={opening}
+          alt={project.title}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
 
         <div
           className="pointer-events-none absolute inset-0"
-          style={{ background: "linear-gradient(0deg, rgba(10,9,7,0.45) 0%, rgba(10,9,7,0) 45%)" }}
+          style={{
+            background:
+              "linear-gradient(0deg, rgba(10,9,7,0.45) 0%, rgba(10,9,7,0) 45%)",
+          }}
         />
 
         <div className="absolute bottom-[clamp(96px,16vh,160px)] right-[clamp(20px,5vw,72px)] text-right">
-          <p
-            className="mb-2 text-sm uppercase md:text-base"
-            style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-almond)" }}
-          >
-            {zonderJaartal(content.category)}
-          </p>
-          <h1
-            className="text-[clamp(38px,6vw,76px)] font-light leading-[1.05]"
-            style={{ ...serif, color: "var(--color-champagne)" }}
-          >
-            {project.title}
-          </h1>
+          <p className="t-label mb-3">{zonderJaartal(content.category)}</p>
+          <h1 className="t-kop">{project.title}</h1>
         </div>
       </header>
 
       {/* HET MUURVLAK */}
       {rijen.map((rij, index) => (
-        <div key={`rij-${index}`} className="flex w-full flex-col md:h-screen md:flex-row">
+        <div
+          key={`rij-${index}`}
+          className="flex w-full flex-col md:h-screen md:flex-row"
+        >
           {rij.map((cel, k) =>
             cel.soort === "tekst" ? (
               <TekstTegel
@@ -218,7 +257,9 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
               <div
                 key={`${cel.src}-${k}`}
                 className="group relative aspect-[4/3] w-full overflow-hidden md:aspect-auto md:h-full md:w-[var(--breed)]"
-                style={{ "--breed": `${cel.breedte * 100}%` } as React.CSSProperties}
+                style={
+                  { "--breed": `${cel.breedte * 100}%` } as React.CSSProperties
+                }
               >
                 <Image
                   src={cel.src}
@@ -237,17 +278,19 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
       {/* MEER INSPIRATIE */}
       <section className="w-full py-20 md:py-28">
         <div className="container mx-auto px-4 md:px-8">
-          <p
-            className="mb-10 text-sm uppercase md:text-base"
-            style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-almond)" }}
-          >
-            {copy.meer}
-          </p>
+          <p className="t-label mb-10">{copy.meer}</p>
 
           <div className="grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-3">
             {anderen.map((ander) => (
-              <Link key={ander.slug} href={`/projecten/${ander.slug}`} className="group block">
-                <div className="relative w-full overflow-hidden" style={{ aspectRatio: "3 / 4" }}>
+              <Link
+                key={ander.slug}
+                href={`/projecten/${ander.slug}`}
+                className="group block"
+              >
+                <div
+                  className="relative w-full overflow-hidden"
+                  style={{ aspectRatio: "3 / 4" }}
+                >
                   <Image
                     src={ander.cardImage}
                     alt={ander.title}
@@ -258,12 +301,7 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
                   />
                 </div>
 
-                <h2
-                  className="mt-5 text-2xl font-light md:text-3xl"
-                  style={{ ...serif, color: "var(--color-champagne)" }}
-                >
-                  {ander.title}
-                </h2>
+                <h2 className="t-titel mt-5">{ander.title}</h2>
               </Link>
             ))}
           </div>
@@ -278,28 +316,27 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
        */}
       <div
         className="fixed inset-x-0 bottom-0 z-40 backdrop-blur-md"
-        style={{ backgroundColor: "rgba(103, 92, 83, 0.82)", borderTop: "1px solid rgba(182, 163, 144, 0.3)" }}
+        style={{
+          backgroundColor: "rgba(103, 92, 83, 0.82)",
+          borderTop: "1px solid rgba(182, 163, 144, 0.3)",
+        }}
       >
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-x-8 gap-y-2 px-[clamp(16px,4vw,48px)] py-3.5">
           <div className="flex items-center gap-6">
             <Link
               href="/projecten"
-              className="text-[11px] uppercase transition-opacity duration-300 hover:opacity-70 md:text-xs"
-              style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-champagne)" }}
+              className="t-label t-label--sterk transition-opacity duration-300 hover:opacity-70"
             >
               &larr; {copy.terug}
             </Link>
 
-            <span className="hidden text-base md:inline" style={{ ...serif, color: "var(--color-almond)" }}>
-              {copy.vraag}
-            </span>
+            <span className="t-tekst hidden md:inline">{copy.vraag}</span>
           </div>
 
           <div className="flex items-center gap-5">
             <a
               href={`mailto:${copy.mail}`}
-              className="text-[11px] uppercase transition-opacity duration-300 hover:opacity-70 md:text-xs"
-              style={{ ...sans, letterSpacing: "0.15em", color: "var(--color-champagne)" }}
+              className="t-label t-label--sterk transition-opacity duration-300 hover:opacity-70"
             >
               {copy.mail}
             </a>
@@ -308,8 +345,7 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
             </span>
             <a
               href={`tel:${copy.tel.replace(/\s/g, "")}`}
-              className="text-[11px] uppercase transition-opacity duration-300 hover:opacity-70 md:text-xs"
-              style={{ ...sans, letterSpacing: "0.15em", color: "var(--color-champagne)" }}
+              className="t-label t-label--sterk transition-opacity duration-300 hover:opacity-70"
             >
               {copy.tel}
             </a>
@@ -340,31 +376,16 @@ function TekstTegel({
   return (
     <div
       className="flex w-full flex-col justify-center px-[clamp(20px,3vw,44px)] py-14 md:h-full md:w-[var(--breed)] md:py-10"
-      style={{ "--breed": `${breedte * 100}%`, backgroundColor: "var(--color-cedar)" } as React.CSSProperties}
+      style={
+        {
+          "--breed": `${breedte * 100}%`,
+          backgroundColor: "var(--color-cedar)",
+        } as React.CSSProperties
+      }
     >
-      {sub && (
-        <p
-          className="mb-4 text-[11px] uppercase"
-          style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-almond)" }}
-        >
-          {sub}
-        </p>
-      )}
-
-      {kop && (
-        <h2
-          className="mb-5 text-2xl font-light md:text-3xl"
-          style={{ ...serif, color: "var(--color-champagne)" }}
-        >
-          {kop}
-        </h2>
-      )}
-
-      {body && (
-        <p className="text-base leading-relaxed" style={{ ...serif, color: "var(--color-almond)" }}>
-          {body}
-        </p>
-      )}
+      {sub && <p className="t-label mb-4">{sub}</p>}
+      {kop && <h2 className="t-titel mb-5">{kop}</h2>}
+      {body && <p className="t-tekst">{body}</p>}
     </div>
   );
 }

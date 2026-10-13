@@ -10,11 +10,11 @@ interface LoadingPageProps {
   timeWait?: number;
 }
 
-export default function LoadingPage({ 
-  show = true, 
-  fadeIn = true, 
-  fadeOut = true, 
-  timeWait = 2 
+export default function LoadingPage({
+  show = true,
+  fadeIn = true,
+  fadeOut = true,
+  timeWait = 2,
 }: LoadingPageProps) {
   const [isVisible, setIsVisible] = useState(show);
   const [opacity, setOpacity] = useState(fadeIn ? 0 : 1);
@@ -76,10 +76,10 @@ export default function LoadingPage({
   return (
     <div
       className="fixed inset-0 z-[100] pointer-events-none overflow-hidden"
-      style={{ 
+      style={{
         opacity: opacity,
         transition: "opacity 0.8s ease-in-out",
-        backgroundColor: "var(--color-cedar)"
+        backgroundColor: "var(--color-cedar)",
       }}
     >
       {/* Pattern layer */}
@@ -105,7 +105,7 @@ export default function LoadingPage({
           opacity: 0.3,
         }}
       />
-      
+
       {/* Loading logo - positioned before overlay so it can be covered, hidden on mobile */}
       <div
         className="absolute inset-0 hidden md:flex items-center justify-center"
@@ -121,10 +121,13 @@ export default function LoadingPage({
             borderRadius: "12px",
             border: "1px solid rgba(182, 163, 144, 0.4)",
             padding: "0 40px",
-            zIndex: 9
+            zIndex: 9,
           }}
         >
-          <div className="relative" style={{ width: "570px", height: "190px", zIndex: 10 }}>
+          <div
+            className="relative"
+            style={{ width: "570px", height: "190px", zIndex: 10 }}
+          >
             <Image
               src="/images/Botman Design Logo-03-A.png"
               alt="Botman Design Logo"
@@ -143,13 +146,13 @@ export default function LoadingPage({
           left: "-100%",
           width: "300%",
           height: "300%",
-          background: "radial-gradient(ellipse 35% 20% at center, transparent 0%, transparent 15%, rgba(103, 92, 83, 0.2) 25%, rgba(103, 92, 83, 0.5) 40%, rgba(103, 92, 83, 0.8) 55%, rgba(103, 92, 83, 0.95) 70%, var(--color-cedar) 100%)",
+          background:
+            "radial-gradient(ellipse 35% 20% at center, transparent 0%, transparent 15%, rgba(103, 92, 83, 0.2) 25%, rgba(103, 92, 83, 0.5) 40%, rgba(103, 92, 83, 0.8) 55%, rgba(103, 92, 83, 0.95) 70%, var(--color-cedar) 100%)",
           animation: "fade-diagonal 4s linear infinite",
           transformOrigin: "center center",
-          zIndex: 11
+          zIndex: 11,
         }}
       />
     </div>
   );
 }
-
