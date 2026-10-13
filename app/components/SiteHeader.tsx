@@ -142,7 +142,7 @@ export default function SiteHeader() {
   return (
     <>
       <nav
-        className="fixed inset-x-0 top-0 z-50 pt-5 transition-all duration-500"
+        className="fixed inset-x-0 top-0 z-50 pb-10 pt-5 transition-all duration-500"
         style={{
           // Wegschuiven in plaats van alleen vervagen: zo neemt hij ook geen
           // ruimte meer in beeld in zodra hij weg is.
@@ -150,17 +150,14 @@ export default function SiteHeader() {
           opacity: visible ? 1 : 0,
           pointerEvents: visible ? "auto" : "none",
           /*
-           * Bovenaan helemaal doorzichtig. Daarna een waas in plaats van een
-           * vlak: genoeg om de links leesbaar te houden boven een foto, te
-           * weinig om de aandacht te trekken.
+           * Een verloop in de grondkleur achter de balk: bovenaan net genoeg
+           * om de links van een foto los te maken, naar onderen helemaal weg.
+           * Een vlak zou een balk worden die over het beeld ligt; zo zie je
+           * alleen dat het daar iets donkerder is.
            */
-          backgroundColor: atTop
-            ? "transparent"
-            : light
-              ? "rgba(238, 227, 211, 0.6)"
-              : "rgba(103, 92, 83, 0.38)",
-          backdropFilter: atTop ? "none" : "blur(14px)",
-          WebkitBackdropFilter: atTop ? "none" : "blur(14px)",
+          background: light
+            ? "linear-gradient(to bottom, rgba(238, 227, 211, 0.72) 0%, rgba(238, 227, 211, 0.38) 55%, rgba(238, 227, 211, 0) 100%)"
+            : "linear-gradient(to bottom, rgba(103, 92, 83, 0.72) 0%, rgba(103, 92, 83, 0.38) 55%, rgba(103, 92, 83, 0) 100%)",
         }}
       >
         <div className="container mx-auto px-8 md:px-12">
