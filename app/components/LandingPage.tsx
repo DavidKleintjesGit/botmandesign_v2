@@ -5,7 +5,6 @@ import Header from "./Header";
 import LoadingPage from "./LoadingPage";
 import BusinessCardComponent from "./BusinessCardComponent";
 import HorizontalImageGalleryPlaceholder from "./HorizontalImageGalleryPlaceholder";
-import HomeProjectsSection from "./HomeProjectsSection";
 import ServicesSection from "./ServicesSection";
 import AboutSection from "./AboutSection";
 import TestimonialSection from "./TestimonialSection";
@@ -85,7 +84,7 @@ export default function LandingPage({ projects, services, testimonials }: Landin
       <div ref={galleryPlaceholderRef}>
         <HorizontalImageGalleryPlaceholder />
       </div>
-      <HomeProjectsSection projects={projects} />
+      {/* De projecten staan hier tijdelijk niet; de aandacht gaat nu naar de projectpagina zelf. */}
       <ServicesSection services={services} />
       <AboutSection />
       <TestimonialSection testimonials={testimonials} />

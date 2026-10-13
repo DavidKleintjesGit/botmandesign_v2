@@ -30,21 +30,30 @@ const serif = { fontFamily: "var(--font-cormorant-garamond), serif" } as const;
 const sans = { fontFamily: "var(--font-montserrat)" } as const;
 
 /*
- * Het ritme van de banden. Elk getal is een breuk van de schermbreedte; elke
+ * Het ritme van de rijen. Elk getal is een breuk van de schermbreedte; elke
  * rij is samen precies één scherm breed.
  *
- * De hoogtes wisselen mee: een hele band staat hoger dan een rij van drie. Dat
- * verschil is wat het laat lezen als compositie en niet als raster.
+ * Alleen het openingsbeeld krijgt het hele scherm. Daaronder staan er altijd
+ * twee of drie naast elkaar: een reeks waarin steeds één beeld het scherm
+ * vult leest als een diavoorstelling, en dit hoort een galerij te zijn. De
+ * hoogtes blijven onder de halve schermhoogte, zodat je altijd meer dan één
+ * rij tegelijk ziet — dat is wat het raster laat lezen als raster.
  */
 const RITME: { breedtes: number[]; hoogte: string }[] = [
-  { breedtes: [1], hoogte: "88vh" },
-  { breedtes: [2 / 3, 1 / 3], hoogte: "76vh" },
-  { breedtes: [1 / 2, 1 / 2], hoogte: "82vh" },
-  { breedtes: [1], hoogte: "94vh" },
-  { breedtes: [1 / 3, 2 / 3], hoogte: "76vh" },
-  { breedtes: [1 / 2, 1 / 2], hoogte: "70vh" },
-  { breedtes: [1 / 3, 1 / 3, 1 / 3], hoogte: "64vh" },
+  { breedtes: [1 / 2, 1 / 2], hoogte: "58vh" },
+  { breedtes: [1 / 3, 1 / 3, 1 / 3], hoogte: "44vh" },
+  { breedtes: [2 / 3, 1 / 3], hoogte: "52vh" },
+  { breedtes: [1 / 2, 1 / 2], hoogte: "48vh" },
+  { breedtes: [1 / 3, 2 / 3], hoogte: "52vh" },
+  { breedtes: [1 / 3, 1 / 3, 1 / 3], hoogte: "44vh" },
 ];
+
+/*
+ * Na hoeveel rijen het eerste tekstvlak liefst komt. Meteen onder het
+ * openingsbeeld las de inleiding als een voorwoord dat je eerst door moest;
+ * na een paar rijen beeld heb je iets gezien om over te lezen.
+ */
+const EERSTE_TEKST_NA = 3;
 
 type Band = { soort: "band"; breedtes: number[]; hoogte: string; beelden: string[] };
 type Tekst = { soort: "tekst"; sub: string; kop: string; body: string };
@@ -57,51 +66,103 @@ type Blok = Band | Tekst;
  * tekstvlak; de rest levert zijn beeld aan de banden. Zo bepaalt Bas per dia
  * waar de woorden vallen, zonder dat daar een apart veld voor nodig is.
  */
-function blokkenVoor(slides: ProjectSlide[], opening: string): Blok[] {
-  const blokken: Blok[] = [];
-  let wachtrij: string[] = [];
-  let stap = 0;
-
-  const legen = () => {
-    while (wachtrij.length > 0) {
-      const { breedtes, hoogte } = RITME[stap % RITME.length];
-      const deel = wachtrij.slice(0, breedtes.length);
-
-      blokken.push({
-        soort: "band",
-        // Een rij die niet vol raakt verdeelt de breedte over wat er is.
-        breedtes: deel.length < breedtes.length ? deel.map(() => 1 / deel.length) : breedtes,
-        hoogte,
-        beelden: deel,
-      });
-
-      wachtrij = wachtrij.slice(deel.length);
-      stap += 1;
-    }
-  };
+/** Alle beelden uit de reeks, op volgorde, zonder het openingsbeeld. */
+function beeldenVoor(slides: ProjectSlide[], opening: string): string[] {
+  const uit: string[] = [];
 
   for (const slide of slides) {
-    if (slide.layout === "rust" || slide.layout === "tekst") {
-      legen();
-
-      if (slide.caption || slide.body) {
-        blokken.push({ soort: "tekst", sub: slide.sub, kop: slide.caption, body: slide.body });
-      }
-
-      // Een dia met tekst én beeld geeft zijn beeld alsnog aan de reeks mee.
-      if (slide.layout === "tekst" && slide.img && slide.img !== opening) {
-        wachtrij.push(slide.img);
-      }
-
-      continue;
-    }
-
     for (const src of [slide.img, slide.imgTwo]) {
-      if (src && src !== opening && !wachtrij.includes(src)) wachtrij.push(src);
+      if (src && src !== opening && !uit.includes(src)) uit.push(src);
     }
   }
 
-  legen();
+  return uit;
+}
+
+/**
+ * Verdeelt de beelden over rijen van twee of drie.
+ *
+ * Nooit een rij van één: blijft er aan het eind eentje over, dan gaat die bij
+ * de vorige rij. Eén beeld over de volle breedte hoort bij de opening en
+ * nergens anders.
+ */
+function rijenVoor(beelden: string[]): Band[] {
+  const rijen: Band[] = [];
+  let i = 0;
+  let stap = 0;
+
+  while (i < beelden.length) {
+    const { breedtes, hoogte } = RITME[stap % RITME.length];
+    const deel = beelden.slice(i, i + breedtes.length);
+
+    if (deel.length === 1 && rijen.length > 0) {
+      const vorige = rijen[rijen.length - 1];
+      vorige.beelden.push(deel[0]);
+      vorige.breedtes = vorige.beelden.map(() => 1 / vorige.beelden.length);
+      break;
+    }
+
+    rijen.push({
+      soort: "band",
+      breedtes: deel.length < breedtes.length ? deel.map(() => 1 / deel.length) : breedtes,
+      hoogte,
+      beelden: deel,
+    });
+
+    i += deel.length;
+    stap += 1;
+  }
+
+  return rijen;
+}
+
+/** De tekstvlakken die Bas in de reeks heeft gezet. */
+function tekstenVoor(slides: ProjectSlide[]): Tekst[] {
+  return slides
+    .filter((s) => (s.layout === "rust" || s.layout === "tekst") && (s.caption || s.body))
+    .map((s) => ({ soort: "tekst" as const, sub: s.sub, kop: s.caption, body: s.body }));
+}
+
+/**
+ * Zet de rijen en de tekstvlakken achter elkaar.
+ *
+ * De tekst zit niet vast aan de plek van zijn dia maar valt op een rijgrens,
+ * met een paar rijen beeld ertussen. Eerder liep de wachtrij leeg zodra er een
+ * tekstdia langskwam: dan bleef er een los beeld over en stonden twee vlakken
+ * soms tegen elkaar.
+ */
+/**
+ * Na welke rijen de tekstvlakken vallen.
+ *
+ * Hoe meer beeld er is, hoe verder ze uit elkaar staan; is er weinig, dan
+ * schuiven ze naar voren en houden ze minstens één rij beeld tussen zich in.
+ * Twee vlakken tegen elkaar is wat je wil voorkomen — dan lees je twee keer
+ * achter elkaar in plaats van te kijken.
+ */
+function tekstPosities(rijen: number, aantal: number): number[] {
+  if (aantal === 0 || rijen === 0) return [];
+
+  const start = Math.min(EERSTE_TEKST_NA, Math.max(1, rijen - aantal + 1));
+  const stap = Math.max(1, Math.floor((rijen - start) / Math.max(1, aantal - 1)));
+
+  return Array.from({ length: aantal }, (_, i) => Math.min(start + i * stap, rijen));
+}
+
+function blokkenVoor(slides: ProjectSlide[], opening: string, inleiding: Tekst): Blok[] {
+  const rijen = rijenVoor(beeldenVoor(slides, opening));
+  const teksten = [inleiding, ...tekstenVoor(slides)];
+  const posities = tekstPosities(rijen.length, teksten.length);
+
+  const blokken: Blok[] = [];
+
+  rijen.forEach((rij, index) => {
+    blokken.push(rij);
+
+    posities.forEach((positie, i) => {
+      if (positie === index + 1) blokken.push(teksten[i]);
+    });
+  });
+
   return blokken;
 }
 
@@ -123,7 +184,12 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
 
   const content = projectContent(project, language);
   const opening = project.cardImage;
-  const blokken = blokkenVoor(content.slides, opening);
+  const blokken = blokkenVoor(content.slides, opening, {
+    soort: "tekst",
+    sub: zonderJaartal(content.category),
+    kop: project.title,
+    body: content.intro,
+  });
   const anderen = projects.filter((item) => item.slug !== slug).slice(0, 3);
 
   return (
@@ -162,11 +228,6 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
         </div>
       </header>
 
-      {/* De inleiding, direct onder het openingsbeeld. */}
-      <Onthulling>
-        <TekstVlak sub={zonderJaartal(content.category)} kop={project.title} body={content.intro} />
-      </Onthulling>
-
       {/* HET MUURVLAK */}
       {blokken.map((blok, index) =>
         blok.soort === "tekst" ? (
@@ -188,7 +249,7 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
                     fill
                     loading="lazy"
                     sizes={`${Math.round(blok.breedtes[kolom] * 100)}vw`}
-                    className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
+                    className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-[1.025]"
                   />
                 </div>
               ))}
@@ -217,7 +278,7 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
                     fill
                     loading="lazy"
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
+                    className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-[1.025]"
                   />
                 </div>
 
