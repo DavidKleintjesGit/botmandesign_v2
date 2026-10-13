@@ -166,31 +166,21 @@ export default function SiteHeader() {
         <div className="container mx-auto px-8 md:px-12">
           <div className="relative flex min-h-[96px] items-center justify-between">
             {!compact ? (
+              /*
+               * Woordmerk links, alle navigatie rechts bij elkaar.
+               *
+               * Het merk stond gecentreerd met de links aan weerszijden, en
+               * dan staat Contact aan de andere kant van het scherm dan de
+               * rest — vier losse groepjes over de hele breedte. Nu is er één
+               * plek waar je naartoe kijkt om verder te gaan.
+               */
               <>
-                <div className="-mt-3 flex items-center gap-8">
-                  {leftLinks.map((link) => (
-                    <Link
-                      key={link.key}
-                      href={link.href}
-                      className="t-label transition-colors"
-                      style={linkStyle}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-
-                <Link
-                  href="/"
-                  className="absolute left-1/2 top-3"
-                  style={{ transform: "translateX(-50%)" }}
-                  aria-label="Botman Design"
-                >
-                  <Wordmark light={light} width={240} height={80} />
+                <Link href="/" aria-label="Botman Design">
+                  <Wordmark light={light} width={220} height={74} />
                 </Link>
 
-                <div className="-mt-3 flex items-center gap-8">
-                  {rightLinks.map((link) => (
+                <div className="flex items-center gap-9">
+                  {[...leftLinks, ...rightLinks].map((link) => (
                     <Link
                       key={link.key}
                       href={link.href}

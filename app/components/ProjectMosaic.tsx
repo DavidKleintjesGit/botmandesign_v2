@@ -37,20 +37,28 @@ const copyPer = {
  * twee tegelijk, dus er is ook niets om op één lijn mee te liggen. Lagere
  * rijen maakten er een raster van; dat was wat er misging.
  */
-const RITME: number[][] = [
-  [1],
-  [1 / 3, 1 / 3, 1 / 3],
-  [1 / 2, 1 / 2],
-  [2 / 3, 1 / 3],
-  [1 / 2, 1 / 2],
-  [1 / 3, 2 / 3],
-  [1],
-  [2 / 3, 1 / 3],
-  [1 / 3, 1 / 3, 1 / 3],
-  [1 / 3, 2 / 3],
-  [1 / 2, 1 / 2],
-  [2 / 3, 1 / 3],
+const RITME: { breedtes: number[]; hoogte: string }[] = [
+  { breedtes: [1], hoogte: "92vh" },
+  { breedtes: [0.38, 0.62], hoogte: "78vh" },
+  { breedtes: [0.55, 0.45], hoogte: "88vh" },
+  { breedtes: [0.3, 0.44, 0.26], hoogte: "64vh" },
+  { breedtes: [0.62, 0.38], hoogte: "82vh" },
+  { breedtes: [0.46, 0.54], hoogte: "72vh" },
+  { breedtes: [1], hoogte: "86vh" },
+  { breedtes: [0.28, 0.4, 0.32], hoogte: "68vh" },
+  { breedtes: [0.58, 0.42], hoogte: "80vh" },
+  { breedtes: [0.42, 0.58], hoogte: "76vh" },
+  { breedtes: [0.34, 0.3, 0.36], hoogte: "62vh" },
+  { breedtes: [0.52, 0.48], hoogte: "84vh" },
 ];
+
+/* De rij waarin een tekstvlak staat; ook die wisselt van maat. */
+const TEKSTRIJ = [
+  { tekst: 0.34, beeld: 0.66, hoogte: "74vh" },
+  { tekst: 0.3, beeld: 0.7, hoogte: "80vh" },
+  { tekst: 0.38, beeld: 0.62, hoogte: "70vh" },
+];
+
 
 /** Minimaal aantal rijen beeld tussen twee tekststroken. */
 const MINSTENS_RIJEN_TUSSEN = 2;
@@ -59,7 +67,7 @@ type Tekst = { sub: string; kop: string; body: string };
 type Cel = { breedte: number } & (
   { soort: "beeld"; src: string } | ({ soort: "tekst" } & Tekst)
 );
-type Rij = Cel[];
+type Rij = { cellen: Cel[]; hoogte: string };
 
 /** Alle beelden uit de reeks, op volgorde, zonder het openingsbeeld. */
 function beeldenVoor(slides: ProjectSlide[], opening: string): string[] {
@@ -125,6 +133,7 @@ function rijenVoor(
   const rijen: Rij[] = [];
   let i = 0;
   let volgende = 0;
+  let stap = 0;
 
   while (i < beelden.length) {
     const nummer = rijen.length + 1;
@@ -137,10 +146,14 @@ function rijenVoor(
       const linksTekst = volgende % 2 === 0;
       volgende += 1;
 
-      const beeld: Cel = { soort: "beeld", src: beelden[i], breedte: 2 / 3 };
-      const vak: Cel = { soort: "tekst", breedte: 1 / 3, ...tekst };
+      const maat = TEKSTRIJ[(volgende - 1) % TEKSTRIJ.length];
+      const beeld: Cel = { soort: "beeld", src: beelden[i], breedte: maat.beeld };
+      const vak: Cel = { soort: "tekst", breedte: maat.tekst, ...tekst };
 
-      rijen.push(linksTekst ? [vak, beeld] : [beeld, vak]);
+      rijen.push({
+        cellen: linksTekst ? [vak, beeld] : [beeld, vak],
+        hoogte: maat.hoogte,
+      });
       i += 1;
       continue;
     }
@@ -151,27 +164,34 @@ function rijenVoor(
      * galerij. Staat de volgende verdeling op vol terwijl de vorige dat ook
      * was, dan slaan we hem over.
      */
-    let beurt = rijen.length;
+    /*
+     * Een eigen teller en niet het aantal rijen: sla je een verdeling over,
+     * dan moet de volgende rij verder in het ritme beginnen. Anders komt die
+     * overgeslagen stap terug en staan er twee rijen met dezelfde verdeling
+     * onder elkaar — precies de naden die op één lijn liggen.
+     */
 
     /*
      * Het openingsbeeld is zelf al een vol scherm, dus de eerste rij telt als
      * de tweede: ook die mag niet de volle breedte pakken.
      */
     const vorigeVol =
-      rijen.length === 0 || rijen[rijen.length - 1].length === 1;
+      rijen.length === 0 || rijen[rijen.length - 1].cellen.length === 1;
 
-    if (vorigeVol && RITME[beurt % RITME.length].length === 1) beurt += 1;
+    if (vorigeVol && RITME[stap % RITME.length].breedtes.length === 1) stap += 1;
 
-    const breedtes = RITME[beurt % RITME.length];
+    const { breedtes, hoogte } = RITME[stap % RITME.length];
+    stap += 1;
     const deel = beelden.slice(i, i + breedtes.length);
 
-    rijen.push(
-      deel.map((src, k) => ({
+    rijen.push({
+      cellen: deel.map((src, k) => ({
         soort: "beeld" as const,
         src,
         breedte: deel.length < breedtes.length ? 1 / deel.length : breedtes[k],
       })),
-    );
+      hoogte,
+    });
 
     i += deel.length;
   }
@@ -242,9 +262,10 @@ export default function ProjectMosaic({
       {rijen.map((rij, index) => (
         <div
           key={`rij-${index}`}
-          className="flex w-full flex-col md:h-screen md:flex-row"
+          className="flex w-full flex-col md:flex-row"
+          style={{ "--hoog": rij.hoogte } as React.CSSProperties}
         >
-          {rij.map((cel, k) =>
+          {rij.cellen.map((cel, k) =>
             cel.soort === "tekst" ? (
               <TekstTegel
                 key={`tekst-${index}-${k}`}
@@ -256,7 +277,7 @@ export default function ProjectMosaic({
             ) : (
               <div
                 key={`${cel.src}-${k}`}
-                className="group relative aspect-[4/3] w-full overflow-hidden md:aspect-auto md:h-full md:w-[var(--breed)]"
+                className="group relative aspect-[4/3] w-full overflow-hidden md:aspect-auto md:h-[var(--hoog)] md:w-[var(--breed)]"
                 style={
                   { "--breed": `${cel.breedte * 100}%` } as React.CSSProperties
                 }
@@ -375,7 +396,7 @@ function TekstTegel({
 }) {
   return (
     <div
-      className="flex w-full flex-col justify-center px-[clamp(20px,3vw,44px)] py-14 md:h-full md:w-[var(--breed)] md:py-10"
+      className="flex w-full flex-col justify-center px-[clamp(20px,3vw,44px)] py-14 md:h-[var(--hoog)] md:w-[var(--breed)] md:py-10"
       style={
         {
           "--breed": `${breedte * 100}%`,

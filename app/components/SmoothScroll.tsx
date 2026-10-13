@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -25,6 +26,9 @@ gsap.registerPlugin(ScrollTrigger);
  * scroll van de browser.
  */
 export default function SmoothScroll() {
+  const lenisRef = useRef<Lenis | null>(null);
+  const pathname = usePathname();
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -42,6 +46,7 @@ export default function SmoothScroll() {
       touchMultiplier: 1.6,
     });
 
+    lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
 
     const tekenen = (tijd: number) => lenis.raf(tijd * 1000);
@@ -51,8 +56,21 @@ export default function SmoothScroll() {
     return () => {
       gsap.ticker.remove(tekenen);
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, []);
+
+  /*
+   * Bij een nieuwe pagina bovenaan beginnen.
+   *
+   * De browser doet dat normaal zelf, maar Lenis houdt zijn eigen positie bij
+   * en zet die er na de navigatie weer overheen — dan kom je midden in een
+   * project binnen op de hoogte waar je in het overzicht stond. Zonder
+   * animatie, want dit is geen beweging die je wil zien.
+   */
+  useEffect(() => {
+    lenisRef.current?.scrollTo(0, { immediate: true });
+  }, [pathname]);
 
   return null;
 }

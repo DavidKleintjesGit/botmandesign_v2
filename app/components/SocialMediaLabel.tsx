@@ -15,12 +15,16 @@ export default function SocialMediaLabel() {
       <div
         className="backdrop-blur-xl px-4 py-4 rounded-l-[2rem] border-l"
         style={{
-          fontFamily: "var(--font-cormorant-garamond), serif",
           width: "50px",
-          backgroundColor: "transparent",
-          borderColor: light ? "rgba(103, 92, 83, 0.4)" : "var(--color-almond)",
+          /*
+           * Een waas met een vleugje kleur in plaats van helemaal doorzichtig:
+           * zo is het een vlak dat je kunt aanwijzen, zonder de foto eronder
+           * dicht te gooien.
+           */
+          backgroundColor: light ? "rgba(238, 227, 211, 0.5)" : "rgba(103, 92, 83, 0.42)",
+          borderColor: light ? "rgba(103, 92, 83, 0.25)" : "rgba(238, 227, 211, 0.35)",
           transition: INK_TRANSITION,
-          boxShadow: "0 4px 30px rgba(0,0,0,0.08)",
+          boxShadow: "0 6px 34px rgba(0,0,0,0.14)",
         }}
       >
         <div className="flex flex-col items-center gap-6">
