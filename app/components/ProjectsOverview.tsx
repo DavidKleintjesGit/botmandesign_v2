@@ -20,14 +20,7 @@ const sans = { fontFamily: "var(--font-montserrat)" } as const;
  * ruimte ertussen. De eerste kaart rechts begint een stuk lager, zodat de twee
  * kolommen niet als een raster lezen maar als twee eigen reeksen.
  */
-export default function ProjectsOverview({
-  projects,
-  basis = "/projecten",
-}: {
-  projects: Project[];
-  /** Waar de kaarten heen wijzen; zo kan hetzelfde overzicht twee concepten dienen. */
-  basis?: string;
-}) {
+export default function ProjectsOverview({ projects }: { projects: Project[] }) {
   const { language } = useLanguage();
   const copy = overviewCopy[language];
 
@@ -55,7 +48,7 @@ export default function ProjectsOverview({
       </section>
 
       <div className="container mx-auto px-4 pb-24 md:px-8 md:pb-36">
-        {featured && <ProjectCard project={featured} language={language} basis={basis} featured />}
+        {featured && <ProjectCard project={featured} language={language} featured />}
 
         <div className="mt-20 grid grid-cols-1 gap-x-16 gap-y-20 md:mt-28 md:grid-cols-2">
           {rest.map((project, index) => (
@@ -63,7 +56,7 @@ export default function ProjectsOverview({
               key={project.slug}
               project={project}
               language={language}
-              basis={basis}
+             
               /* Alleen de eerste rechts zakt; daarna lopen de kolommen gelijk op. */
               className={index === 1 ? "md:mt-20" : undefined}
             />

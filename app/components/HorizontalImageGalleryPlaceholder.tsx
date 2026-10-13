@@ -10,11 +10,11 @@ import { useLanguage } from "./LanguageProvider";
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * Hoeveel pixels de sectie vastgepind blijft. Dit stond op 5400 — ruim vijf
- * schermhoogtes scrollen voor één beeldwisseling, met een lange staart waarin
- * niets meer veranderde. 1800 houdt het effect maar laat de pagina doorlopen.
+ * Hoeveel pixels de sectie vastgepind blijft. Dit was 5400, toen 1800, nu 900:
+ * er staat één regel, dus er valt niets meer af te wachten. Lang genoeg om het
+ * beeld te laten komen en gaan, kort genoeg om niet vast te zitten.
  */
-const SCROLL_HOLD = 1800;
+const SCROLL_HOLD = 900;
 
 /** Crossing this progress (increasing) → starts timed fade-out animation. */
 const FADE_OUT_ENTER_PROGRESS = 0.62;
@@ -38,24 +38,13 @@ const SHELL_FADE_OUT_SEC = 0.7;
 const SECTION_IMAGE = "/images/botman_design_second_section.png";
 
 /*
- * De regels die onder het scrollen langskomen. Er stond hier eerst één vast
- * citaat: de pagina werd stilgezet terwijl de woorden niet veranderden, dus het
- * scrollen voelde zinloos. Nu bepaalt hoe ver je binnen het blok bent welke
- * regel er staat, en eindigt de reeks op het citaat dat er altijd al stond.
- *
- * De getallen zijn de ondergrens: vanaf dat deel van het blok staat die regel.
+ * Eén regel. Er stonden er drie, die elkaar aflosten terwijl je scrolde, maar
+ * dat vroeg om aandacht die het niet terugbetaalde: je stond stil om tekst te
+ * zien veranderen. Nu staat er wat er staat, en scroll je er zo doorheen.
  */
 const LINES = {
-  nl: [
-    { from: 0, text: ["Materialen spreken."] },
-    { from: 0.24, text: ["Licht vormt emotie."] },
-    { from: 0.48, text: ["“Gebouwd in lagen.", "Gevoeld in stilte.”"] },
-  ],
-  en: [
-    { from: 0, text: ["Materials speak."] },
-    { from: 0.24, text: ["Light shapes emotion."] },
-    { from: 0.48, text: ["“Built in layers.", "Felt in silence.”"] },
-  ],
+  nl: [{ from: 0, text: ["“Gebouwd in lagen.", "Gevoeld in stilte.”"] }],
+  en: [{ from: 0, text: ["“Built in layers.", "Felt in silence.”"] }],
 } as const;
 
 /** Welke regel hoort bij deze positie in het blok. */

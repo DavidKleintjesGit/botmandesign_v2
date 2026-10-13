@@ -30,18 +30,15 @@ export default function ProjectCard({
   language,
   featured = false,
   className,
-  basis = "/projecten",
 }: {
   project: Project;
   language: "nl" | "en";
   /** Breed beeld in plaats van staand, voor het eerste project van een reeks. */
   featured?: boolean;
   className?: string;
-  /** Waar de kaart heen wijst; de twee concepten hebben elk hun eigen pad. */
-  basis?: string;
 }) {
   return (
-    <Link href={`${basis}/${project.slug}`} className={`group block ${className ?? ""}`}>
+    <Link href={`/projecten/${project.slug}`} className={`group block ${className ?? ""}`}>
       <div className="relative w-full overflow-hidden" style={{ aspectRatio: featured ? "16 / 9" : "3 / 4" }}>
         <Image
           src={project.cardImage}

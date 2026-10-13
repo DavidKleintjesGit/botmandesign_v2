@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import ProjectDetail from "@/app/components/ProjectDetail";
+import ProjectMosaic from "@/app/components/ProjectMosaic";
 import { fetchProjects } from "@/app/lib/cms";
 
 interface PageProps {
@@ -25,5 +25,5 @@ export default async function ProjectPage({ params }: PageProps) {
 
   if (!projects.some((item) => item.slug === slug)) notFound();
 
-  return <ProjectDetail slug={slug} projects={projects} />;
+  return <ProjectMosaic slug={slug} projects={projects} />;
 }

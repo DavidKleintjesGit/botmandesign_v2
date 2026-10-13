@@ -170,7 +170,7 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
 
           <div className="grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-3">
             {anderen.map((ander) => (
-              <Link key={ander.slug} href={`/concept-2/${ander.slug}`} className="group block">
+              <Link key={ander.slug} href={`/projecten/${ander.slug}`} className="group block">
                 <div className="relative w-full overflow-hidden" style={{ aspectRatio: "3 / 4" }}>
                   <Image
                     src={ander.cardImage}
@@ -207,7 +207,7 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-x-8 gap-y-2 px-[clamp(16px,4vw,48px)] py-3.5">
           <div className="flex items-center gap-6">
             <Link
-              href="/concept-2"
+              href="/projecten"
               className="text-[11px] uppercase transition-opacity duration-300 hover:opacity-70 md:text-xs"
               style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-champagne)" }}
             >

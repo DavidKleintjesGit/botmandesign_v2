@@ -42,21 +42,13 @@ function Wordmark({ light, width, height }: { light: boolean; width: number; hei
 const COMPACT_BREAKPOINT = 1024;
 const SCROLL_THRESHOLD = 40;
 
-/** Hoeveel pixels richtingverandering nodig is voordat de balk reageert. */
-const DIRECTION_THRESHOLD = 8;
-
 /*
  * De navigatie van de onderliggende pagina's. Zelfde opmaak als de navbar op de
  * homepage — Montserrat in hoofdletters, het woordmerk gecentreerd, Contact als
  * omlijnde pil — maar hier blijft hij staan in plaats van weg te faden, omdat
  * deze pagina's geen beeldvullende hero hebben om in te verdwijnen.
  */
-interface SiteHeaderProps {
-  /** Verbergt de balk, bijvoorbeeld terwijl een beeldvullende diashow loopt. */
-  hidden?: boolean;
-}
-
-export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
+export default function SiteHeader() {
   const { t } = useLanguage();
   /*
    * De balk staat op elke pagina, en niet elke pagina heeft dezelfde grond. Op
@@ -66,15 +58,13 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
   const { light } = usePageSurface();
   const [compact, setCompact] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [projectsOpen, setProjectsOpen] = useState(false);
 
   /*
-   * De balk mag het beeld niet in de weg zitten maar moet wel bereikbaar
-   * blijven. Hij verdwijnt daarom zodra je naar beneden scrolt en komt terug
-   * zodra je omhoog gaat — dan is hij nodig. Bovenaan de pagina staat hij
-   * gewoon.
+   * De balk hoort bij de bovenkant van de pagina en nergens anders. Hij kwam
+   * eerder terug zodra je omhoog scrolde, maar dan schuift er halverwege een
+   * balk over het beeld dat je aan het bekijken bent. Nu is hij er alleen
+   * bovenaan.
    */
-  const [revealed, setRevealed] = useState(true);
   const [atTop, setAtTop] = useState(true);
 
   const drawerOpen = compact && menuOpen;
@@ -82,20 +72,7 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
   useEffect(() => {
     const check = () => setCompact(window.innerWidth < COMPACT_BREAKPOINT);
 
-    let last = window.scrollY;
-
-    const onScroll = () => {
-      const y = window.scrollY;
-      const top = y <= SCROLL_THRESHOLD;
-
-      setAtTop(top);
-
-      // Kleine bewegingen negeren, anders knippert de balk bij elke rimpel.
-      if (Math.abs(y - last) > DIRECTION_THRESHOLD) {
-        setRevealed(top || y < last);
-        last = y;
-      }
-    };
+    const onScroll = () => setAtTop(window.scrollY <= SCROLL_THRESHOLD);
 
     check();
     onScroll();
@@ -124,22 +101,12 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
     return () => window.removeEventListener("keydown", onEscape);
   }, [drawerOpen]);
 
-  // De diashow op een projectpagina kan de balk ook helemaal onderdrukken.
-  const visible = revealed && !hidden;
+  const visible = atTop;
 
-  /*
-   * Projecten heeft twee weergaven die we naast elkaar beoordelen. Zolang dat
-   * zo is hangt er een klein menuutje onder; valt de keuze, dan wordt het weer
-   * één link.
-   */
-  const projectConcepten = [
-    { key: "concept-1", label: "Concept 1", href: "/projecten" },
-    { key: "concept-2", label: "Concept 2", href: "/concept-2" },
-  ];
-
+  // De collectie staat er tijdelijk niet in; die komt terug als de webshop zover is.
   const leftLinks = [
+    { key: "projects", label: t.navProjects, href: "/projecten" },
     { key: "services", label: t.navServices, href: "/services" },
-    { key: "shop", label: t.navShop, href: "/collectie" },
   ];
 
   const rightLinks = [{ key: "about", label: t.navAbout, href: "/over" }];
@@ -199,49 +166,6 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
             {!compact ? (
               <>
                 <div className="-mt-3 flex items-center gap-8">
-                  <div
-                    className="relative"
-                    onMouseEnter={() => setProjectsOpen(true)}
-                    onMouseLeave={() => setProjectsOpen(false)}
-                  >
-                    <Link
-                      href="/projecten"
-                      className="flex items-center gap-2 text-sm font-light uppercase tracking-wider transition-colors"
-                      style={linkStyle}
-                      onFocus={() => setProjectsOpen(true)}
-                    >
-                      {t.navProjects}
-                      <span
-                        aria-hidden
-                        className="text-[9px] transition-transform duration-300"
-                        style={{ transform: projectsOpen ? "rotate(180deg)" : "rotate(0deg)" }}
-                      >
-                        &#9660;
-                      </span>
-                    </Link>
-
-                    <div
-                      className="absolute left-0 top-full flex flex-col gap-3 pt-4 transition-all duration-300"
-                      style={{
-                        opacity: projectsOpen ? 1 : 0,
-                        transform: projectsOpen ? "translateY(0)" : "translateY(-6px)",
-                        pointerEvents: projectsOpen ? "auto" : "none",
-                      }}
-                    >
-                      {projectConcepten.map((concept) => (
-                        <Link
-                          key={concept.key}
-                          href={concept.href}
-                          className="whitespace-nowrap text-xs font-light uppercase tracking-wider transition-opacity duration-300 hover:opacity-70"
-                          style={linkStyle}
-                          onClick={() => setProjectsOpen(false)}
-                        >
-                          {concept.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-
                   {leftLinks.map((link) => (
                     <Link
                       key={link.key}
@@ -311,11 +235,20 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
         </div>
       </nav>
 
-      {drawerOpen && (
+      {/*
+       * De la schuift van rechts naar binnen in plaats van er ineens te staan.
+       * Hij blijft in de boom zolang hij dichtgaat, anders is er niets om de
+       * beweging op te hangen.
+       */}
+      {compact && (
         <>
           <div
-            className="fixed inset-0 z-[70] bg-black/50"
+            className="fixed inset-0 z-[70] bg-black/50 transition-opacity duration-500"
             onClick={() => setMenuOpen(false)}
+            style={{
+              opacity: drawerOpen ? 1 : 0,
+              pointerEvents: drawerOpen ? "auto" : "none",
+            }}
             aria-hidden
           />
           <div
@@ -323,25 +256,25 @@ export default function SiteHeader({ hidden = false }: SiteHeaderProps) {
             style={{
               backgroundColor: "var(--color-cedar)",
               borderLeft: "1px solid rgba(182, 163, 144, 0.25)",
+              transform: drawerOpen ? "translateX(0)" : "translateX(100%)",
+              transition: "transform 520ms cubic-bezier(0.22, 1, 0.36, 1)",
+              visibility: drawerOpen ? "visible" : "hidden",
+              transitionProperty: "transform, visibility",
+              transitionDelay: drawerOpen ? "0ms, 0ms" : "0ms, 520ms",
             }}
           >
             <button
               type="button"
               aria-label={t.close}
               onClick={() => setMenuOpen(false)}
-              className="cursor-pointer self-end text-2xl leading-none"
+              className="-mr-2 -mt-2 cursor-pointer self-end p-2 text-5xl font-light leading-none transition-opacity duration-300 hover:opacity-70"
               style={{ color: "var(--color-champagne)" }}
             >
               &times;
             </button>
 
             <nav className="flex flex-col gap-6">
-              {[
-                { key: "projects", label: t.navProjects, href: "/projecten" },
-                ...projectConcepten.map((c) => ({ ...c, label: "— " + c.label })),
-                ...leftLinks,
-                ...rightLinks,
-              ].map((link) => (
+              {[...leftLinks, ...rightLinks].map((link) => (
                 <Link
                   key={link.key}
                   href={link.href}

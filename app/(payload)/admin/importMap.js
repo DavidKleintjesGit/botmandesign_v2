@@ -1,10 +1,3 @@
-/*
- * Payload houdt deze lijst zelf bij, met één uitzondering: SlideLayoutField.
- * Dat is een component op een veld binnen een reeks, en die loopt de generator
- * niet na — hij meldt alleen dat hij hem niet kan vinden. De regel staat er dus
- * met de hand bij. Verdwijnt de vormkiezer in het beheer, dan is deze regel
- * weggeschreven en moet hij terug.
- */
 import { default as default_197efe8822635a1d73fd3fe15ef4cba3 } from '../../../payload/components/SlideLayoutField'
 import { default as default_89318d787cf8abcb41b487534c5a9679 } from '../../../payload/components/EditKicker'
 import { default as default_f24c8920be647154be1721ef6724ca91 } from '../../../payload/components/SaveBar'

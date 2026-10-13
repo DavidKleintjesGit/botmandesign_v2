@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import PageIntro from "./PageIntro";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageProvider";
 import type { Service } from "@/app/content/services";
@@ -146,40 +145,45 @@ export default function ContactPageContent({ services }: { services: Record<stri
 
   return (
     <div>
-      <PageIntro label={copy.label} title={copy.title} titleAccent={copy.titleAccent} intro={copy.intro} />
-
       {/*
-       * Een derde voor de directe gegevens, twee derde voor het formulier.
+       * Alles onder elkaar op één lijn.
        *
-       * Het formulier mag breed zijn zolang de invulregels dat niet worden:
-       * naam en e-mail staan daarom naast elkaar, onderwerp en bericht eronder
-       * over de volle breedte. Zo vult het de kolom met een indeling in plaats
-       * van met uitgerekte regels, en leest het van boven naar beneden als
-       * twee korte vragen gevolgd door twee lange.
+       * Er stonden vier blokken die elk op een andere hoogte begonnen: de kop
+       * links, de inleiding zwevend halverwege rechts, de gegevens links
+       * daaronder en het formulier rechts. Je oog had vier plekken om te
+       * beginnen, en dat is precies wat een pagina onrustig maakt. Nu is er één
+       * linkermarge en lees je van boven naar beneden: wie we zijn, wat je
+       * invult, hoe je ons anders bereikt.
        */}
+      <section className="w-full pt-40 pb-16 md:pt-52 md:pb-24">
+        <div className="container mx-auto px-4 md:px-8">
+          <p className="mb-6 text-sm uppercase md:text-base" style={{ ...sans, color: "var(--color-champagne)" }}>
+            {copy.label}
+          </p>
+
+          <h1
+            className="mb-10 text-3xl font-light uppercase tracking-wider md:text-4xl lg:text-5xl"
+            style={{ ...serif, letterSpacing: "0.15em", color: "var(--color-champagne)" }}
+          >
+            {copy.title}
+            <br />
+            <span style={{ color: "var(--color-almond)" }}>{copy.titleAccent}</span>
+          </h1>
+
+          <p
+            className="max-w-xl text-lg leading-relaxed md:text-xl"
+            style={{ ...serif, color: "var(--color-almond)" }}
+          >
+            {copy.intro}
+          </p>
+        </div>
+      </section>
+
       <section id="form" className="w-full pb-24 md:pb-36">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="grid gap-14 md:grid-cols-3 md:gap-16">
-            <div>
-              <p className="mb-4 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
-                {copy.directLabel}
-              </p>
+          <div className="w-full max-w-3xl">
 
-              <div className="flex flex-col gap-2">
-                {DIRECT.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="w-fit text-lg transition-opacity duration-300 hover:opacity-70 md:text-xl"
-                    style={{ ...serif, color: "var(--color-champagne)" }}
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="flex w-full flex-col gap-8 md:col-span-2">
+            <form onSubmit={handleSubmit} className="flex w-full flex-col gap-8">
               <div className="grid gap-8 md:grid-cols-2">
                 <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
                   {copy.formName}
@@ -243,6 +247,29 @@ export default function ContactPageContent({ services }: { services: Record<stri
                 </p>
               )}
             </form>
+
+            {/* Voor wie liever geen formulier invult. Eén regel, onderaan. */}
+            <div
+              className="mt-20 flex flex-col gap-3 border-t pt-10 md:flex-row md:items-baseline md:gap-10"
+              style={{ borderColor: "rgba(182, 163, 144, 0.25)" }}
+            >
+              <p className="text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+                {copy.directLabel}
+              </p>
+
+              <div className="flex flex-col gap-2 md:flex-row md:gap-8">
+                {DIRECT.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="w-fit text-lg transition-opacity duration-300 hover:opacity-70 md:text-xl"
+                    style={{ ...serif, color: "var(--color-champagne)" }}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>

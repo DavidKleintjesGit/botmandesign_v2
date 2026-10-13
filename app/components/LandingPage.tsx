@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import Header from "./Header";
 import LoadingPage from "./LoadingPage";
-import CookiePopup from "./CookiePopup";
 import BusinessCardComponent from "./BusinessCardComponent";
 import HorizontalImageGalleryPlaceholder from "./HorizontalImageGalleryPlaceholder";
 import HomeProjectsSection from "./HomeProjectsSection";
@@ -90,7 +89,7 @@ export default function LandingPage({ projects, services, testimonials }: Landin
         <CTA />
       </div>
       <Footer />
-      <CookiePopup />
+      {/* De cookiemelding staat tijdelijk uit; zet hem terug voor de site live gaat. */}
     </div>
   );
 }

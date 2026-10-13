@@ -2,7 +2,7 @@
 
 import { usePageSurface, INK_TRANSITION } from "./PageSurface";
 
-export default function SocialMediaLabel({ hidden = false }: { hidden?: boolean }) {
+export default function SocialMediaLabel() {
   /*
    * Zelfde regel als de taalschakelaar eronder: op de champagne grond van de
    * collectie valt champagne weg, dus gaan de iconen daar naar cedar.
@@ -19,10 +19,7 @@ export default function SocialMediaLabel({ hidden = false }: { hidden?: boolean 
           width: '50px',
           backgroundColor: 'transparent',
           borderColor: light ? 'rgba(103, 92, 83, 0.4)' : 'var(--color-almond)',
-          transform: hidden ? 'translateX(120%)' : 'translateX(0)',
-          opacity: hidden ? 0 : 1,
-          pointerEvents: hidden ? 'none' : 'auto',
-          transition: INK_TRANSITION + ', transform 500ms ease, opacity 500ms ease',
+          transition: INK_TRANSITION,
           boxShadow: '0 4px 30px rgba(0,0,0,0.08)',
         }}
       >

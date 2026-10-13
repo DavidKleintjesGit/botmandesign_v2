@@ -101,18 +101,6 @@ export default function Header() {
           {copy.currentProjects} &rarr;
         </Link>
 
-        <p
-          className="text-base leading-relaxed md:text-lg"
-          style={{
-            fontFamily: "var(--font-cormorant-garamond), serif",
-            color: "var(--color-almond)",
-          }}
-        >
-          {copy.heroSub1}
-          <br />
-          {copy.heroSub2}
-        </p>
-
         <Image
           src="/images/Botman Design Logo-03-B.png"
           alt="Botman Design Logo"
