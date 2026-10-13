@@ -54,9 +54,9 @@ const RITME: number[][] = [
 /** Minimaal aantal rijen beeld tussen twee tekststroken. */
 const MINSTENS_RIJEN_TUSSEN = 2;
 
-type Rij = { soort: "rij"; breedtes: number[]; beelden: string[] };
-type Tekst = { soort: "tekst"; sub: string; kop: string; body: string };
-type Blok = Rij | Tekst;
+type Tekst = { sub: string; kop: string; body: string };
+type Cel = { breedte: number } & ({ soort: "beeld"; src: string } | ({ soort: "tekst" } & Tekst));
+type Rij = Cel[];
 
 /** Alle beelden uit de reeks, op volgorde, zonder het openingsbeeld. */
 function beeldenVoor(slides: ProjectSlide[], opening: string): string[] {
@@ -79,55 +79,65 @@ function tekstenVoor(slides: ProjectSlide[]): Tekst[] {
 }
 
 /**
- * Zet de rijen en de tekstvlakken achter elkaar.
+ * Zet de rijen op.
  *
- * Tekst staat alleen tússen beeld. Nooit als laatste: dan eindigt een project
- * op een alinea in plaats van op een ruimte, en dat is precies waar je
- * doorheen wil blijven scrollen.
+ * Tekst is hier geen balk over de volle breedte maar een tegel in de rij,
+ * naast een beeld: een derde tekst en tweederde beeld, en de volgende keer
+ * andersom. Zo hoort het bij de galerij in plaats van dat het hem onderbreekt.
+ *
+ * Nooit in de laatste rij: een project hoort te eindigen op een ruimte, niet
+ * op een alinea.
  */
-function blokkenVoor(slides: ProjectSlide[], opening: string, inleiding: Tekst): Blok[] {
+function rijenVoor(slides: ProjectSlide[], opening: string, inleiding: Tekst): Rij[] {
   const beelden = beeldenVoor(slides, opening);
   const teksten = [inleiding, ...tekstenVoor(slides)];
 
+  /*
+   * Hoeveel rijen er ongeveer komen, om de tekst gelijkmatig te verdelen. Een
+   * rij pakt gemiddeld ruim twee beelden; een rij met tekst pakt er één.
+   * Afronden en niet afkappen, anders schuift alles naar voren en staat de
+   * laatste helft van de pagina zonder woorden.
+   */
+  const schatting = Math.max(1, Math.round(beelden.length / 2.2) + teksten.length);
+  const ruimte = Math.max(MINSTENS_RIJEN_TUSSEN, Math.round(schatting / (teksten.length + 1)));
+
   const rijen: Rij[] = [];
   let i = 0;
+  let volgende = 0;
 
   while (i < beelden.length) {
+    const nummer = rijen.length + 1;
+    const nogBeeldNa = beelden.length - i > 1;
+    const tekstBeurt = nogBeeldNa && nummer % ruimte === 0 && volgende < teksten.length;
+
+    if (tekstBeurt) {
+      const tekst = teksten[volgende];
+      const linksTekst = volgende % 2 === 0;
+      volgende += 1;
+
+      const beeld: Cel = { soort: "beeld", src: beelden[i], breedte: 2 / 3 };
+      const vak: Cel = { soort: "tekst", breedte: 1 / 3, ...tekst };
+
+      rijen.push(linksTekst ? [vak, beeld] : [beeld, vak]);
+      i += 1;
+      continue;
+    }
+
     const breedtes = RITME[rijen.length % RITME.length];
     const deel = beelden.slice(i, i + breedtes.length);
 
-    rijen.push({
-      soort: "rij",
-      breedtes: deel.length < breedtes.length ? deel.map(() => 1 / deel.length) : breedtes,
-      beelden: deel,
-    });
+    rijen.push(
+      deel.map((src, k) => ({
+        soort: "beeld" as const,
+        src,
+        breedte: deel.length < breedtes.length ? 1 / deel.length : breedtes[k],
+      })),
+    );
 
     i += deel.length;
   }
 
-  /*
-   * De afstand tussen twee stroken hangt af van hoeveel beeld er is. Bij veel
-   * foto's staan ze ver uit elkaar, bij weinig schuiven ze naar elkaar toe —
-   * maar nooit dichter dan twee rijen, en nooit achter de laatste rij. Zo valt
-   * er ook geen tekst weg omdat er net geen plek meer was.
-   */
-  const ruimte = Math.max(MINSTENS_RIJEN_TUSSEN, Math.floor(rijen.length / (teksten.length + 1)));
-
-  const blokken: Blok[] = [];
-  let volgende = 0;
-
-  rijen.forEach((rij, index) => {
-    blokken.push(rij);
-
-    const laatste = index === rijen.length - 1;
-
-    if (!laatste && (index + 1) % ruimte === 0 && volgende < teksten.length) {
-      blokken.push(teksten[volgende]);
-      volgende += 1;
-    }
-  });
-
-  return blokken;
+  return rijen;
 }
 
 /*
@@ -147,8 +157,7 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
 
   const content = projectContent(project, language);
   const opening = project.cardImage;
-  const blokken = blokkenVoor(content.slides, opening, {
-    soort: "tekst",
+  const rijen = rijenVoor(content.slides, opening, {
     sub: zonderJaartal(content.category),
     kop: project.title,
     body: content.intro,
@@ -183,30 +192,36 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
       </header>
 
       {/* HET MUURVLAK */}
-      {blokken.map((blok, index) =>
-        blok.soort === "tekst" ? (
-          <TekstStrook key={`tekst-${index}`} sub={blok.sub} kop={blok.kop} body={blok.body} />
-        ) : (
-          <div key={`rij-${index}`} className="flex h-[60vh] w-full md:h-screen">
-            {blok.beelden.map((src, kolom) => (
+      {rijen.map((rij, index) => (
+        <div key={`rij-${index}`} className="flex w-full flex-col md:h-screen md:flex-row">
+          {rij.map((cel, k) =>
+            cel.soort === "tekst" ? (
+              <TekstTegel
+                key={`tekst-${index}-${k}`}
+                breedte={cel.breedte}
+                sub={cel.sub}
+                kop={cel.kop}
+                body={cel.body}
+              />
+            ) : (
               <div
-                key={`${src}-${kolom}`}
-                className="group relative h-full overflow-hidden"
-                style={{ width: `${blok.breedtes[kolom] * 100}%` }}
+                key={`${cel.src}-${k}`}
+                className="group relative aspect-[4/3] w-full overflow-hidden md:aspect-auto md:h-full md:w-[var(--breed)]"
+                style={{ "--breed": `${cel.breedte * 100}%` } as React.CSSProperties}
               >
                 <Image
-                  src={src}
+                  src={cel.src}
                   alt={project.title}
                   fill
                   loading="lazy"
-                  sizes={`${Math.round(blok.breedtes[kolom] * 100)}vw`}
+                  sizes={`${Math.round(cel.breedte * 100)}vw`}
                   className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-[1.025]"
                 />
               </div>
-            ))}
-          </div>
-        ),
-      )}
+            ),
+          )}
+        </div>
+      ))}
 
       {/* MEER INSPIRATIE */}
       <section className="w-full py-20 md:py-28">
@@ -295,46 +310,50 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
 }
 
 /*
- * Een smalle strook om iets te vertellen, tussen twee rijen beeld door.
+ * Een tegel met tekst, even hoog als de rij waarin hij staat.
  *
- * Op cedar, dezelfde grond als de footer: een lichte strook hield het beeld te
- * lang tegen. En laag gehouden — je komt hier langs, je gaat er niet zitten.
+ * Hij ligt op cedar — dezelfde grond als de footer — zodat hij tussen de
+ * beelden leest als een stuk muur in plaats van als een onderbreking.
  */
-function TekstStrook({ sub, kop, body }: { sub?: string; kop?: string; body?: string }) {
-  if (!kop && !body) return null;
-
+function TekstTegel({
+  breedte,
+  sub,
+  kop,
+  body,
+}: {
+  breedte: number;
+  sub?: string;
+  kop?: string;
+  body?: string;
+}) {
   return (
-    <section className="w-full py-14 md:py-16" style={{ backgroundColor: "var(--color-cedar)" }}>
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="max-w-3xl">
-          {sub && (
-            <p
-              className="mb-4 text-[11px] uppercase md:text-xs"
-              style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-almond)" }}
-            >
-              {sub}
-            </p>
-          )}
+    <div
+      className="flex w-full flex-col justify-center px-[clamp(20px,3vw,44px)] py-14 md:h-full md:w-[var(--breed)] md:py-10"
+      style={{ "--breed": `${breedte * 100}%`, backgroundColor: "var(--color-cedar)" } as React.CSSProperties}
+    >
+      {sub && (
+        <p
+          className="mb-4 text-[11px] uppercase"
+          style={{ ...sans, letterSpacing: "0.2em", color: "var(--color-almond)" }}
+        >
+          {sub}
+        </p>
+      )}
 
-          {kop && (
-            <h2
-              className="mb-5 text-2xl font-light md:text-3xl"
-              style={{ ...serif, color: "var(--color-champagne)" }}
-            >
-              {kop}
-            </h2>
-          )}
+      {kop && (
+        <h2
+          className="mb-5 text-2xl font-light md:text-3xl"
+          style={{ ...serif, color: "var(--color-champagne)" }}
+        >
+          {kop}
+        </h2>
+      )}
 
-          {body && (
-            <p
-              className="max-w-prose text-base leading-relaxed md:text-lg"
-              style={{ ...serif, color: "var(--color-almond)" }}
-            >
-              {body}
-            </p>
-          )}
-        </div>
-      </div>
-    </section>
+      {body && (
+        <p className="text-base leading-relaxed" style={{ ...serif, color: "var(--color-almond)" }}>
+          {body}
+        </p>
+      )}
+    </div>
   );
 }
