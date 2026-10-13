@@ -39,33 +39,25 @@ const sans = { fontFamily: "var(--font-montserrat)" } as const;
  * hoogtes blijven onder de halve schermhoogte, zodat je altijd meer dan één
  * rij tegelijk ziet — dat is wat het raster laat lezen als raster.
  */
-const RITME: { breedtes: number[]; hoogte: string }[] = [
-  { breedtes: [1 / 2, 1 / 2], hoogte: "58vh" },
-  { breedtes: [1 / 3, 1 / 3, 1 / 3], hoogte: "44vh" },
-  { breedtes: [2 / 3, 1 / 3], hoogte: "52vh" },
-  { breedtes: [1 / 2, 1 / 2], hoogte: "48vh" },
-  { breedtes: [1 / 3, 2 / 3], hoogte: "52vh" },
-  { breedtes: [1 / 3, 1 / 3, 1 / 3], hoogte: "44vh" },
-];
+const VERHOUDINGEN = ["4 / 5", "1 / 1", "3 / 4", "4 / 3", "5 / 6", "1 / 1", "16 / 11", "3 / 4"];
 
-/*
- * Na hoeveel rijen het eerste tekstvlak liefst komt. Meteen onder het
- * openingsbeeld las de inleiding als een voorwoord dat je eerst door moest;
- * na een paar rijen beeld heb je iets gezien om over te lezen.
- */
-const EERSTE_TEKST_NA = 3;
+/** Hoe hoog een beeld wordt bij breedte 1 — om de kolommen in balans te houden. */
+function hoogteVan(verhouding: string): number {
+  const [breed, hoog] = verhouding.split("/").map((deel) => Number(deel.trim()));
+  return hoog / breed;
+}
 
-type Band = { soort: "band"; breedtes: number[]; hoogte: string; beelden: string[] };
+/** Hoeveel lager de ene kolom begint dan de andere. */
+const VERSPRINGING = "clamp(40px, 7vw, 120px)";
+
+/** Hoeveel beelden er in één metselvlak gaan voordat er tekst tussen mag. */
+const BEELDEN_PER_VLAK = 6;
+
+type Tegel = { src: string; verhouding: string };
+type Vlak = { soort: "vlak"; kolommen: Tegel[][]; beurt: number };
 type Tekst = { soort: "tekst"; sub: string; kop: string; body: string };
-type Blok = Band | Tekst;
+type Blok = Vlak | Tekst;
 
-/*
- * De reeks uit het beheer wordt een reeks blokken.
- *
- * Een dia die op "alleen tekst" of "beeld met tekst" staat wordt hier een
- * tekstvlak; de rest levert zijn beeld aan de banden. Zo bepaalt Bas per dia
- * waar de woorden vallen, zonder dat daar een apart veld voor nodig is.
- */
 /** Alle beelden uit de reeks, op volgorde, zonder het openingsbeeld. */
 function beeldenVoor(slides: ProjectSlide[], opening: string): string[] {
   const uit: string[] = [];
@@ -80,40 +72,26 @@ function beeldenVoor(slides: ProjectSlide[], opening: string): string[] {
 }
 
 /**
- * Verdeelt de beelden over rijen van twee of drie.
+ * Verdeelt beelden over twee kolommen, elk met een eigen verhouding.
  *
- * Nooit een rij van één: blijft er aan het eind eentje over, dan gaat die bij
- * de vorige rij. Eén beeld over de volle breedte hoort bij de opening en
- * nergens anders.
+ * Elk beeld gaat naar de kolom die op dat moment het laagst is. Omdat de
+ * verhoudingen verschillen lopen de kolommen vanzelf uit de pas — en dat is
+ * precies de bedoeling: niets ligt op dezelfde lijn, maar onderaan komen ze
+ * weer ongeveer gelijk uit.
  */
-function rijenVoor(beelden: string[]): Band[] {
-  const rijen: Band[] = [];
-  let i = 0;
-  let stap = 0;
+function vlakVan(beelden: string[], begin: number, beurt: number): Vlak {
+  const kolommen: Tegel[][] = [[], []];
+  const hoogtes = [0, 0];
 
-  while (i < beelden.length) {
-    const { breedtes, hoogte } = RITME[stap % RITME.length];
-    const deel = beelden.slice(i, i + breedtes.length);
+  beelden.forEach((src, i) => {
+    const verhouding = VERHOUDINGEN[(begin + i) % VERHOUDINGEN.length];
+    const kolom = hoogtes[0] <= hoogtes[1] ? 0 : 1;
 
-    if (deel.length === 1 && rijen.length > 0) {
-      const vorige = rijen[rijen.length - 1];
-      vorige.beelden.push(deel[0]);
-      vorige.breedtes = vorige.beelden.map(() => 1 / vorige.beelden.length);
-      break;
-    }
+    kolommen[kolom].push({ src, verhouding });
+    hoogtes[kolom] += hoogteVan(verhouding);
+  });
 
-    rijen.push({
-      soort: "band",
-      breedtes: deel.length < breedtes.length ? deel.map(() => 1 / deel.length) : breedtes,
-      hoogte,
-      beelden: deel,
-    });
-
-    i += deel.length;
-    stap += 1;
-  }
-
-  return rijen;
+  return { soort: "vlak", kolommen, beurt };
 }
 
 /** De tekstvlakken die Bas in de reeks heeft gezet. */
@@ -124,46 +102,36 @@ function tekstenVoor(slides: ProjectSlide[]): Tekst[] {
 }
 
 /**
- * Zet de rijen en de tekstvlakken achter elkaar.
+ * Zet de metselvlakken en de tekstvlakken achter elkaar.
  *
- * De tekst zit niet vast aan de plek van zijn dia maar valt op een rijgrens,
- * met een paar rijen beeld ertussen. Eerder liep de wachtrij leeg zodra er een
- * tekstdia langskwam: dan bleef er een los beeld over en stonden twee vlakken
- * soms tegen elkaar.
+ * Het beeld wordt in porties geknipt; tussen twee porties past een tekstvlak.
+ * Zo staat de tekst nooit tegen een ander tekstvlak aan en onderbreekt hij het
+ * beeld op een plek waar de kolommen toch al gelijk uitkomen.
  */
-/**
- * Na welke rijen de tekstvlakken vallen.
- *
- * Hoe meer beeld er is, hoe verder ze uit elkaar staan; is er weinig, dan
- * schuiven ze naar voren en houden ze minstens één rij beeld tussen zich in.
- * Twee vlakken tegen elkaar is wat je wil voorkomen — dan lees je twee keer
- * achter elkaar in plaats van te kijken.
- */
-function tekstPosities(rijen: number, aantal: number): number[] {
-  if (aantal === 0 || rijen === 0) return [];
-
-  const start = Math.min(EERSTE_TEKST_NA, Math.max(1, rijen - aantal + 1));
-  const stap = Math.max(1, Math.floor((rijen - start) / Math.max(1, aantal - 1)));
-
-  return Array.from({ length: aantal }, (_, i) => Math.min(start + i * stap, rijen));
-}
-
 function blokkenVoor(slides: ProjectSlide[], opening: string, inleiding: Tekst): Blok[] {
-  const rijen = rijenVoor(beeldenVoor(slides, opening));
+  const beelden = beeldenVoor(slides, opening);
   const teksten = [inleiding, ...tekstenVoor(slides)];
-  const posities = tekstPosities(rijen.length, teksten.length);
 
   const blokken: Blok[] = [];
+  let i = 0;
+  let volgende = 0;
+  let vlakken = 0;
 
-  rijen.forEach((rij, index) => {
-    blokken.push(rij);
+  while (i < beelden.length) {
+    const portie = beelden.slice(i, i + BEELDEN_PER_VLAK);
+    blokken.push(vlakVan(portie, i, vlakken));
+    vlakken += 1;
+    i += portie.length;
 
-    posities.forEach((positie, i) => {
-      if (positie === index + 1) blokken.push(teksten[i]);
-    });
-  });
+    // Ook na het laatste vlak mag er tekst staan; alleen nooit twee op rij.
+    if (volgende < teksten.length) {
+      blokken.push(teksten[volgende]);
+      volgende += 1;
+    }
+  }
 
-  return blokken;
+  // Wat er niet tussen paste komt achteraan, zodat er niets wegvalt.
+  return [...blokken, ...teksten.slice(volgende)];
 }
 
 /*
@@ -235,22 +203,35 @@ export default function ProjectMosaic({ slug, projects }: { slug: string; projec
             <TekstVlak sub={blok.sub} kop={blok.kop} body={blok.body} />
           </Onthulling>
         ) : (
-          <Onthulling key={`band-${index}`}>
-            <div className="flex w-full" style={{ height: blok.hoogte }}>
-              {blok.beelden.map((src, kolom) => (
+          <Onthulling key={`vlak-${index}`}>
+            <div className="grid grid-cols-1 md:grid-cols-2">
+              {blok.kolommen.map((kolom, k) => (
                 <div
-                  key={`${src}-${kolom}`}
-                  className="group relative h-full overflow-hidden"
-                  style={{ width: `${blok.breedtes[kolom] * 100}%` }}
+                  key={`kolom-${k}`}
+                  className="flex flex-col"
+                  /*
+                   * Eén van de twee kolommen begint lager, en per vlak wisselt
+                   * welke. Anders ligt de bovenrand van elk vlak toch weer op
+                   * één lijn en leest het alsnog als een raster.
+                   */
+                  style={{ marginTop: k === blok.beurt % 2 ? VERSPRINGING : undefined }}
                 >
-                  <Image
-                    src={src}
-                    alt={project.title}
-                    fill
-                    loading="lazy"
-                    sizes={`${Math.round(blok.breedtes[kolom] * 100)}vw`}
-                    className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-[1.025]"
-                  />
+                  {kolom.map((tegel) => (
+                    <div
+                      key={tegel.src}
+                      className="group relative w-full overflow-hidden"
+                      style={{ aspectRatio: tegel.verhouding }}
+                    >
+                      <Image
+                        src={tegel.src}
+                        alt={project.title}
+                        fill
+                        loading="lazy"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-[1.025]"
+                      />
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>

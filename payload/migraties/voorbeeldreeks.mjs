@@ -41,7 +41,6 @@ const reeks = [
   },
   { v: "vol", nl: ["Zithoek", "DETAIL", "Boucle, brons en eikenhout — materialen die je wil aanraken."], en: ["Seating area", "DETAIL", "Boucle, bronze and oak — materials you want to touch."] },
   { v: "versprongen", nl: ["Slaapkamer", "RUST", "Minder spullen, meer ruimte om te ademen."], en: ["Bedroom", "QUIET", "Fewer things, more room to breathe."] },
-  { v: "rust", nl: ["Een huis wordt pas af als je er niets meer aan wil veranderen.", "", ""], en: ["A house is only finished when you no longer want to change anything about it.", "", ""] },
   { v: "portret", nl: ["Trappenhuis", "LIJN", "Eén doorlopende lijn van beneden naar boven."], en: ["Stairwell", "LINE", "One continuous line from bottom to top."] },
   { v: "duo", nl: ["Badkamer", "MATERIAAL", "Natuursteen en messing, samen oud worden."], en: ["Bathroom", "MATERIAL", "Natural stone and brass, ageing together."] },
   { v: "vol", nl: ["Terras", "BUITEN", "De overgang naar buiten is nauwelijks te zien."], en: ["Terrace", "OUTSIDE", "The step outside is barely there."] },
