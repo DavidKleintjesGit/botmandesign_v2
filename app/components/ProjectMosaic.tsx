@@ -123,7 +123,18 @@ function rijenVoor(slides: ProjectSlide[], opening: string, inleiding: Tekst): R
       continue;
     }
 
-    const breedtes = RITME[rijen.length % RITME.length];
+    /*
+     * Nooit twee schermvullende beelden achter elkaar: twee keer een heel
+     * scherm op rij leest als een diavoorstelling in plaats van als een
+     * galerij. Staat de volgende verdeling op vol terwijl de vorige dat ook
+     * was, dan slaan we hem over.
+     */
+    let beurt = rijen.length;
+    const vorigeVol = rijen.length > 0 && rijen[rijen.length - 1].length === 1;
+
+    if (vorigeVol && RITME[beurt % RITME.length].length === 1) beurt += 1;
+
+    const breedtes = RITME[beurt % RITME.length];
     const deel = beelden.slice(i, i + breedtes.length);
 
     rijen.push(
