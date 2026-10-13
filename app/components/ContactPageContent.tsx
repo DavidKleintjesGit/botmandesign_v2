@@ -146,55 +146,85 @@ export default function ContactPageContent({ services }: { services: Record<stri
   return (
     <div>
       {/*
-       * Alles onder elkaar op één lijn.
+       * Twee kolommen die op dezelfde regel beginnen en samen eindigen.
        *
-       * Er stonden vier blokken die elk op een andere hoogte begonnen: de kop
-       * links, de inleiding zwevend halverwege rechts, de gegevens links
-       * daaronder en het formulier rechts. Je oog had vier plekken om te
-       * beginnen, en dat is precies wat een pagina onrustig maakt. Nu is er één
-       * linkermarge en lees je van boven naar beneden: wie we zijn, wat je
-       * invult, hoe je ons anders bereikt.
+       * Eerst stonden hier vier blokken op vier hoogtes — onrustig. Daarna
+       * alles in één kolom links, en dan blijft de halve pagina leeg. Dit is
+       * het midden: links wat we te zeggen hebben, rechts wat je invult, elk
+       * met één eigen as. Twee assen, geen vier, en geen leeg veld ernaast.
+       *
+       * De gegevens staan onderaan de linkerkolom, zodat beide kolommen op
+       * dezelfde lijn eindigen.
        */}
-      <section className="w-full pt-40 pb-16 md:pt-52 md:pb-24">
+      <section className="w-full pt-40 pb-24 md:pt-52 md:pb-36">
         <div className="container mx-auto px-4 md:px-8">
-          <p className="mb-6 text-sm uppercase md:text-base" style={{ ...sans, color: "var(--color-champagne)" }}>
-            {copy.label}
-          </p>
+          <div className="grid items-stretch gap-14 md:grid-cols-[5fr_6fr] md:gap-20 lg:gap-28">
+            {/* WAT WE TE ZEGGEN HEBBEN */}
+            <div className="flex flex-col">
+              <p
+                className="mb-6 text-sm uppercase md:text-base"
+                style={{ ...sans, color: "var(--color-champagne)" }}
+              >
+                {copy.label}
+              </p>
 
-          <h1
-            className="mb-10 text-3xl font-light uppercase tracking-wider md:text-4xl lg:text-5xl"
-            style={{ ...serif, letterSpacing: "0.15em", color: "var(--color-champagne)" }}
-          >
-            {copy.title}
-            <br />
-            <span style={{ color: "var(--color-almond)" }}>{copy.titleAccent}</span>
-          </h1>
+              <h1
+                // In een smallere kolom brak de kop in vier regels; dit houdt het op twee.
+                className="mb-10 text-[26px] font-light uppercase leading-[1.25] md:text-3xl lg:text-[40px]"
+                style={{ ...serif, letterSpacing: "0.1em", color: "var(--color-champagne)" }}
+              >
+                {copy.title}
+                <br />
+                <span style={{ color: "var(--color-almond)" }}>{copy.titleAccent}</span>
+              </h1>
 
-          <p
-            className="max-w-xl text-lg leading-relaxed md:text-xl"
-            style={{ ...serif, color: "var(--color-almond)" }}
-          >
-            {copy.intro}
-          </p>
-        </div>
-      </section>
+              <p className="text-lg leading-relaxed md:text-xl" style={{ ...serif, color: "var(--color-almond)" }}>
+                {copy.intro}
+              </p>
 
-      <section id="form" className="w-full pb-24 md:pb-36">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="w-full max-w-3xl">
+              {/*
+               * Voor wie liever geen formulier invult. Onderaan de kolom, met
+               * mt-auto, zodat hij meezakt tot de voet van het formulier.
+               */}
+              <div
+                className="mt-14 border-t pt-10 md:mt-auto"
+                style={{ borderColor: "rgba(182, 163, 144, 0.25)" }}
+              >
+                <p className="mb-5 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+                  {copy.directLabel}
+                </p>
 
-            <form onSubmit={handleSubmit} className="flex w-full flex-col gap-8">
-              <div className="grid gap-8 md:grid-cols-2">
-                <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
-                  {copy.formName}
-                  <input type="text" name="name" style={fieldStyle} />
-                </label>
-
-                <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
-                  {copy.formEmail}
-                  <input type="email" name="email" style={fieldStyle} />
-                </label>
+                <div className="flex flex-col gap-2">
+                  {DIRECT.map((item) => (
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      className="w-fit text-lg transition-opacity duration-300 hover:opacity-70 md:text-xl"
+                      style={{ ...serif, color: "var(--color-champagne)" }}
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
               </div>
+            </div>
+
+            {/* WAT JE INVULT */}
+            <form
+              id="form"
+              onSubmit={handleSubmit}
+              className="flex w-full flex-col gap-8 md:border-l md:pl-20 lg:pl-28"
+              style={{ borderColor: "rgba(182, 163, 144, 0.22)" }}
+            >
+              <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+                {copy.formName}
+                <input type="text" name="name" style={fieldStyle} />
+              </label>
+
+              <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
+                {copy.formEmail}
+                <input type="email" name="email" style={fieldStyle} />
+              </label>
 
               <label className="flex flex-col gap-3 text-[11px] uppercase md:text-xs" style={labelTextStyle}>
                 {copy.formInquiry}
@@ -217,7 +247,7 @@ export default function ContactPageContent({ services }: { services: Record<stri
                 {copy.formMessage}
                 <textarea
                   name="message"
-                  rows={6}
+                  rows={5}
                   style={{ ...fieldStyle, resize: "vertical", fontFamily: "var(--font-cormorant-garamond), serif" }}
                 />
               </label>
@@ -247,29 +277,6 @@ export default function ContactPageContent({ services }: { services: Record<stri
                 </p>
               )}
             </form>
-
-            {/* Voor wie liever geen formulier invult. Eén regel, onderaan. */}
-            <div
-              className="mt-20 flex flex-col gap-3 border-t pt-10 md:flex-row md:items-baseline md:gap-10"
-              style={{ borderColor: "rgba(182, 163, 144, 0.25)" }}
-            >
-              <p className="text-[11px] uppercase md:text-xs" style={labelTextStyle}>
-                {copy.directLabel}
-              </p>
-
-              <div className="flex flex-col gap-2 md:flex-row md:gap-8">
-                {DIRECT.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="w-fit text-lg transition-opacity duration-300 hover:opacity-70 md:text-xl"
-                    style={{ ...serif, color: "var(--color-champagne)" }}
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </section>
