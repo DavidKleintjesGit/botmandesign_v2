@@ -8,15 +8,6 @@ import { zonderJaartal } from "./ProjectCard";
 import { useLanguage } from "./LanguageProvider";
 import { projectContent, type Project } from "@/app/content/projects";
 
-const overviewCopy = {
-  en: { label: "PROJECTS", title1: "Selected works.", title2: "One vision." },
-  nl: {
-    label: "PROJECTEN",
-    title1: "Geselecteerd werk.",
-    title2: "Eén visie.",
-  },
-};
-
 /*
  * De breedteverdeling per project, nagemeten op kabaz.nl/projecten: twee
  * gelijke helften, dan een derde met een tweederde ernaast, weer twee helften,
@@ -56,22 +47,16 @@ export default function ProjectsOverview({
   projects: Project[];
 }) {
   const { language } = useLanguage();
-  const copy = overviewCopy[language];
 
   return (
     <div>
-      <section className="w-full pt-40 pb-14 md:pt-52 md:pb-20">
-        <div className="container mx-auto px-4 md:px-8">
-          <p className="t-label t-label--sterk mb-6">{copy.label}</p>
-
-          <h1 className="t-kop">
-            {copy.title1}
-            <br />
-            <span style={{ color: "var(--ink-zacht)" }}>{copy.title2}</span>
-          </h1>
-        </div>
-      </section>
-
+      {/*
+       * Meteen beeld, geen kop erboven.
+       *
+       * Er stond een titelblok van een halve schermhoogte voor je het eerste
+       * project zag. Je weet al waar je bent — je hebt op Projecten geklikt —
+       * en het werk hoort hier het eerste te zijn wat je ziet.
+       */}
       {projects.map((project, index) => {
         const breedtes = RITME[index % RITME.length];
         const beelden = beeldenVan(project, language);
