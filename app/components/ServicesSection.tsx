@@ -1,18 +1,32 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
+
 import type { Service } from "@/app/content/services";
 import { useLanguage } from "./LanguageProvider";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const sectionCopy = {
-  en: { label: "Our studio services", more: "More info" },
-  nl: { label: "Onze studio services", more: "Meer info" },
+  en: { more: "More info" },
+  nl: { more: "Meer info" },
 };
+
+/*
+ * Dezelfde taal als de projectpagina's: rijen van rand tot rand, elk met een
+ * eigen maat, en de tekst als tegel binnen die rij in plaats van ernaast.
+ *
+ * Hier stonden drie kolommen tekst met haarlijntjes ertussen en geen enkel
+ * beeld. Dat is het tegenovergestelde van wat de rest van de site doet: je
+ * komt uit beeld, krijgt een muur van woorden, en gaat weer door naar beeld.
+ *
+ * De maten wisselen per rij en de tekst wisselt van kant, zodat er geen twee
+ * naden op één lijn liggen.
+ */
+const RITME = [
+  { beeld: 0.64, tekst: 0.36, hoogte: "78vh", tekstLinks: false },
+  { beeld: 0.58, tekst: 0.42, hoogte: "70vh", tekstLinks: true },
+  { beeld: 0.68, tekst: 0.32, hoogte: "82vh", tekstLinks: false },
+];
 
 export default function ServicesSection({
   services,
@@ -21,126 +35,80 @@ export default function ServicesSection({
 }) {
   const { language } = useLanguage();
   const copy = sectionCopy[language];
-  const sectionRef = useRef<HTMLElement>(null);
-  const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
-    if (!sectionRef.current || blockRefs.current.length === 0) return;
-
-    const blocks = blockRefs.current.filter(Boolean);
-    gsap.set(blocks, { opacity: 0, y: 24 });
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 90%",
-        end: "top 15%",
-        // 0.6 houdt de beweging vloeiend zonder merkbaar achter de scroll aan te lopen.
-        scrub: 0.6,
-      },
-    });
-
-    tl.to(
-      blocks,
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power2.out",
-      },
-      0,
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.vars.trigger === sectionRef.current) t.kill();
-      });
-    };
-  }, []);
-
-  /*
-   * De drie studio services uit Bas zijn ontwerp. De teksten komen uit
-   * app/content/services.ts, zodat de homepage, het overzicht en de
-   * detailpagina's niet uit elkaar kunnen lopen.
-   */
-  const blocks = Object.entries(services).map((entry) => {
-    const [slug, service] = entry;
+  const blokken = Object.entries(services).map(([slug, service], i) => {
     const content = service[language];
+    const maat = RITME[i % RITME.length];
 
     return {
       slug,
-      title: content.name,
-      text: content.tagline,
-      description: content.introOne,
-      descriptionExtra: content.introTwo,
-      priceFrom: content.price,
-      buttonLabel: copy.more,
+      maat,
+      beeld: service.cardImage,
+      naam: content.name,
+      regel: content.tagline,
+      prijs: content.price,
     };
   });
 
   return (
-    <section
-      ref={sectionRef}
-      // De onderruimte was 224 tot 384 pixels kale cedar; daar viel de pagina
-      // stil voordat het verhaal eronder begon.
-      className="w-full relative overflow-hidden flex flex-col items-center pt-10 pb-24 md:pb-32"
-      style={{
-        backgroundColor: "var(--color-cedar)",
-      }}
-    >
-      <div className="container mx-auto px-4 md:px-8 w-full">
-        <p className="t-label t-label--sterk mb-8 md:mb-10">{copy.label}</p>
-        <div className="flex flex-col md:flex-row md:items-stretch gap-12 md:gap-0">
-          {blocks.map((block, i) => (
-            <div
-              key={block.slug}
-              className="flex flex-col md:flex-1 md:flex-row md:min-h-0"
+    <section className="w-full" style={{ backgroundColor: "var(--color-cedar)" }}>
+      {blokken.map((blok) => {
+        const tegel = (
+          <div
+            className="flex w-full flex-col justify-center gap-5 px-[clamp(20px,3vw,48px)] py-14 md:h-[var(--hoog)] md:w-[var(--tekst)] md:py-10"
+            style={{ "--tekst": `${blok.maat.tekst * 100}%` } as React.CSSProperties}
+          >
+            <h3 className="t-titel">{blok.naam}</h3>
+            <p className="t-tekst">{blok.regel}</p>
+            <p className="t-label">{blok.prijs}</p>
+
+            <Link
+              href={`/services/${blok.slug}`}
+              className="t-label mt-2 inline-block self-start rounded-full border px-5 py-2.5 transition-all duration-300 hover:opacity-90"
+              style={{ borderColor: "var(--color-almond)", color: "var(--color-champagne)" }}
             >
-              <div
-                ref={(el) => {
-                  blockRefs.current[i] = el;
-                }}
-                className="flex flex-col text-center items-center md:flex-1 md:px-8 md:h-full min-h-0"
-              >
-                <h3 className="t-titel mb-8">{block.title}</h3>
-                <p className="t-tekst t-tekst--sterk mb-2">{block.text}</p>
-                <div className="flex-1 space-y-4 mb-10">
-                  <p className="t-tekst">{block.description}</p>
-                  <p className="t-tekst">{block.descriptionExtra}</p>
-                </div>
-                <div className="mt-auto flex flex-col items-center gap-3">
-                  <p className="t-tekst t-tekst--sterk">{block.priceFrom}</p>
-                  <Link
-                    href={`/services/${block.slug}`}
-                    className="t-label inline-block px-5 py-2.5 rounded-full border transition-all duration-300 hover:opacity-90"
-                    style={{
-                      fontFamily: "var(--font-montserrat)",
-                      letterSpacing: "0.15em",
-                      backgroundColor: "var(--color-champagne)",
-                      borderColor: "var(--color-champagne)",
-                      color: "var(--color-cedar)",
-                    }}
-                  >
-                    {block.buttonLabel}
-                  </Link>
-                </div>
-              </div>
-              {i < blocks.length - 1 && (
-                <div className="hidden md:flex md:items-center md:flex-shrink-0 md:self-stretch">
-                  <div
-                    className="w-px h-40 md:h-52"
-                    style={{
-                      backgroundColor: "var(--color-almond)",
-                      opacity: 0.5,
-                    }}
-                    aria-hidden
-                  />
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+              {copy.more}
+            </Link>
+          </div>
+        );
+
+        const beeld = (
+          <Link
+            href={`/services/${blok.slug}`}
+            className="group relative aspect-[4/3] w-full overflow-hidden md:aspect-auto md:h-[var(--hoog)] md:w-[var(--beeld)]"
+            style={{ "--beeld": `${blok.maat.beeld * 100}%` } as React.CSSProperties}
+          >
+            <Image
+              src={blok.beeld}
+              alt={blok.naam}
+              fill
+              loading="lazy"
+              sizes={`(max-width: 768px) 100vw, ${Math.round(blok.maat.beeld * 100)}vw`}
+              className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-[1.025]"
+            />
+          </Link>
+        );
+
+        return (
+          <div
+            key={blok.slug}
+            className="flex w-full flex-col md:flex-row"
+            style={{ "--hoog": blok.maat.hoogte } as React.CSSProperties}
+          >
+            {blok.maat.tekstLinks ? (
+              <>
+                {tegel}
+                {beeld}
+              </>
+            ) : (
+              <>
+                {beeld}
+                {tegel}
+              </>
+            )}
+          </div>
+        );
+      })}
     </section>
   );
 }
